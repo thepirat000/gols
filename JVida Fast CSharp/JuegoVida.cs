@@ -9,67 +9,67 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 
-//Definición:
-//Cada célula tiene dos estados: viva (puntito) o muerta (no se dibuja)
-//Cada célula tiene 8 vecinas 
+//Definitions:
+// Each cell has two possible states: Alive (dot) or Dead (not drawn)
+// Each cell has 8 neighbors
 
-//Reglas ejemplo: algoritmo de Conway, 23/3:
-//Una célula viva sigue viva sii tiene exactamente 2 ó 3 células vecinas vivas         (23/)
-//Una célula vacía (o muerta) nace sii tiene exactamente 3 células vecinas vivas       (/3)
+//Algorithm example: Conway = 23/3:
+// A living cell still alive if and only if it has exactly 2 or 3 neighbors alive (23/)
+// A dead cell borns if and only if it has exactly 3 neighbors alive              (/3)
 
 namespace JVida_Fast_CSharp
 {
     public class FireUpdateEventArgs : EventArgs
     {
-        public List<Point> Nacidos { get; set; }
-        public List<Point> Muertos { get; set; }
+        public List<Point> Born { get; set; }
+        public List<Point> Dead { get; set; }
 
-        public FireUpdateEventArgs(List<Point> Nacidos, List<Point> Muertos)
+        public FireUpdateEventArgs(List<Point> Born, List<Point> Dead)
         {
-            this.Nacidos = Nacidos;
-            this.Muertos = Muertos;
+            this.Born = Born;
+            this.Dead = Dead;
         }
     }
 
-    public class JuegoVida
+    public class GameOfLife
     {
         #region Events
         public event FireUpdateEventHandler FireUpdate;
         public delegate void FireUpdateEventHandler(object sender, FireUpdateEventArgs e);
-        private void OnFireUpdate(List<Point> Nacidos, List<Point> Muertos)
+        private void OnFireUpdate(List<Point> Born, List<Point> Dead)
         {
             if (FireUpdate != null)
             {
-                FireUpdate(this, new FireUpdateEventArgs(Nacidos, Muertos));
+                FireUpdate(this, new FireUpdateEventArgs(Born, Dead));
             }
         } 
         #endregion
 
         #region Fields
-        private Celda[,] Matriz;
-        private List<Point> Vivientes;
-        private Algoritmo algoritmo;
-        private int EdadMaxima;
-        private double OcupacionInicial;
+        private Cell[,] Matrix;
+        private List<Point> Alive;
+        private Algorithm algorithm;
+        private int MaximumAge;
+        private double InitialOccupation;
         private bool @stop = false;
-        private delegate void MyEventHandler(List<Point> Nacidos, List<Point> Muertos);
+        private delegate void MyEventHandler(List<Point> Born, List<Point> Dead);
         private MyEventHandler MyFireUpdater; 
         #endregion
 
         #region Properties
-        public string Algoritmo
+        public string Algorithm
         {
-            get { return algoritmo.Simbolo; }
+            get { return algorithm.Symbol; }
         } 
         #endregion
 
         #region Constructor
-        public JuegoVida(int maxX, int maxY, string SimboloAlgoritmo, int EdadMaxima, double OcupacionInicial)
+        public GameOfLife(int maxX, int maxY, string AlgorithmSymbol, int MaximumAge, double InitialOccupation)
         {
             MyFireUpdater = new MyEventHandler(OnFireUpdate);
-            this.EdadMaxima = EdadMaxima;
-            this.algoritmo = new Algoritmo(SimboloAlgoritmo);
-            this.OcupacionInicial = OcupacionInicial;
+            this.MaximumAge = MaximumAge;
+            this.algorithm = new Algorithm(AlgorithmSymbol);
+            this.InitialOccupation = InitialOccupation;
             Init(maxX, maxY);
         } 
         #endregion
@@ -77,13 +77,13 @@ namespace JVida_Fast_CSharp
         #region Private Methods
         private void Init(int maxX, int maxY)
         {
-            Matriz = new Celda[maxX, maxY];
+            Matrix = new Cell[maxX, maxY];
             for (int x = 0; x <= maxX - 1; x++)
             {
                 for (int y = 0; y <= maxY - 1; y++)
                 {
-                    dynamic celda = new Celda(x, y);
-                    Matriz[x, y] = celda;
+                    Cell cell = new Cell(x, y);
+                    Matrix[x, y] = cell;
                 }
             }
             for (int x = 0; x <= maxX - 1; x++)
@@ -91,18 +91,18 @@ namespace JVida_Fast_CSharp
                 for (int y = 0; y <= maxY - 1; y++)
                 {
                     //vecinos
-                    Celda celda = Matriz[x, y];
-                    celda.Vecinos.Add(_prev(maxX, x), _prev(maxY, y));  //Arriba/Izq
-                    celda.Vecinos.Add(x, _prev(maxY, y));               //Arriba/Centro
-                    celda.Vecinos.Add(_next(maxX, x), _prev(maxY, y));  //Arriba/Der
-                    celda.Vecinos.Add(_prev(maxX, x), y);               //Centro/Izquierda
-                    celda.Vecinos.Add(_next(maxX, x), y);               //Centro/Derecha
-                    celda.Vecinos.Add(_prev(maxX, x), _next(maxY, y));  //Abajo/Izq
-                    celda.Vecinos.Add(x, _next(maxY, y));               //Abajo/Centro
-                    celda.Vecinos.Add(_next(maxX, x), _next(maxY, y));  //Abajo/Der
+                    Cell cell = Matrix[x, y];
+                    cell.Neighbors.Add(_prev(maxX, x), _prev(maxY, y));  //Upper Left
+                    cell.Neighbors.Add(x, _prev(maxY, y));               //Upper Center
+                    cell.Neighbors.Add(_next(maxX, x), _prev(maxY, y));  //Upper Right
+                    cell.Neighbors.Add(_prev(maxX, x), y);               //Middle Left
+                    cell.Neighbors.Add(_next(maxX, x), y);               //Middle Right
+                    cell.Neighbors.Add(_prev(maxX, x), _next(maxY, y));  //Lower Left
+                    cell.Neighbors.Add(x, _next(maxY, y));               //Lower Center
+                    cell.Neighbors.Add(_next(maxX, x), _next(maxY, y));  //Lower Right
                 }
             }
-            Vivientes = new List<Point>();
+            Alive = new List<Point>();
         }
 
         private int _next(int max, int i)
@@ -114,67 +114,67 @@ namespace JVida_Fast_CSharp
             return i == 0 ? max - 1 : i - 1;
         }
 
-        private void SetVivos(List<Point> vivos)
+        private void SetAlive(List<Point> alive)
         {
-            foreach (Point item in vivos)
+            foreach (Point item in alive)
             {
-                Matriz[item.X, item.Y].Viva = true;
-                Vivientes.Add(item);
+                Matrix[item.X, item.Y].IsAlive = true;
+                Alive.Add(item);
             }
         }
 
-        // Efectuar un "turno" en el juego
-        private void Turno(ref List<Point> nacen, ref List<Point> mueren)
+        /// <summary>
+        /// Make a step in the game
+        /// </summary>
+        private void GameStep(ref List<Point> Born, ref List<Point> Dead)
         {
-            //Seteo la cuenta de vecinos vivos en 0 a todos además incremento la edad de los vivos
-            foreach (Point item in Vivientes.AsParallel())
+            //Set the neighbor alive count to 0, and increment age
+            foreach (Point item in Alive.AsParallel())
             {
-                Matriz[item.X, item.Y].Cantidad = 0;
-                Matriz[item.X, item.Y].Edad++;
-                foreach (Point vecino in Matriz[item.X, item.Y].Vecinos)
+                Matrix[item.X, item.Y].Quantity = 0;
+                Matrix[item.X, item.Y].Age++;
+                foreach (Point neighbor in Matrix[item.X, item.Y].Neighbors)
                 {
-                    Matriz[vecino.X, vecino.Y].Cantidad = 0;
+                    Matrix[neighbor.X, neighbor.Y].Quantity = 0;
                 }
             }
-            //Computar el numero de vecinos (vivos) en cada celda (viva)
-            //A cada vecino del actual viviente le sumo 1 en la cantidad
-            foreach (Point item in Vivientes.AsParallel())
+            //Compute neighbors alive in each alive cell
+            //Add 1 to each neighbor of the living cells
+            foreach (Point item in Alive.AsParallel())
             {
-                foreach (Point vecino in Matriz[item.X, item.Y].Vecinos)
+                foreach (Point neighbor in Matrix[item.X, item.Y].Neighbors)
                 {
-                    Matriz[vecino.X, vecino.Y].Cantidad++;
+                    Matrix[neighbor.X, neighbor.Y].Quantity++;
                 }
             }
 
-            nacen = GetNacen();
-            List<Point> sobreviven = GetSobreviven();
-            mueren = GetMueren();
-
-            foreach (Point m in mueren)
+            Born = GetBorn();
+            List<Point> survivors = GetSurvivors();
+            Dead = GetDeads();
+            foreach (Point m in Dead)
             {
-                Matriz[m.X, m.Y].Viva = false;
+                Matrix[m.X, m.Y].IsAlive = false;
             }
-
-            Vivientes = nacen.Concat(sobreviven).ToList();
+            Alive = Born.Concat(survivors).ToList();
         }
 
-        private List<Point> GetNacen()
+        private List<Point> GetBorn()
         {
             List<Point> ret = new List<Point>();
-            //Nacen
-            foreach (Point item in Vivientes.AsParallel())
+            //Born
+            foreach (Point item in Alive.AsParallel())
             {
-                foreach (Point vecino in Matriz[item.X, item.Y].Vecinos)
+                foreach (Point neighbor in Matrix[item.X, item.Y].Neighbors)
                 {
-                    Celda celdaVecina = Matriz[vecino.X, vecino.Y];
-                    if (!celdaVecina.Viva)
+                    Cell neighborCell = Matrix[neighbor.X, neighbor.Y];
+                    if (!neighborCell.IsAlive)
                     {
-                        bool nace = algoritmo.EvualuarProximoEstado(0, celdaVecina.Cantidad, celdaVecina.Cantidad);
-                        if (nace)
+                        bool willBorn = algorithm.NextState(0, neighborCell.Quantity);
+                        if (willBorn)
                         {
-                            Matriz[vecino.X, vecino.Y].Viva = true;
-                            Matriz[vecino.X, vecino.Y].Edad = 0;
-                            ret.Add(celdaVecina.Ubicacion);
+                            Matrix[neighbor.X, neighbor.Y].IsAlive = true;
+                            Matrix[neighbor.X, neighbor.Y].Age = 0;
+                            ret.Add(neighborCell.Location);
                         }
                     }
                 }
@@ -182,15 +182,15 @@ namespace JVida_Fast_CSharp
             return ret;
         }
 
-        private List<Point> GetSobreviven()
+        private List<Point> GetSurvivors()
         {
             List<Point> ret = new List<Point>();
-            //Sobreviven
-            foreach (Point item in Vivientes.AsParallel())
+            //Survives
+            foreach (Point item in Alive.AsParallel())
             {
-                Celda c1 = Matriz[item.X, item.Y];
-                bool sobrevive = algoritmo.EvualuarProximoEstado(1, c1.Cantidad, c1.Cantidad);
-                if (sobrevive)
+                Cell c1 = Matrix[item.X, item.Y];
+                bool survives = algorithm.NextState(1, c1.Quantity);
+                if (survives)
                 {
                     ret.Add(item);
                 }
@@ -198,19 +198,19 @@ namespace JVida_Fast_CSharp
             return ret;
         }
 
-        private List<Point> GetMueren()
+        private List<Point> GetDeads()
         {
             List<Point> ret = new List<Point>();
-            foreach (Point item in Vivientes.AsParallel())
+            foreach (Point item in Alive.AsParallel())
             {
-                Celda c1 = Matriz[item.X, item.Y];
-                if (c1.Edad >= EdadMaxima)
+                Cell c1 = Matrix[item.X, item.Y];
+                if (c1.Age >= MaximumAge)
                 {
                     ret.Add(item);
                     continue;
                 }
-                bool vive = algoritmo.EvualuarProximoEstado(1, c1.Cantidad, c1.Cantidad);
-                if (!vive)
+                bool alive = algorithm.NextState(1, c1.Quantity);
+                if (!alive)
                 {
                     ret.Add(item);
                 }
@@ -218,40 +218,40 @@ namespace JVida_Fast_CSharp
             return ret;
         }
 
-        private void Randomizar()
+        private void Randomize()
         {
             Random rnd = new Random();
-            List<Point> vivos = new List<Point>();
-            for (int i = 0; i <= Matriz.GetLength(0) - 1; i++)
+            List<Point> alive = new List<Point>();
+            for (int i = 0; i <= Matrix.GetLength(0) - 1; i++)
             {
-                for (int j = 0; j <= Matriz.GetLength(1) - 1; j++)
+                for (int j = 0; j <= Matrix.GetLength(1) - 1; j++)
                 {
-                    if (rnd.NextDouble() > (1 - this.OcupacionInicial) &&
-                        i > Matriz.GetLength(0) * 2 / 5 &&
-                        i < Matriz.GetLength(0) * 3 / 5 &&
-                        j > Matriz.GetLength(1) * 2 / 5 &&
-                        j < Matriz.GetLength(1) * 3 / 5)
+                    if (rnd.NextDouble() > (1 - this.InitialOccupation) &&
+                        i > Matrix.GetLength(0) * 2 / 5 &&
+                        i < Matrix.GetLength(0) * 3 / 5 &&
+                        j > Matrix.GetLength(1) * 2 / 5 &&
+                        j < Matrix.GetLength(1) * 3 / 5)
                     {
-                        vivos.Add(i, j);
+                        alive.Add(i, j);
                     }
                 }
             }
-            SetVivos(vivos);
-            List<Point> muertos = new List<Point>();
-            OnFireUpdate(vivos, muertos);
+            SetAlive(alive);
+            List<Point> deads = new List<Point>();
+            OnFireUpdate(alive, deads);
         } 
         #endregion
 
         #region Public Methods
-        public void Jugar()
+        public void Play()
         {
-            Randomizar();
-            List<Point> nacen = null;
-            List<Point> mueren = null;
+            Randomize();
+            List<Point> born = null;
+            List<Point> dead = null;
             while (!@stop)
             {
-                Turno(ref nacen, ref mueren);
-                MyFireUpdater.Invoke(nacen, mueren);
+                GameStep(ref born, ref dead);
+                MyFireUpdater.Invoke(born, dead);
                 System.Threading.Thread.Sleep(1);
             }
         } 

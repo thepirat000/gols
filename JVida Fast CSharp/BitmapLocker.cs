@@ -8,7 +8,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
-//Ejemplo de uso:
+//Example:
 //
 //Bitmap bmp = new Bitmap("d:\abc.BMP");
 //clsImg img = New clsImg();
@@ -21,7 +21,7 @@ using System.Runtime.InteropServices;
 //img.UnlockBitmap(bmp);
 
 /// <summary>
-/// Clase para agilizar la manipulación de bitmaps
+/// Speed up the handling of bitmaps
 /// </summary>
 /// <remarks></remarks>
 public class BitmapLocker
@@ -35,7 +35,9 @@ public class BitmapLocker
     #endregion
 
     #region Public Methods
-    // Lock the bitmap's data.
+    /// <summary>
+    /// Lock the bitmap's data.
+    /// </summary>
     public void LockBitmap(Bitmap bm, bool ReadOnly = false)
     {
         // Lock the bitmap data.
@@ -51,6 +53,9 @@ public class BitmapLocker
         Marshal.Copy(BitmapData.Scan0, PixBytes, 0, total_size);
     }
 
+    /// <summary>
+    /// Unlock the bitmap's data.
+    /// </summary>
     public void UnlockBitmap(Bitmap bm)
     {
         // Copy the data back into the bitmap.

@@ -15,12 +15,12 @@ namespace JVida_Fast_CSharp
     public partial class MainForm : Form
     {
         #region Fields
-        private JuegoVida jv;
-        private Grafiquito graf;
+        private GameOfLife Gol;
+        private UniverseGraph Graph;
         private int GridSize = 400;
-        private double OcupacionInicial = .5;
-        private int EdadMaxima = 200;
-        private string Algoritmo = "23/3";
+        private double InitialOccupation = .5;
+        private int MaximumAge = 200;
+        private string Algorithm = "23/3";
         private Thread workerThread; 
         #endregion
 
@@ -34,25 +34,25 @@ namespace JVida_Fast_CSharp
             this.Shown += Form1_Shown;
             this.KeyDown += Form1_KeyDown;
             this.FormClosing += Form1_FormClosing;
-            Inicializar();
+            Initialize();
         } 
         #endregion
 
         #region Private Methods
-        private void Inicializar()
+        private void Initialize()
         {
-            this.Controls.Remove(graf);
-            jv = new JuegoVida(GridSize, GridSize, Algoritmo, EdadMaxima, this.OcupacionInicial);
-            jv.FireUpdate += jv_FireUpdate;
-            graf = new Grafiquito(GridSize, GridSize);
-            graf.Dock = DockStyle.Fill;
-            this.Controls.Add(graf);
+            this.Controls.Remove(Graph);
+            Gol = new GameOfLife(GridSize, GridSize, Algorithm, MaximumAge, this.InitialOccupation);
+            Gol.FireUpdate += jv_FireUpdate;
+            Graph = new UniverseGraph(GridSize, GridSize);
+            Graph.Dock = DockStyle.Fill;
+            this.Controls.Add(Graph);
         }
 
-        private void Comenzar()
+        private void Start()
         {
             AbortWorker();
-            workerThread = new Thread(jv.Jugar);
+            workerThread = new Thread(Gol.Play);
             workerThread.Priority = ThreadPriority.AboveNormal;
             workerThread.Start();
         }
@@ -69,17 +69,17 @@ namespace JVida_Fast_CSharp
         private string GetKeysHelp()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("F1: Mostrar/Ocultar ayuda");
-            sb.AppendLine("A: Cambiar algoritmo");
-            sb.AppendLine("E: Cambiar la edad máxima");
-            sb.AppendLine("F: Mostrar/Ocultar fps");
-            sb.AppendLine("G: Cambiar tamaño de grid");
-            sb.AppendLine("O: Cambiar la densidad inicial");
-            sb.AppendLine("R: Reiniciar");
-            sb.AppendLine("Esc: Salir de la aplicación");
-            sb.AppendLine("Enter: Cambiar color de celdas vivas");
+            sb.AppendLine("F1: Show/Hide help");
+            sb.AppendLine("A: Change Algorithm");
+            sb.AppendLine("E: Change Maximum Age");
+            sb.AppendLine("F: Show/Hide fps");
+            sb.AppendLine("G: Change Grid Size");
+            sb.AppendLine("O: Change initial density (occupation)");
+            sb.AppendLine("R: Restart");
+            sb.AppendLine("Esc: Exit Application");
+            sb.AppendLine("Enter: Change alive cell color");
             sb.AppendLine();
-            sb.AppendFormat("Algoritmo: {0}. Edad máx: {1}. Tamaño: {2}.", this.Algoritmo, this.EdadMaxima, this.GridSize);
+            sb.AppendFormat("Algorithm: {0}. Max Age: {1}. Size: {2}.", this.Algorithm, this.MaximumAge, this.GridSize);
             return sb.ToString();
         }
 
@@ -89,52 +89,51 @@ namespace JVida_Fast_CSharp
             switch (e.KeyCode)
             {
                 case Keys.R:
-                    // Comenzar de nuevo
+                    // Start again
                     redraw = true;
                     break;
                 case Keys.Return:
-                    // Cambiar color de celdas vivas
+                    // Change alive cell color
                     Random rnd = new Random();
-                    graf.ForeColor = Color.FromArgb(rnd.Next(0, 255), rnd.Next(0, 255), rnd.Next(0, 255));
+                    Graph.ForeColor = Color.FromArgb(rnd.Next(0, 255), rnd.Next(0, 255), rnd.Next(0, 255));
                     break;
                 case Keys.A:
-                    // Cambiar algoritmo
-                    string newAlgoritmo;
-                    string help = "Ingrese el nuevo algoritmo en formato ddd/DDD\nUna celda viva sigue viva sii tiene exactamente d celdas vecinas vivas\nUna celda vacía nace sii tiene exactamente D células vecinas vivas\nEjemplo: 23/3 = Algoritmo de conway. 34/34 = Vida 34";
-
-                    if (InputBox.Show("Algoritmo", help, this.Algoritmo, out newAlgoritmo) == System.Windows.Forms.DialogResult.OK)
+                    // change algorithm
+                    string newAlgorithm;
+                    string help = "Enter the new algorithm in ddd/DDD format.\nA living cell still alive iif it has exactly d neighbors.\nAn empty cell is born iif it has exactly D alive neighbors.\nExample: 23/3 = Conway algorithm. 34/34 = Life 34.";
+                    if (InputBox.Show("Algorithm", help, this.Algorithm, out newAlgorithm) == System.Windows.Forms.DialogResult.OK)
                     {
-                        this.Algoritmo = newAlgoritmo;
+                        this.Algorithm = newAlgorithm;
                         redraw = true;
                     }
                     break;
                 case Keys.G:
-                    // Cambiar gridsize
+                    // Change gridsize
                     string newgridSzie;
-                    if (InputBox.Show("Grid", "Ingrese nuevo tamaño de grid", this.GridSize.ToString(), out newgridSzie) == System.Windows.Forms.DialogResult.OK)
+                    if (InputBox.Show("Grid size", "Enter the new Grid Size", this.GridSize.ToString(), out newgridSzie) == System.Windows.Forms.DialogResult.OK)
                     {
                         this.GridSize = int.Parse(newgridSzie);
                         redraw = true;
                     }
                     break;
                 case Keys.E:
-                    // Cambiar edad máxima
-                    string newEdadMax;
-                    if (InputBox.Show("Edad", "Ingrese nueva edad máxima.\nLa edad máxima es la cantidad máxima de ciclos luego de la cual cualquier celda viva muere.", this.EdadMaxima.ToString(), out newEdadMax) == System.Windows.Forms.DialogResult.OK)
+                    // Change maximum age
+                    string newMaxAge;
+                    if (InputBox.Show("Age", "Enter the new Maximum Age.\nThe maximum age is the maximum number of cycles after which any living cell dies.", this.MaximumAge.ToString(), out newMaxAge) == System.Windows.Forms.DialogResult.OK)
                     {
-                        this.EdadMaxima = int.Parse(newEdadMax);
+                        this.MaximumAge = int.Parse(newMaxAge);
                         redraw = true;
                     }
                     break;
                 case Keys.F:
-                    graf.ShowFps = !graf.ShowFps;
+                    Graph.ShowFps = !Graph.ShowFps;
                     break;
                 case Keys.O:
-                    // Cambiar ocupación inicial
-                    string newOcup;
-                    if (InputBox.Show("Ocupación inicial", "Ingrese el porcentaje de ocupación inicial (densidad).\nValor entre 1 y 100.", (this.OcupacionInicial * 100).ToString(), out newOcup) == System.Windows.Forms.DialogResult.OK)
+                    // Chage initial occupation
+                    string newOccup;
+                    if (InputBox.Show("Initial occupation", "Enter the initial occupation percentage (density).\nValue between 1 and 100.", (this.InitialOccupation * 100).ToString(), out newOccup) == System.Windows.Forms.DialogResult.OK)
                     {
-                        this.OcupacionInicial = double.Parse(newOcup) / 100;
+                        this.InitialOccupation = double.Parse(newOccup) / 100;
                         redraw = true;
                     }
                     break;
@@ -142,14 +141,14 @@ namespace JVida_Fast_CSharp
                     Application.Exit();
                     break;
                 case Keys.F1:
-                    graf.OverlayInfo = string.IsNullOrEmpty(graf.OverlayInfo) ? GetKeysHelp() : null;
+                    Graph.OverlayInfo = string.IsNullOrEmpty(Graph.OverlayInfo) ? GetKeysHelp() : null;
                     break;
             }
             if (redraw)
             {
                 AbortWorker();
-                Inicializar();
-                Comenzar();
+                Initialize();
+                Start();
             }
         }
 
@@ -160,20 +159,20 @@ namespace JVida_Fast_CSharp
 
         private void Form1_Shown(object sender, System.EventArgs e)
         {
-            Comenzar();
+            Start();
         }
 
         private void jv_FireUpdate(object sender, FireUpdateEventArgs e)
         {
-            foreach (Point nace in e.Nacidos)
+            foreach (Point born in e.Born)
             {
-                graf.PlotBmp(nace.X, nace.Y, 1);
+                Graph.PlotBmp(born.X, born.Y, 1);
             }
-            foreach (Point muere in e.Muertos)
+            foreach (Point dead in e.Dead)
             {
-                graf.PlotBmp(muere.X, muere.Y, 0);
+                Graph.PlotBmp(dead.X, dead.Y, 0);
             }
-            graf.Invalidate();
+            Graph.Invalidate();
         } 
         #endregion
     }

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Threading;
 using System;
 using System.Windows.Forms;
+using System.Reflection;
 
 namespace JVida_Fast_CSharp
 {
@@ -23,27 +24,22 @@ namespace JVida_Fast_CSharp
         }
 
         /// <summary>
-        /// Determina si existe alguna instancia previa del programa corriendo
+        /// Determines if any previous instance of the program is running
         /// </summary>
         public static bool PrevInstance()
         {
-            //Obtengo el nombre del ensamblado donde se encuentra ésta función
-            string NombreAssembly = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
-            //Nombre del mutex según Tipo (visibilidad)
-            string mutexName = "Global\\" + NombreAssembly;
+            string AssemblyName = Assembly.GetExecutingAssembly().GetName().Name;
+            string mutexName = "Global\\" + AssemblyName;
             bool newMutexCreated = false;
             try
             {
-                //Abro/Creo mutex con nombre único
                 mutex = new Mutex(false, mutexName, out newMutexCreated);
                 if (newMutexCreated)
                 {
-                    //Se creó el mutex, NO existe instancia previa
                     return false;
                 }
                 else
                 {
-                    //El mutex ya existía, Libero el mutex 
                     mutex.Close();
                     return true;
                 }
