@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1">
+  <asmv1:assemblyIdentity name="JVida Fast CSharp.exe" version="1.0.0.1" publicKeyToken="229f3b2f997df214" language="es-MX" processorArchitecture="x86" type="win32" />
+  <application />
+  <entryPoint>
+    <assemblyIdentity name="JVida Fast CSharp" version="1.0.0.0" language="neutral" processorArchitecture="x86" />
+    <commandLine file="JVida Fast CSharp.exe" parameters="" />
+  </entryPoint>
+  <trustInfo>
+    <security>
+      <applicationRequestMinimum>
+        <PermissionSet Unrestricted="true" ID="Custom" SameSite="site" />
+        <defaultAssemblyRequest permissionSetReference="Custom" />
+      </applicationRequestMinimum>
+      <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
+        <!--
+          UAC Manifest Options
+          If you want to change the Windows User Account Control level replace the 
+          requestedExecutionLevel node with one of the following.
+
+        <requestedExecutionLevel  level="asInvoker" uiAccess="false" />
+        <requestedExecutionLevel  level="requireAdministrator" uiAccess="false" />
+        <requestedExecutionLevel  level="highestAvailable" uiAccess="false" />
+
+         If you want to utilize File and Registry Virtualization for backward 
+         compatibility then delete the requestedExecutionLevel node.
+    -->
+        <requestedExecutionLevel level="asInvoker" uiAccess="false" />
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+  <dependency>
+    <dependentOS>
+      <osVersionInfo>
+        <os majorVersion="5" minorVersion="1" buildNumber="2600" servicePackMajor="0" />
+      </osVersionInfo>
+    </dependentOS>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Microsoft.Windows.CommonLanguageRuntime" version="4.0.30319.0" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="JVida Fast CSharp.exe" size="25600">
+      <assemblyIdentity name="JVida Fast CSharp" version="1.0.0.0" language="neutral" processorArchitecture="x86" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+        <dsig:DigestValue>3zZ4/6zgC/LtZtB9nEP9LETEO5E=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+<publisherIdentity name="CN=LAP-HP\Federico" issuerKeyHash="58dd128b28a29ac0445ae77b0882f0dd50f4a14b" /><Signature Id="StrongNameSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><DigestValue>5Nnxs0V3kuHcDvh3+p3Q881j8VE=</DigestValue></Reference></SignedInfo><SignatureValue>IZjY2W2ahxg4kx9NDEoDOz2I5Q4C9eOozUPzTgtt/tmq69r2QzyaqzKdI6kVj1taqeqc9ghUv1Y/uMr9Z1d7xwTTLXzcRb6zNnfg4077OpVhPf+Jj237XGNk6g8xagOtLE/D+zzkymHCcZPIOSrV4uM5vY3ZWrd+4NKtovFN2PQ=</SignatureValue><KeyInfo Id="StrongNameKeyInfo"><KeyValue><RSAKeyValue><Modulus>rYQtQNWef/IMgQEGjtAUYvV//kRfTduP6g6dP+dZtDUTs0LxWwJEtil8U19rj3SHUf6okc1+Q6d1oeAxkMAmPG2sAjlC/x23VgwoysOGscoyUiwcOZuBmcoxn3KZhGf4IbBnUNdhMn3X8GJL2/F6LGRkFao0w02k3MBY/kbV7b0=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><msrel:RelData xmlns:msrel="http://schemas.microsoft.com/windows/rel/2005/reldata"><r:license xmlns:r="urn:mpeg:mpeg21:2003:01-REL-R-NS" xmlns:as="http://schemas.microsoft.com/windows/pki/2005/Authenticode"><r:grant><as:ManifestInformation Hash="51f163cdf3d09dfa77f80edce1927745b3f1d9e4" Description="" Url=""><as:assemblyIdentity name="JVida Fast CSharp.exe" version="1.0.0.1" publicKeyToken="229f3b2f997df214" language="es-MX" processorArchitecture="x86" type="win32" /></as:ManifestInformation><as:SignedBy /><as:AuthenticodePublisher><as:X509SubjectName>CN=LAP-HP\Federico</as:X509SubjectName></as:AuthenticodePublisher></r:grant><r:issuer><Signature Id="AuthenticodeSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><DigestValue>Ku/NSE/yU+X0pAudlvH9K2jOep0=</DigestValue></Reference></SignedInfo><SignatureValue>A926RPi3jj2juGSxc5UQDmiy0vFSZeqvyxvGZjhd+b/iD5Ou4iQO/69MO2dUO2llSyZVgnv/XlF8s/jtmJmEZWbvHoHnAeXSODXhJ/sc0Xsi6gzzyfe/rbI1zGV5DaDrEcKcJZh2QbFktK1w5DcbbiryFxRSMcFF4FcS+L1T0Ow=</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>rYQtQNWef/IMgQEGjtAUYvV//kRfTduP6g6dP+dZtDUTs0LxWwJEtil8U19rj3SHUf6okc1+Q6d1oeAxkMAmPG2sAjlC/x23VgwoysOGscoyUiwcOZuBmcoxn3KZhGf4IbBnUNdhMn3X8GJL2/F6LGRkFao0w02k3MBY/kbV7b0=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><X509Data><X509Certificate>MIIB1TCCAT6gAwIBAgIQM00IZE2dZKhOeZzuBQJLQTANBgkqhkiG9w0BAQUFADApMScwJQYDVQQDHh4ATABBAFAALQBIAFAAXABGAGUAZABlAHIAaQBjAG8wHhcNMTEwNDAzMDUwNDI0WhcNMTIwNDAyMTEwNDI0WjApMScwJQYDVQQDHh4ATABBAFAALQBIAFAAXABGAGUAZABlAHIAaQBjAG8wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAK2ELUDVnn/yDIEBBo7QFGL1f/5EX03bj+oOnT/nWbQ1E7NC8VsCRLYpfFNfa490h1H+qJHNfkOndaHgMZDAJjxtrAI5Qv8dt1YMKMrDhrHKMlIsHDmbgZnKMZ9ymYRn+CGwZ1DXYTJ91/BiS9vxeixkZBWqNMNNpNzAWP5G1e29AgMBAAEwDQYJKoZIhvcNAQEFBQADgYEAOH0JhmUDJrDTBQ8CtKv8LVaHEW+BB+RpVE4l1y3HhSrziMac3PkdfJ0NKTQ2QYkbq+ATXjf+oEt0rqI4liqwdazYUzDJkq5bvc0vXp4BquslOaxWA4ap5y9jY9g7mT3oWXVHLFuPRrIHMXvIRk4sZdBL9v+9Gvdn68HfMfpJga4=</X509Certificate></X509Data></KeyInfo></Signature></r:issuer></r:license></msrel:RelData></KeyInfo></Signature></asmv1:assembly>

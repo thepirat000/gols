@@ -24,13 +24,13 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>http://gameoflifesimulator.codeplex.com/releases/clickonce/</InstallUrl>
+    <InstallUrl>http://gols.codeplex.com/releases/clickonce/</InstallUrl>
     <TargetCulture>es-MX</TargetCulture>
     <ProductName>Game of Life Simulator</ProductName>
     <PublisherName>Federico D. Colombo</PublisherName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationRevision>3</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -80,38 +80,39 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Algorithm.cs" />
-    <Compile Include="BitmapLocker.cs" />
-    <Compile Include="Cell.cs" />
+    <Compile Include="GameOfLife\Algorithm.cs" />
+    <Compile Include="GameOfLife\FireUpdateEventArgs.cs" />
+    <Compile Include="Helpers\BitmapLocker.cs" />
+    <Compile Include="GameOfLife\Cell.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UniverseGraph.cs">
+    <Compile Include="Controls\UniverseGraph.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UniverseGraph.Designer.cs">
+    <Compile Include="Controls\UniverseGraph.Designer.cs">
       <DependentUpon>UniverseGraph.cs</DependentUpon>
     </Compile>
-    <Compile Include="InputBox.cs">
+    <Compile Include="Controls\InputBox.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="InputBox.Designer.cs">
+    <Compile Include="Controls\InputBox.Designer.cs">
       <DependentUpon>InputBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="JuegoVida.cs" />
-    <Compile Include="Extensions.cs" />
+    <Compile Include="GameOfLife\GameOfLife.cs" />
+    <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UniverseGraph.resx">
+    <EmbeddedResource Include="Controls\UniverseGraph.resx">
       <DependentUpon>UniverseGraph.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="InputBox.resx">
+    <EmbeddedResource Include="Controls\InputBox.resx">
       <DependentUpon>InputBox.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">

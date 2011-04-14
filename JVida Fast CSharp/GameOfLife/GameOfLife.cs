@@ -19,18 +19,6 @@ using System.Drawing;
 
 namespace JVida_Fast_CSharp
 {
-    public class FireUpdateEventArgs : EventArgs
-    {
-        public List<Point> Born { get; set; }
-        public List<Point> Dead { get; set; }
-
-        public FireUpdateEventArgs(List<Point> Born, List<Point> Dead)
-        {
-            this.Born = Born;
-            this.Dead = Dead;
-        }
-    }
-
     public class GameOfLife
     {
         #region Events
@@ -131,11 +119,11 @@ namespace JVida_Fast_CSharp
             //Set the neighbor alive count to 0, and increment age
             foreach (Point item in Alive.AsParallel())
             {
-                Matrix[item.X, item.Y].Quantity = 0;
+                Matrix[item.X, item.Y].AliveNeighbors = 0;
                 Matrix[item.X, item.Y].Age++;
                 foreach (Point neighbor in Matrix[item.X, item.Y].Neighbors)
                 {
-                    Matrix[neighbor.X, neighbor.Y].Quantity = 0;
+                    Matrix[neighbor.X, neighbor.Y].AliveNeighbors = 0;
                 }
             }
             //Compute neighbors alive in each alive cell
@@ -144,7 +132,7 @@ namespace JVida_Fast_CSharp
             {
                 foreach (Point neighbor in Matrix[item.X, item.Y].Neighbors)
                 {
-                    Matrix[neighbor.X, neighbor.Y].Quantity++;
+                    Matrix[neighbor.X, neighbor.Y].AliveNeighbors++;
                 }
             }
 
@@ -169,7 +157,7 @@ namespace JVida_Fast_CSharp
                     Cell neighborCell = Matrix[neighbor.X, neighbor.Y];
                     if (!neighborCell.IsAlive)
                     {
-                        bool willBorn = algorithm.NextState(0, neighborCell.Quantity);
+                        bool willBorn = algorithm.NextState(0, neighborCell.AliveNeighbors);
                         if (willBorn)
                         {
                             Matrix[neighbor.X, neighbor.Y].IsAlive = true;
@@ -189,7 +177,7 @@ namespace JVida_Fast_CSharp
             foreach (Point item in Alive.AsParallel())
             {
                 Cell c1 = Matrix[item.X, item.Y];
-                bool survives = algorithm.NextState(1, c1.Quantity);
+                bool survives = algorithm.NextState(1, c1.AliveNeighbors);
                 if (survives)
                 {
                     ret.Add(item);
@@ -209,7 +197,7 @@ namespace JVida_Fast_CSharp
                     ret.Add(item);
                     continue;
                 }
-                bool alive = algorithm.NextState(1, c1.Quantity);
+                bool alive = algorithm.NextState(1, c1.AliveNeighbors);
                 if (!alive)
                 {
                     ret.Add(item);

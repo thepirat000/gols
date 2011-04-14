@@ -37,9 +37,8 @@
             this.ClientSize = new System.Drawing.Size(292, 273);
             this.KeyPreview = true;
             this.Name = "MainForm";
-            this.Text = "Juego de la vida                     by thePirat";
+            this.Text = "Game Of Life Simulator";
             this.ResumeLayout(false);
-
         }
 
         #endregion
