@@ -28,7 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.SuspendLayout();
+            // 
+            // saveFileDialog1
+            // 
+            this.saveFileDialog1.DefaultExt = "avi";
+            this.saveFileDialog1.Filter = "Video files (*.avi)|*.avi";
+            this.saveFileDialog1.RestoreDirectory = true;
+            this.saveFileDialog1.Title = "Enter the new video filename to create";
             // 
             // MainForm
             // 
@@ -39,9 +47,12 @@
             this.Name = "MainForm";
             this.Text = "Game Of Life Simulator";
             this.ResumeLayout(false);
+
         }
 
         #endregion
+
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
     }
 }
 

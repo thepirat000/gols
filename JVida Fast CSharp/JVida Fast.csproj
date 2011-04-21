@@ -45,6 +45,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -82,6 +83,7 @@
   <ItemGroup>
     <Compile Include="GameOfLife\Algorithm.cs" />
     <Compile Include="GameOfLife\FireUpdateEventArgs.cs" />
+    <Compile Include="Helpers\AviWriter.cs" />
     <Compile Include="Helpers\BitmapLocker.cs" />
     <Compile Include="GameOfLife\Cell.cs" />
     <Compile Include="MainForm.cs">

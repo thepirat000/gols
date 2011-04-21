@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.Threading;
 using System.Drawing;
 using System.Text;
+using System.Drawing.Imaging;
 
 namespace JVida_Fast_CSharp
 {
@@ -21,7 +22,12 @@ namespace JVida_Fast_CSharp
         private double InitialOccupation = .5;
         private int MaximumAge = 200;
         private string Algorithm = "23/3";
-        private Thread workerThread; 
+        private Thread workerThread;
+
+        private bool IsRecording = false;
+        private AviWriter Avi = new AviWriter();
+        private Bitmap BmpAvi;
+        private BitmapLocker imgBit = new BitmapLocker();
         #endregion
 
         #region Constructor
@@ -39,16 +45,27 @@ namespace JVida_Fast_CSharp
         #endregion
 
         #region Private Methods
+        private void Restart()
+        {
+            AbortWorker();
+            Initialize();
+            Start();
+        }
+        
         private void Initialize()
         {
+            Color prevColor = Graph == null ? Color.Red : Graph.ForeColor;
             this.Controls.Remove(Graph);
-            Gol = new GameOfLife(GridSize, GridSize, Algorithm, MaximumAge, this.InitialOccupation);
+            Gol = new GameOfLife(this.GridSize, this.GridSize, this.Algorithm, this.MaximumAge, this.InitialOccupation);
             Gol.FireUpdate += jv_FireUpdate;
-            Graph = new UniverseGraph(GridSize, GridSize);
-            Graph.Dock = DockStyle.Fill;
+            Graph = new UniverseGraph(GridSize, GridSize)
+            {
+                Dock = DockStyle.Fill,
+                ForeColor = prevColor
+            };
             this.Controls.Add(Graph);
         }
-
+        
         private void Start()
         {
             AbortWorker();
@@ -59,6 +76,10 @@ namespace JVida_Fast_CSharp
 
         private void AbortWorker()
         {
+            if (this.IsRecording && !this.Avi.IsClosed)
+            {
+                this.Avi.Close();
+            }
             if (workerThread != null && workerThread.IsAlive)
             {
                 workerThread.Abort();
@@ -76,6 +97,7 @@ namespace JVida_Fast_CSharp
             sb.AppendLine("G: Change Grid Size");
             sb.AppendLine("O: Change initial density (occupation)");
             sb.AppendLine("R: Restart");
+            sb.AppendLine("S: Start/Stop recording AVI video");
             sb.AppendLine("Esc: Exit Application");
             sb.AppendLine("Enter: Change alive cell color");
             sb.AppendLine();
@@ -143,12 +165,33 @@ namespace JVida_Fast_CSharp
                 case Keys.F1:
                     Graph.OverlayInfo = string.IsNullOrEmpty(Graph.OverlayInfo) ? GetKeysHelp() : null;
                     break;
+                case Keys.S:
+                    if (!this.IsRecording)
+                    {
+                        this.saveFileDialog1.FileName = "Algorithm " + this.Algorithm.Replace('/', '^') + " - MaxAge " + this.MaximumAge + " - Density " + (int)(this.InitialOccupation * 100);
+                        if (this.saveFileDialog1.ShowDialog() == DialogResult.OK)
+                        {
+                            AbortWorker();
+                            this.BmpAvi = this.Avi.Open(this.saveFileDialog1.FileName, 30, this.GridSize, this.GridSize);
+                            Restart();
+                            this.IsRecording = true;
+                            Graph.FootInfo = "Recording... Press 's' to stop.";
+                        }
+                    }
+                    else
+                    {
+                        // Stop recording
+                        Graph.FootInfo = "";
+                        this.Avi.Close();
+                        this.BmpAvi.Dispose();
+                        Process.Start(@"explorer", @"/select,""" + this.saveFileDialog1.FileName + @"""");
+                        this.IsRecording = false;
+                    }
+                    break;
             }
             if (redraw)
             {
-                AbortWorker();
-                Initialize();
-                Start();
+                Restart();
             }
         }
 
@@ -173,7 +216,23 @@ namespace JVida_Fast_CSharp
                 Graph.PlotBmp(dead.X, dead.Y, 0);
             }
             Graph.Invalidate();
-        } 
+            if (this.IsRecording)
+            {
+                lock (Graph.UniverseBitmap)
+                {
+                    if (!Avi.IsClosed)
+                    {
+                        using (Graphics g = Graphics.FromImage(BmpAvi))
+                        {
+                            g.DrawImage(Graph.UniverseBitmap, 0, 0, BmpAvi.Width, BmpAvi.Height);
+                        }
+                        Avi.AddFrame();
+                    }
+                }
+            }
+        }
+
+
         #endregion
     }
 }

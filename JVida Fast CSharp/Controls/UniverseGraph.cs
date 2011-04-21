@@ -14,6 +14,8 @@ namespace JVida_Fast_CSharp
     public partial class UniverseGraph : UserControl
     {
         #region Fields
+        private Color backColor = Color.Black;
+        private Color foreColor = Color.Red;
         private int maxX;
         private int maxY;
         private BitmapLocker imgBit = new BitmapLocker();
@@ -25,20 +27,25 @@ namespace JVida_Fast_CSharp
         #endregion
 
         #region Properties
-        private Color backColor = Color.Black;
         public override Color BackColor
         {
             get { return backColor; }
             set { backColor = value; }
         }
-        private Color foreColor = Color.Red;
         public override Color ForeColor
         {
             get { return foreColor; }
             set { foreColor = value; }
         }
 
+        public Bitmap UniverseBitmap
+        {
+            get { return bmp; }
+        }
+
+
         public string OverlayInfo { get; set; }
+        public string FootInfo { get; set; }
         public bool ShowFps { get; set; }
         #endregion
 
@@ -109,6 +116,11 @@ namespace JVida_Fast_CSharp
                 if (!string.IsNullOrEmpty(this.OverlayInfo))
                 {
                     g.DrawString(this.OverlayInfo, font, Brushes.LightBlue, 0, 0);
+                }
+                if (!string.IsNullOrEmpty(this.FootInfo))
+                {
+                    SizeF size = g.MeasureString(this.FootInfo, font);
+                    g.DrawString(this.FootInfo, font, Brushes.LightBlue, 0, this.Height - size.Height);
                 }
             }
         }
