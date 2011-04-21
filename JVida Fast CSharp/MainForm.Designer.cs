@@ -45,6 +45,7 @@
             this.ClientSize = new System.Drawing.Size(292, 273);
             this.KeyPreview = true;
             this.Name = "MainForm";
+            this.ShowIcon = false;
             this.Text = "Game Of Life Simulator";
             this.ResumeLayout(false);
 

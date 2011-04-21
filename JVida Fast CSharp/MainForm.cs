@@ -176,12 +176,14 @@ namespace JVida_Fast_CSharp
                             Restart();
                             this.IsRecording = true;
                             Graph.FootInfo = "Recording... Press 's' to stop.";
+                            Graph.ShowFps = false;
                         }
                     }
                     else
                     {
                         // Stop recording
                         Graph.FootInfo = "";
+                        Graph.ShowFps = true;
                         this.Avi.Close();
                         this.BmpAvi.Dispose();
                         Process.Start(@"explorer", @"/select,""" + this.saveFileDialog1.FileName + @"""");
@@ -231,8 +233,6 @@ namespace JVida_Fast_CSharp
                 }
             }
         }
-
-
         #endregion
     }
 }
