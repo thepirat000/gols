@@ -156,16 +156,10 @@ namespace JVida_Fast_CSharp
                     return;
                 }
                 closed = true;
-                if (ps_ != IntPtr.Zero)
-                {
-                    AVIStreamRelease(ps_);
-                    if (psCompressed_ != IntPtr.Zero)
-                    {
-                        AVIStreamRelease(psCompressed_);
-                    }
-                    AVIFileRelease(pfile_);
-                    AVIFileExit();
-                }
+                AVIStreamRelease(ps_);
+                AVIStreamRelease(psCompressed_);
+                AVIFileRelease(pfile_);
+                AVIFileExit();
             }
         }
 
@@ -202,12 +196,6 @@ namespace JVida_Fast_CSharp
                 throw new AviException("AVIFileCreateStream");
             }
         }
-
-        // defines for uiFlags (AVISaveOptions)
-        const uint ICMF_CHOOSE_KEYFRAME           = 0x1;     // show KeyFrame Every box
-        const uint ICMF_CHOOSE_DATARATE           = 0x2;     // show DataRate box
-        const uint ICMF_CHOOSE_PREVIEW            = 0x4;     // allow expanded preview dialog
-        const uint ICMF_CHOOSE_ALLCOMPRESSORS     = 0x8;     // don't only show those that
 
         unsafe private void SetOptions()
         {
@@ -306,5 +294,10 @@ namespace JVida_Fast_CSharp
         private UInt32 fccHandler_ = 808810089;// IV50
         //1145656899;  // CVID
         private Bitmap bmp_;
-    };
+        // defines for uiFlags (AVISaveOptions)
+        const uint ICMF_CHOOSE_KEYFRAME           = 0x1;     // show KeyFrame Every box
+        const uint ICMF_CHOOSE_DATARATE           = 0x2;     // show DataRate box
+        const uint ICMF_CHOOSE_PREVIEW            = 0x4;     // allow expanded preview dialog
+        const uint ICMF_CHOOSE_ALLCOMPRESSORS     = 0x8;     // don't only show those that    
+    }
 }

@@ -59,10 +59,7 @@ namespace JVida_Fast_CSharp
             // Add any initialization after the InitializeComponent() call.
             this.maxX = maxX;
             this.maxY = maxY;
-            this.ShowFps = true;
-            this.OverlayInfo = null;
-            bmp = new Bitmap(maxX, maxY, PixelFormat.Format24bppRgb);
-            ClearBmp();
+            Initialize();
         } 
         #endregion
 
@@ -76,10 +73,25 @@ namespace JVida_Fast_CSharp
             {
                 bmp.SetPixel(x, y, state > 0 ? ForeColor : BackColor);
             }
-        } 
+        }
+        public void Restart(int maxX, int maxY)
+        {
+            if (null != bmp)
+            {
+                bmp.Dispose();
+            }
+            Initialize();
+        }
         #endregion
 
         #region Private Methods
+        public void Initialize()
+        {
+            this.ShowFps = true;
+            this.OverlayInfo = null;
+            bmp = new Bitmap(maxX, maxY, PixelFormat.Format24bppRgb);
+            ClearBmp();
+        }
         private void ClearBmp()
         {
             imgBit.LockBitmap(bmp);

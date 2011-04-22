@@ -25,7 +25,7 @@ namespace JVida_Fast_CSharp
         private Thread workerThread;
 
         private bool IsRecording = false;
-        private AviWriter Avi = new AviWriter();
+        private AviWriter Avi;
         private Bitmap BmpAvi;
         private BitmapLocker imgBit = new BitmapLocker();
         #endregion
@@ -168,10 +168,11 @@ namespace JVida_Fast_CSharp
                 case Keys.S:
                     if (!this.IsRecording)
                     {
+                        AbortWorker();
+                        Avi = new AviWriter();
                         this.saveFileDialog1.FileName = "Algorithm " + this.Algorithm.Replace('/', '^') + " - MaxAge " + this.MaximumAge + " - Density " + (int)(this.InitialOccupation * 100);
                         if (this.saveFileDialog1.ShowDialog() == DialogResult.OK)
                         {
-                            AbortWorker();
                             this.BmpAvi = this.Avi.Open(this.saveFileDialog1.FileName, 30, this.GridSize, this.GridSize);
                             Restart();
                             this.IsRecording = true;
@@ -182,12 +183,12 @@ namespace JVida_Fast_CSharp
                     else
                     {
                         // Stop recording
+                        this.IsRecording = false;
                         Graph.FootInfo = "";
                         Graph.ShowFps = true;
                         this.Avi.Close();
                         this.BmpAvi.Dispose();
                         Process.Start(@"explorer", @"/select,""" + this.saveFileDialog1.FileName + @"""");
-                        this.IsRecording = false;
                     }
                     break;
             }
@@ -220,16 +221,21 @@ namespace JVida_Fast_CSharp
             Graph.Invalidate();
             if (this.IsRecording)
             {
-                lock (Graph.UniverseBitmap)
+                RecordFrame();
+            }
+        }
+
+        private void RecordFrame()
+        {
+            lock (Graph.UniverseBitmap)
+            {
+                if (!Avi.IsClosed)
                 {
-                    if (!Avi.IsClosed)
+                    using (Graphics g = Graphics.FromImage(BmpAvi))
                     {
-                        using (Graphics g = Graphics.FromImage(BmpAvi))
-                        {
-                            g.DrawImage(Graph.UniverseBitmap, 0, 0, BmpAvi.Width, BmpAvi.Height);
-                        }
-                        Avi.AddFrame();
+                        g.DrawImage(Graph.UniverseBitmap, 0, 0, BmpAvi.Width, BmpAvi.Height);
                     }
+                    Avi.AddFrame();
                 }
             }
         }
