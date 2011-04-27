@@ -1,5 +1,5 @@
-﻿//Thepirat 2011
-//thepirat000@hotmail.com
+﻿// Thepirat 2011
+// thepirat000@hotmail.com
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,18 +7,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
-
-//Example:
-//
-//Bitmap bmp = new Bitmap("d:\abc.BMP");
-//clsImg img = New clsImg();
-
-//img.LockBitmap(bmp);
-//for (int Y = 0; Y < bmp.Height; Y++)
-//    for (int X = 0; X < bmp.Widthl X++)
-//        if (img.GetPixel(X, Y).GetSaturation > 0.5) 
-//            img.SetPixel(X, Y, Color.White);
-//img.UnlockBitmap(bmp);
 
 /// <summary>
 /// Speed up the handling of bitmaps
@@ -42,15 +30,15 @@ public class BitmapLocker
     {
         // Lock the bitmap data.
         Rectangle bounds = new Rectangle(0, 0, bm.Width, bm.Height);
-        BitmapData = bm.LockBits(bounds, ReadOnly ? ImageLockMode.ReadOnly : ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
-        RowSizeBytes = BitmapData.Stride;
+        this.BitmapData = bm.LockBits(bounds, ReadOnly ? ImageLockMode.ReadOnly : ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
+        this.RowSizeBytes = this.BitmapData.Stride;
 
         // Allocate room for the data.
-        int total_size = BitmapData.Stride * BitmapData.Height;
-        PixBytes = new byte[total_size + 1];
+        int total_size = this.BitmapData.Stride * this.BitmapData.Height;
+        this.PixBytes = new byte[total_size + 1];
 
         // Copy the data into the g_PixBytes array.
-        Marshal.Copy(BitmapData.Scan0, PixBytes, 0, total_size);
+        Marshal.Copy(this.BitmapData.Scan0, this.PixBytes, 0, total_size);
     }
 
     /// <summary>
@@ -59,37 +47,36 @@ public class BitmapLocker
     public void UnlockBitmap(Bitmap bm)
     {
         // Copy the data back into the bitmap.
-        int total_size = BitmapData.Stride * BitmapData.Height;
-        Marshal.Copy(PixBytes, 0, BitmapData.Scan0, total_size);
+        int total_size = this.BitmapData.Stride * this.BitmapData.Height;
+        Marshal.Copy(this.PixBytes, 0, this.BitmapData.Scan0, total_size);
 
         // Unlock the bitmap.
-        bm.UnlockBits(BitmapData);
+        bm.UnlockBits(this.BitmapData);
 
         // Release resources.
-        PixBytes = null;
-        BitmapData = null;
+        this.PixBytes = null;
+        this.BitmapData = null;
     }
 
     public Color GetPixel(int x, int y)
     {
-        return Color.FromArgb(PixBytes[GetArrayPos(x, y, ColorChannel.ALPHA)],
-                              PixBytes[GetArrayPos(x, y, ColorChannel.RED)],
-                              PixBytes[GetArrayPos(x, y, ColorChannel.GREEN)],
-                              PixBytes[GetArrayPos(x, y, ColorChannel.BLUE)]);
+        return Color.FromArgb(this.PixBytes[this.GetArrayPos(x, y, ColorChannel.ALPHA)],
+                              this.PixBytes[this.GetArrayPos(x, y, ColorChannel.RED)],
+                              this.PixBytes[this.GetArrayPos(x, y, ColorChannel.GREEN)],
+                              this.PixBytes[this.GetArrayPos(x, y, ColorChannel.BLUE)]);
     }
 
     public void SetPixel(int x, int y, Color c)
     {
-        PixBytes[GetArrayPos(x, y, ColorChannel.RED)] = c.R;
-        PixBytes[GetArrayPos(x, y, ColorChannel.GREEN)] = c.G;
-        PixBytes[GetArrayPos(x, y, ColorChannel.BLUE)] = c.B;
-        PixBytes[GetArrayPos(x, y, ColorChannel.ALPHA)] = c.A;
+        this.PixBytes[this.GetArrayPos(x, y, ColorChannel.RED)] = c.R;
+        this.PixBytes[this.GetArrayPos(x, y, ColorChannel.GREEN)] = c.G;
+        this.PixBytes[this.GetArrayPos(x, y, ColorChannel.BLUE)] = c.B;
+        this.PixBytes[this.GetArrayPos(x, y, ColorChannel.ALPHA)] = c.A;
     }
 
     public int GetArrayPos(int x, int y, ColorChannel c)
     {
-        return Convert.ToInt32((RowSizeBytes * y + x * 4) + c);
+        return Convert.ToInt32(((this.RowSizeBytes * y) + (x * 4)) + c);
     } 
     #endregion
 }
-

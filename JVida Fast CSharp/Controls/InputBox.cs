@@ -1,16 +1,16 @@
-﻿//Thepirat 2011
-//thepirat000@hotmail.com
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-
+﻿// Thepirat 2011
+// thepirat000@hotmail.com
 namespace JVida_Fast_CSharp
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Data;
+    using System.Drawing;
+    using System.Linq;
+    using System.Text;
+    using System.Windows.Forms;
+
     public partial class InputBox : Form
     {
         private InputBox()

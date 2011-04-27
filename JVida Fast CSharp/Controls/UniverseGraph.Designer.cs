@@ -1,6 +1,6 @@
 ﻿namespace JVida_Fast_CSharp
 {
-    partial class UniverseGraph
+    public partial class UniverseGraph
     {
         /// <summary> 
         /// Required designer variable.
@@ -13,9 +13,17 @@
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if (disposing && (this.components != null))
             {
-                components.Dispose();
+                this.components.Dispose();
+            }
+            if (null != this.bmp)
+            {
+                this.bmp.Dispose();
+            }
+            if (null != this.font)
+            {
+                this.font.Dispose();
             }
             base.Dispose(disposing);
         }

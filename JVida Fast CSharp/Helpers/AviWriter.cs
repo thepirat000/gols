@@ -1,15 +1,15 @@
 ﻿// Original By René Nyffenegger (http://www.adp-gmbh.ch/csharp/avi/write_avi.html)
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-
 namespace JVida_Fast_CSharp
 {
-    public class AviWriter
+    using System;
+    using System.Collections.Generic;
+    using System.Drawing;
+    using System.Drawing.Imaging;
+    using System.Linq;
+    using System.Runtime.InteropServices;
+    using System.Text;
+
+    public class AviWriter : IDisposable
     {
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         private struct AVISTREAMINFOW
@@ -35,6 +35,7 @@ namespace JVida_Fast_CSharp
                              szName54, szName55, szName56, szName57, szName58, szName59,
                              szName60, szName61, szName62, szName63;
         }
+
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         private struct AVICOMPRESSOPTIONS
         {
@@ -50,6 +51,7 @@ namespace JVida_Fast_CSharp
             public UInt32 cbParms;
             public UInt32 dwInterleaveEvery;
         }
+
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct BITMAPINFOHEADER
         {
@@ -65,73 +67,79 @@ namespace JVida_Fast_CSharp
             public UInt32 biClrUsed;
             public UInt32 biClrImportant;
         }
+
         public class AviException : ApplicationException
         {
-            public AviException(string s) : base(s) { }
+            public AviException(string s) : base(s) 
+            { 
+            }
+
             public AviException(string s, Int32 hr)
                 : base(s)
             {
 
                 if (hr == AVIERR_BADPARAM)
                 {
-                    err_msg = "AVIERR_BADPARAM";
+                    this.err_msg = "AVIERR_BADPARAM";
                 }
                 else
                 {
-                    err_msg = "unknown";
+                    this.err_msg = "unknown";
                 }
             }
 
             public string ErrMsg()
             {
-                return err_msg;
+                return this.err_msg;
             }
             private const Int32 AVIERR_BADPARAM = -2147205018;
             private string err_msg;
         }
+
         private bool closed;
+
         private object lockme = new object();
 
         public bool IsClosed
         {
             get
             {
-                return closed;
+                return this.closed;
             }
         }
 
         public Bitmap Open(string fileName, UInt32 frameRate, int width, int height)
         {
-            closed = false;
-            frameRate_ = frameRate;
-            width_ = (UInt32)width;
-            height_ = (UInt32)height;
-            bmp_ = new Bitmap(width, height, PixelFormat.Format24bppRgb);
-            BitmapData bmpDat = bmp_.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
-            stride_ = (UInt32)bmpDat.Stride;
-            bmp_.UnlockBits(bmpDat);
+            this.closed = false;
+            this.frameRate = frameRate;
+            this.width = (UInt32)width;
+            this.height = (UInt32)height;
+            this.bmp = new Bitmap(width, height, PixelFormat.Format24bppRgb);
+            BitmapData bmpDat = this.bmp.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
+            this.stride = (UInt32)bmpDat.Stride;
+            this.bmp.UnlockBits(bmpDat);
             AVIFileInit();
-            int hr = AVIFileOpenW(ref pfile_, fileName, 4097 /* OF_WRITE | OF_CREATE (winbase.h) */, 0);
+            int hr = AVIFileOpenW(ref this.pfile, fileName, 4097 /* OF_WRITE | OF_CREATE (winbase.h) */, 0);
             if (hr != 0)
             {
                 throw new AviException("error for AVIFileOpenW");
             }
 
-            CreateStream();
-            SetOptions();
+            this.CreateStream();
+            this.SetOptions();
 
-            return bmp_;
+            return this.bmp;
         }
 
         public void AddFrame()
         {
-            lock (lockme)
+            lock (this.lockme)
             {
                 BitmapData bmpDat;
-                bmpDat = bmp_.LockBits(new Rectangle(0, 0, (int)width_, (int)height_), ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
-                int hr = AVIStreamWrite(psCompressed_, count_, 1,
+                bmpDat = this.bmp.LockBits(new Rectangle(0, 0, (int)this.width, (int)this.height), ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
+                int hr = AVIStreamWrite(this.psCompressed, this.count, 1,
                    bmpDat.Scan0, // pointer to data
-                   (Int32)(stride_ * height_),
+                   (Int32)(this.stride * this.height),
                    0, // 16 = AVIIF_KEYFRAMe
                    0,
                    0);
@@ -141,24 +149,24 @@ namespace JVida_Fast_CSharp
                     throw new AviException("AVIStreamWrite");
                 }
 
-                bmp_.UnlockBits(bmpDat);
+                this.bmp.UnlockBits(bmpDat);
 
-                count_++;
+                this.count++;
             }
         }
 
         public void Close()
         {
-            lock (lockme)
+            lock (this.lockme)
             {
-                if (closed)
+                if (this.closed)
                 {
                     return;
                 }
-                closed = true;
-                AVIStreamRelease(ps_);
-                AVIStreamRelease(psCompressed_);
-                AVIFileRelease(pfile_);
+                this.closed = true;
+                AVIStreamRelease(this.ps);
+                AVIStreamRelease(this.psCompressed);
+                AVIFileRelease(this.pfile);
                 AVIFileExit();
             }
         }
@@ -166,30 +174,30 @@ namespace JVida_Fast_CSharp
         private void CreateStream()
         {
             AVISTREAMINFOW strhdr = new AVISTREAMINFOW();
-            strhdr.fccType = fccType_;
-            strhdr.fccHandler = fccHandler_;
+            strhdr.fccType = this.fccType;
+            strhdr.fccHandler = this.fccHandler;
             strhdr.dwFlags = 0;
             strhdr.dwCaps = 0;
             strhdr.wPriority = 0;
             strhdr.wLanguage = 0;
             strhdr.dwScale = 1;
-            strhdr.dwRate = frameRate_; // Frames per Second
+            strhdr.dwRate = this.frameRate; // Frames per Second
             strhdr.dwStart = 0;
             strhdr.dwLength = 0;
             strhdr.dwInitialFrames = 0;
-            strhdr.dwSuggestedBufferSize = height_ * stride_;
-            strhdr.dwQuality = 0xffffffff; //-1;         // Use default
+            strhdr.dwSuggestedBufferSize = this.height * this.stride;
+            strhdr.dwQuality = 0xffffffff; // -1;         // Use default
             strhdr.dwSampleSize = 0;
             strhdr.rect_top = 0;
             strhdr.rect_left = 0;
-            strhdr.rect_bottom = height_;
-            strhdr.rect_right = width_;
+            strhdr.rect_bottom = this.height;
+            strhdr.rect_right = this.width;
             strhdr.dwEditCount = 0;
             strhdr.dwFormatChangeCount = 0;
             strhdr.szName0 = 0;
             strhdr.szName1 = 0;
 
-            int hr = AVIFileCreateStream(pfile_, out ps_, ref strhdr);
+            int hr = AVIFileCreateStream(this.pfile, out this.ps, ref strhdr);
 
             if (hr != 0)
             {
@@ -200,8 +208,8 @@ namespace JVida_Fast_CSharp
         unsafe private void SetOptions()
         {
             AVICOMPRESSOPTIONS opts = new AVICOMPRESSOPTIONS();
-            opts.fccType = 0; //fccType_;
-            opts.fccHandler = 0;//fccHandler_;
+            opts.fccType = 0;
+            opts.fccHandler = 0;
             opts.dwKeyFrameEvery = 0;
             opts.dwQuality = 0;  // 0 .. 10000
             opts.dwFlags = 0;  // AVICOMRPESSF_KEYFRAMES = 4
@@ -215,12 +223,12 @@ namespace JVida_Fast_CSharp
             AVICOMPRESSOPTIONS* p = &opts;
             AVICOMPRESSOPTIONS** pp = &p;
 
-            IntPtr x = ps_;
+            IntPtr x = this.ps;
             IntPtr* ptr_ps = &x;
 
             AVISaveOptions(0, ICMF_CHOOSE_KEYFRAME | ICMF_CHOOSE_DATARATE | ICMF_CHOOSE_ALLCOMPRESSORS, 1, ptr_ps, pp);
 
-            int hr = AVIMakeCompressedStream(out psCompressed_, ps_, ref opts, 0);
+            int hr = AVIMakeCompressedStream(out this.psCompressed, this.ps, ref opts, 0);
             if (hr != 0)
             {
                 throw new AviException("AVIMakeCompressedStream");
@@ -228,21 +236,33 @@ namespace JVida_Fast_CSharp
 
             BITMAPINFOHEADER bi = new BITMAPINFOHEADER();
             bi.biSize = 40;
-            bi.biWidth = (Int32)width_;
-            bi.biHeight = (Int32)height_;
+            bi.biWidth = (Int32)this.width;
+            bi.biHeight = (Int32)this.height;
             bi.biPlanes = 1;
             bi.biBitCount = 24;
             bi.biCompression = 0;  // 0 = BI_RGB
-            bi.biSizeImage = stride_ * height_;
+            bi.biSizeImage = this.stride * this.height;
             bi.biXPelsPerMeter = 0;
             bi.biYPelsPerMeter = 0;
             bi.biClrUsed = 0;
             bi.biClrImportant = 0;
 
-            hr = AVIStreamSetFormat(psCompressed_, 0, ref bi, 40);
+            hr = AVIStreamSetFormat(this.psCompressed, 0, ref bi, 40);
             if (hr != 0)
             {
                 throw new AviException("AVIStreamSetFormat", hr);
+            }
+        }
+
+        public void Dispose()
+        {
+            try
+            {
+                this.bmp.Dispose();
+                this.Close();
+            }
+            catch (Exception)
+            {
             }
         }
 
@@ -265,7 +285,7 @@ namespace JVida_Fast_CSharp
           IntPtr aviStream, Int32 lPos, ref BITMAPINFOHEADER lpFormat, Int32 cbFormat);
 
         [DllImport("avifil32.dll")]
-        unsafe private static extern int AVISaveOptions(
+        private static unsafe extern int AVISaveOptions(
           int hwnd, UInt32 flags, int nStreams, IntPtr* ptr_ptr_avi, AVICOMPRESSOPTIONS** ao);
 
         [DllImport("avifil32.dll")]
@@ -282,22 +302,21 @@ namespace JVida_Fast_CSharp
         [DllImport("avifil32.dll")]
         private static extern void AVIFileExit();
 
-        private int pfile_ = 0;
-        private IntPtr ps_ = new IntPtr(0);
-        private IntPtr psCompressed_ = new IntPtr(0);
-        private UInt32 frameRate_ = 0;
-        private int count_ = 0;
-        private UInt32 width_ = 0;
-        private UInt32 stride_ = 0;
-        private UInt32 height_ = 0;
-        private UInt32 fccType_ = 1935960438;  // vids
-        private UInt32 fccHandler_ = 808810089;// IV50
-        //1145656899;  // CVID
-        private Bitmap bmp_;
-        // defines for uiFlags (AVISaveOptions)
-        const uint ICMF_CHOOSE_KEYFRAME           = 0x1;     // show KeyFrame Every box
-        const uint ICMF_CHOOSE_DATARATE           = 0x2;     // show DataRate box
-        const uint ICMF_CHOOSE_PREVIEW            = 0x4;     // allow expanded preview dialog
-        const uint ICMF_CHOOSE_ALLCOMPRESSORS     = 0x8;     // don't only show those that    
+        private int pfile = 0;
+        private IntPtr ps = new IntPtr(0);
+        private IntPtr psCompressed = new IntPtr(0);
+        private UInt32 frameRate = 0;
+        private int count = 0;
+        private UInt32 width = 0;
+        private UInt32 stride = 0;
+        private UInt32 height = 0;
+        private UInt32 fccType = 1935960438;  // vids
+        private UInt32 fccHandler = 808810089; // IV50
+        private Bitmap bmp;
+        private const uint ICMF_CHOOSE_KEYFRAME           = 0x1;     // show KeyFrame Every box
+        private const uint ICMF_CHOOSE_DATARATE = 0x2;     // show DataRate box
+        private const uint ICMF_CHOOSE_PREVIEW = 0x4;     // allow expanded preview dialog
+        private const uint ICMF_CHOOSE_ALLCOMPRESSORS = 0x8;     // don't only show those that    
+
     }
 }

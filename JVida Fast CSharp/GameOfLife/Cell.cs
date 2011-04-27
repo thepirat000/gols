@@ -1,13 +1,13 @@
-﻿//Thepirat 2011
-//thepirat000@hotmail.com
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Drawing;
-
+﻿// Thepirat 2011
+// thepirat000@hotmail.com
 namespace JVida_Fast_CSharp
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Drawing;
+    using System.Linq;
+    using System.Text;
+
     /// <summary>
     /// Represents a cell (an individual) inside the universe
     /// </summary>
@@ -18,18 +18,22 @@ namespace JVida_Fast_CSharp
         /// Cell current location
         /// </summary>
         public Point Location { get; set; }
+
         /// <summary>
         /// Cell neighbors
         /// </summary>
-        public List<Point> Neighbors { get; set; }
+        public IList<Point> Neighbors { get; set; }
+
         /// <summary>
         /// number of living neighbors
         /// </summary>
         public byte AliveNeighbors { get; set; }
+
         /// <summary>
         /// Indicates if the cell is alive
         /// </summary>
         public bool IsAlive { get; set; }
+
         /// <summary>
         /// Indicates the current cell age
         /// </summary>
@@ -37,10 +41,10 @@ namespace JVida_Fast_CSharp
         #endregion
 
         #region Constructor
-        public Cell(int X, int Y)
+        public Cell(int x, int y)
             : this()
         {
-            this.Location = new Point(X, Y);
+            this.Location = new Point(x, y);
             this.AliveNeighbors = 0;
             this.Neighbors = new List<Point>(8);
             this.Age = 0;

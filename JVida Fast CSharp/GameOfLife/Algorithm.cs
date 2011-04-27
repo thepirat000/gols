@@ -1,27 +1,28 @@
-﻿//Thepirat 2011
-//thepirat000@hotmail.com
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics;
-
+﻿// Thepirat 2011
+// thepirat000@hotmail.com
 namespace JVida_Fast_CSharp
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Diagnostics;
+
     /// <summary>
     /// Represents an algorithm of game of life
     /// </summary>
     public struct Algorithm
     {
         #region Fields
-        //Values ​​that indicate when a cell keeps alive (number of alive neighbors)
-        private List<byte> StillAliveIf;
-        //Values ​​that indicate when a cell born (number of alive neighbors)
-        private List<byte> BornIf;
+        // Values ​​that indicate when a cell keeps alive (number of alive neighbors)
+        private ICollection<byte> StillAliveIf;
+
+        // Values ​​that indicate when a cell born (number of alive neighbors)
+        private ICollection<byte> BornIf;
         #endregion
 
         #region Constructor
-        //Symbol: "nnn/nnn"
+        // Symbol: "nnn/nnn"
         public Algorithm(string Symbol)
         {
             string[] ns = Symbol.Split('/');
@@ -29,19 +30,19 @@ namespace JVida_Fast_CSharp
             {
                 throw new ArgumentException("Incorrect Format");
             }
-            StillAliveIf = new List<byte>();
+            this.StillAliveIf = new List<byte>();
             foreach (char c in ns[0])
             {
-                StillAliveIf.Add(Convert.ToByte(Char.GetNumericValue(c)));
+                this.StillAliveIf.Add(Convert.ToByte(char.GetNumericValue(c)));
             }
-            BornIf = new List<byte>();
+            this.BornIf = new List<byte>();
             foreach (char c in ns[1])
             {
-                BornIf.Add(Convert.ToByte(Char.GetNumericValue(c)));
+                this.BornIf.Add(Convert.ToByte(char.GetNumericValue(c)));
             }
         }
 
-        public Algorithm(List<byte> StillAliveIf, List<byte> BornIf)
+        public Algorithm(ICollection<byte> StillAliveIf, ICollection<byte> BornIf)
         {
             this.StillAliveIf = StillAliveIf;
             this.BornIf = BornIf;
@@ -53,13 +54,13 @@ namespace JVida_Fast_CSharp
         {
             get
             {
-                string s = "";
-                foreach (byte i in StillAliveIf)
+                string s = string.Empty;
+                foreach (byte i in this.StillAliveIf)
                 {
                     s += i.ToString();
                 }
                 s += "/";
-                foreach (byte i in BornIf)
+                foreach (byte i in this.BornIf)
                 {
                     s += i.ToString();
                 }
@@ -71,13 +72,14 @@ namespace JVida_Fast_CSharp
         #region Public methods
         public bool NextState(byte CurrentState, byte AliveNeighbors)
         {
-            //Está muerta, ver si puede nacer
-            if (CurrentState == 0 && BornIf.Contains(AliveNeighbors))
+            // Is dead, check if it born
+            if (CurrentState == 0 && this.BornIf.Contains(AliveNeighbors))
             {
                 return true;
             }
-            //Está viva, ver si puede seguir viva
-            if (CurrentState > 0 && StillAliveIf.Contains(AliveNeighbors))
+
+            // Is alive, check if it keeps living or dies
+            if (CurrentState > 0 && this.StillAliveIf.Contains(AliveNeighbors))
             {
                 return true;
             }
@@ -86,4 +88,3 @@ namespace JVida_Fast_CSharp
         #endregion
     }
 }
-

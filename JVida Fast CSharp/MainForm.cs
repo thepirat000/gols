@@ -1,18 +1,18 @@
-﻿//Thepirat 2011
-//thepirat000@hotmail.com
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics;
-using System.Windows.Forms;
-using System.Threading;
-using System.Drawing;
-using System.Text;
-using System.Drawing.Imaging;
-
+﻿// Thepirat 2011
+// thepirat000@hotmail.com
 namespace JVida_Fast_CSharp
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Diagnostics;
+    using System.Drawing;
+    using System.Drawing.Imaging;
+    using System.Text;
+    using System.Threading;
+    using System.Windows.Forms;
+
     public partial class MainForm : Form
     {
         #region Fields
@@ -27,51 +27,50 @@ namespace JVida_Fast_CSharp
         private bool IsRecording = false;
         private AviWriter Avi;
         private Bitmap BmpAvi;
-        private BitmapLocker imgBit = new BitmapLocker();
         #endregion
 
         #region Constructor
         public MainForm()
         {
             // This call is required by the Windows Form Designer.
-            InitializeComponent();
+            this.InitializeComponent();
 
             // Add any initialization after the InitializeComponent() call.
-            this.Shown += Form1_Shown;
-            this.KeyDown += Form1_KeyDown;
-            this.FormClosing += Form1_FormClosing;
-            Initialize();
+            this.Shown += this.Form1_Shown;
+            this.KeyDown += this.Form1_KeyDown;
+            this.FormClosing += this.Form1_FormClosing;
+            this.Initialize();
         } 
         #endregion
 
         #region Private Methods
         private void Restart()
         {
-            AbortWorker();
-            Initialize();
-            Start();
+            this.AbortWorker();
+            this.Initialize();
+            this.Start();
         }
         
         private void Initialize()
         {
-            Color prevColor = Graph == null ? Color.Red : Graph.ForeColor;
-            this.Controls.Remove(Graph);
-            Gol = new GameOfLife(this.GridSize, this.GridSize, this.Algorithm, this.MaximumAge, this.InitialOccupation);
-            Gol.FireUpdate += jv_FireUpdate;
-            Graph = new UniverseGraph(GridSize, GridSize)
+            Color prevColor = this.Graph == null ? Color.Red : this.Graph.ForeColor;
+            this.Controls.Remove(this.Graph);
+            this.Gol = new GameOfLife(this.GridSize, this.GridSize, this.Algorithm, this.MaximumAge, this.InitialOccupation);
+            this.Gol.FireUpdate += this.jv_FireUpdate;
+            this.Graph = new UniverseGraph(this.GridSize, this.GridSize)
             {
                 Dock = DockStyle.Fill,
                 ForeColor = prevColor
             };
-            this.Controls.Add(Graph);
+            this.Controls.Add(this.Graph);
         }
         
         private void Start()
         {
-            AbortWorker();
-            workerThread = new Thread(Gol.Play);
-            workerThread.Priority = ThreadPriority.AboveNormal;
-            workerThread.Start();
+            this.AbortWorker();
+            this.workerThread = new Thread(this.Gol.Play);
+            this.workerThread.Priority = ThreadPriority.AboveNormal;
+            this.workerThread.Start();
         }
 
         private void AbortWorker()
@@ -80,10 +79,10 @@ namespace JVida_Fast_CSharp
             {
                 this.Avi.Close();
             }
-            if (workerThread != null && workerThread.IsAlive)
+            if (this.workerThread != null && this.workerThread.IsAlive)
             {
-                workerThread.Abort();
-                workerThread.Join();
+                this.workerThread.Abort();
+                this.workerThread.Join();
             }
         }
 
@@ -117,7 +116,7 @@ namespace JVida_Fast_CSharp
                 case Keys.Return:
                     // Change alive cell color
                     Random rnd = new Random();
-                    Graph.ForeColor = Color.FromArgb(rnd.Next(0, 255), rnd.Next(0, 255), rnd.Next(0, 255));
+                    this.Graph.ForeColor = Color.FromArgb(rnd.Next(0, 255), rnd.Next(0, 255), rnd.Next(0, 255));
                     break;
                 case Keys.A:
                     // change algorithm
@@ -148,7 +147,7 @@ namespace JVida_Fast_CSharp
                     }
                     break;
                 case Keys.F:
-                    Graph.ShowFps = !Graph.ShowFps;
+                    this.Graph.ShowFps = !this.Graph.ShowFps;
                     break;
                 case Keys.O:
                     // Chage initial occupation
@@ -163,29 +162,29 @@ namespace JVida_Fast_CSharp
                     Application.Exit();
                     break;
                 case Keys.F1:
-                    Graph.OverlayInfo = string.IsNullOrEmpty(Graph.OverlayInfo) ? GetKeysHelp() : null;
+                    this.Graph.OverlayInfo = string.IsNullOrEmpty(this.Graph.OverlayInfo) ? this.GetKeysHelp() : null;
                     break;
                 case Keys.S:
                     if (!this.IsRecording)
                     {
-                        AbortWorker();
-                        Avi = new AviWriter();
+                        this.AbortWorker();
+                        this.Avi = new AviWriter();
                         this.saveFileDialog1.FileName = "Algorithm " + this.Algorithm.Replace('/', '^') + " - MaxAge " + this.MaximumAge + " - Density " + (int)(this.InitialOccupation * 100);
                         if (this.saveFileDialog1.ShowDialog() == DialogResult.OK)
                         {
                             this.BmpAvi = this.Avi.Open(this.saveFileDialog1.FileName, 30, this.GridSize, this.GridSize);
-                            Restart();
+                            this.Restart();
                             this.IsRecording = true;
-                            Graph.FootInfo = "Recording... Press 's' to stop.";
-                            Graph.ShowFps = false;
+                            this.Graph.FootInfo = "Recording... Press 's' to stop.";
+                            this.Graph.ShowFps = false;
                         }
                     }
                     else
                     {
                         // Stop recording
                         this.IsRecording = false;
-                        Graph.FootInfo = "";
-                        Graph.ShowFps = true;
+                        this.Graph.FootInfo = string.Empty;
+                        this.Graph.ShowFps = true;
                         this.Avi.Close();
                         this.BmpAvi.Dispose();
                         Process.Start(@"explorer", @"/select,""" + this.saveFileDialog1.FileName + @"""");
@@ -194,48 +193,48 @@ namespace JVida_Fast_CSharp
             }
             if (redraw)
             {
-                Restart();
+                this.Restart();
             }
         }
 
         private void Form1_FormClosing(object sender, System.Windows.Forms.FormClosingEventArgs e)
         {
-            AbortWorker();
+            this.AbortWorker();
         }
 
         private void Form1_Shown(object sender, System.EventArgs e)
         {
-            Start();
+            this.Start();
         }
 
         private void jv_FireUpdate(object sender, FireUpdateEventArgs e)
         {
             foreach (Point born in e.Born)
             {
-                Graph.PlotBmp(born.X, born.Y, 1);
+                this.Graph.PlotBmp(born.X, born.Y, 1);
             }
             foreach (Point dead in e.Dead)
             {
-                Graph.PlotBmp(dead.X, dead.Y, 0);
+                this.Graph.PlotBmp(dead.X, dead.Y, 0);
             }
-            Graph.Invalidate();
+            this.Graph.Invalidate();
             if (this.IsRecording)
             {
-                RecordFrame();
+                this.RecordFrame();
             }
         }
 
         private void RecordFrame()
         {
-            lock (Graph.UniverseBitmap)
+            lock (this.Graph.UniverseBitmap)
             {
-                if (!Avi.IsClosed)
+                if (!this.Avi.IsClosed)
                 {
-                    using (Graphics g = Graphics.FromImage(BmpAvi))
+                    using (Graphics g = Graphics.FromImage(this.BmpAvi))
                     {
-                        g.DrawImage(Graph.UniverseBitmap, 0, 0, BmpAvi.Width, BmpAvi.Height);
+                        g.DrawImage(this.Graph.UniverseBitmap, 0, 0, this.BmpAvi.Width, this.BmpAvi.Height);
                     }
-                    Avi.AddFrame();
+                    this.Avi.AddFrame();
                 }
             }
         }

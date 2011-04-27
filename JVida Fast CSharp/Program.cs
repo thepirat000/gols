@@ -1,13 +1,13 @@
-﻿//Thepirat 2011
-//thepirat000@hotmail.com
-using System.Diagnostics;
-using System.Threading;
-using System;
-using System.Windows.Forms;
-using System.Reflection;
-
+﻿// Thepirat 2011
+// thepirat000@hotmail.com
 namespace JVida_Fast_CSharp
 {
+    using System;
+    using System.Diagnostics;
+    using System.Reflection;
+    using System.Threading;
+    using System.Windows.Forms;
+
     public static class Program
     {
         private static Mutex mutex;

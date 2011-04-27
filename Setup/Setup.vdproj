@@ -87,6 +87,19 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.0,Profile=Client"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4 Client Profile (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.0,Profile=Client"
+                    }
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
+                    {
+                    "Name" = "8:Windows Installer 3.1"
+                    "ProductCode" = "8:Microsoft.Windows.Installer.3.1"
+                    }
+                }
             }
         }
     }
@@ -174,7 +187,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Game of Life Simulator"
         "ProductCode" = "8:{D8D223D4-B25F-4DD6-B04C-4C62A0177907}"
-        "PackageCode" = "8:{08337C15-8FB8-4646-B96D-2B7BE3632104}"
+        "PackageCode" = "8:{E9AEECB3-388C-4592-B469-0AC859501003}"
         "UpgradeCode" = "8:{0858BD39-D2C7-4D0E-9221-3A64D8E15D4C}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
