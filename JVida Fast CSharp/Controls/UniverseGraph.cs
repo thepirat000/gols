@@ -56,6 +56,8 @@ namespace JVida_Fast_CSharp
         public string FootInfo { get; set; }
 
         public bool ShowFps { get; set; }
+
+        public string UpperRightInfo { get; set; }
         #endregion
 
         #region Constructor
@@ -147,6 +149,11 @@ namespace JVida_Fast_CSharp
                 {
                     SizeF size = g.MeasureString(this.FootInfo, this.font);
                     g.DrawString(this.FootInfo, this.font, br, 0, this.Height - size.Height);
+                }
+                if (!string.IsNullOrEmpty(this.UpperRightInfo))
+                {
+                    SizeF size = g.MeasureString(this.UpperRightInfo, this.font);
+                    g.DrawString(this.UpperRightInfo, this.font, br, this.Width - size.Width, 0);
                 }
             }
         }

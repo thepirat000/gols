@@ -7,6 +7,7 @@ namespace JVida_Fast_CSharp
     using System.Collections.Generic;
     using System.Data;
     using System.Diagnostics;
+    using System.Linq;
 
     /// <summary>
     /// Represents an algorithm of game of life
@@ -14,6 +15,8 @@ namespace JVida_Fast_CSharp
     public struct Algorithm
     {
         #region Fields
+        private static Random rnd = new Random();
+
         // Values ​​that indicate when a cell keeps alive (number of alive neighbors)
         private ICollection<byte> StillAliveIf;
 
@@ -85,6 +88,39 @@ namespace JVida_Fast_CSharp
             }
             return false;
         }
+
+        /// <summary>
+        /// Get the symbol of a random algorithm
+        /// </summary>
+        public static string GetRandomAlgorithm()
+        {
+            int qty_d = rnd.Next(0, 9);
+            int qty_D = rnd.Next(1, 9);
+            var qry_d = (from i in Enumerable.Range(1, 8)
+                         select new { i = i, order = rnd.NextDouble() })
+                    .OrderBy(n => n.order)
+                    .Take(qty_d)
+                    .OrderBy(n => n.i)
+                    .Select(n => n.i);
+            var qry_D = (from i in Enumerable.Range(1, 8)
+                         select new { i = i, order = rnd.NextDouble() })
+                    .OrderBy(n => n.order)
+                    .Take(qty_D)
+                    .OrderBy(n => n.i)
+                    .Select(n => n.i);
+            string res = string.Empty;
+            foreach (int i in qry_d)
+            {
+                res += i.ToString();
+            }
+            res += "/";
+            foreach (int i in qry_D)
+            {
+                res += i.ToString();
+            }
+            return res;
+        }
         #endregion
+
     }
 }
