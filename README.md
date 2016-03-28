@@ -4,13 +4,15 @@ Game of Life Simulator
 Project Description
 ===================
 
-Game of Life Simulator is a fast simulator of the Conway's (and not Conway)  Game Of Life.
-
-The main objetive of this simulator was to allow the user to live change the algorithm parameters.
-
-It's developed in C# using Windows Forms and PLINQ  to exploit the potential of multicore processors.
+Game of Life Simulator is a fast simulator of the Conway's (and not Conway) Game Of Life.
+It's developed in C# using Windows Forms.
 
 Features
-- Export simulation to AVI video file. (New) 
-- Variables as  Algorithm, Maximum age, initial occupation  and universe size are configurable. 
-- On-Screen help pressing F1 key. 
+ - All parameters can be changed in real-time, such as algorithm, size, color, etc.
+ - Control the simulation (play, pause, step)
+ - Load patterns from .cells or .rle files. (Download [the collection](http://www.conwaylife.com/patterns/all.zip) from LifeWiki)
+ - Record/Export simulation to AVI video file.
+ - Configurable randomization
+
+![GOL image](http://i.imgur.com/GWmYC4g.png) 
+
