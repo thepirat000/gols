@@ -1,4 +1,4 @@
-﻿// Thepirat 2011
+﻿// Thepirat 2011 (revised on 2016)
 // thepirat000@hotmail.com
 // http://es.wikipedia.org/wiki/Juego_de_la_vida
 
@@ -13,10 +13,7 @@
 namespace JVida_Fast_CSharp
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
-    using System.Data;
-    using System.Diagnostics;
     using System.Drawing;
     using System.Linq;
 

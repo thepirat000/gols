@@ -19,6 +19,7 @@ namespace JVida_Fast_CSharp.Parsers
         private static readonly Regex _wrongDataRegex;
         private static readonly Regex _infoRegex;
         private static readonly Regex _ruleRegex;
+        private static readonly Regex _ruleSimpleRegex;
 
         static ParserRle()
         {
@@ -31,7 +32,8 @@ namespace JVida_Fast_CSharp.Parsers
             _infoToken = "x";
             _wrongDataRegex = new Regex(@"[^0-9bo$!]", RegexOptions.IgnoreCase);
             _infoRegex = new Regex(@"x\s*=\s*(\d+)\s*,\s*y\s*=\s*(\d+)\s*,\s*rule\s*=\s*(.*)", RegexOptions.IgnoreCase);
-            _ruleRegex = new Regex(@"B(\d*)/S(\d*)", RegexOptions.IgnoreCase);
+            _ruleRegex = new Regex(@"^B(\d*)/S(\d*)$", RegexOptions.IgnoreCase);
+            _ruleSimpleRegex = new Regex(@"^(\d*)/(\d*)$", RegexOptions.IgnoreCase);
         }
 
         private List<string> GetTokensForString(string line)
@@ -146,12 +148,20 @@ namespace JVida_Fast_CSharp.Parsers
             }
             if (string.IsNullOrWhiteSpace(rule))
             {
-                rule = "B3/S23";
+                rule = "23/3";
             }
-            match = _ruleRegex.Match(rule);
+            match = _ruleSimpleRegex.Match(rule);
             if (match.Success)
             {
-                pattern.Algorithm = new Algorithm($"{match.Groups[2].Value}/{match.Groups[1].Value}");
+                pattern.Algorithm = new Algorithm($"{match.Groups[1].Value}/{match.Groups[2].Value}");
+            }
+            else
+            {
+                match = _ruleRegex.Match(rule);
+                if (match.Success)
+                {
+                    pattern.Algorithm = new Algorithm($"{match.Groups[2].Value}/{match.Groups[1].Value}");
+                }
             }
             return pattern;
         }

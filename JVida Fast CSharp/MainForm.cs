@@ -58,6 +58,8 @@ namespace JVida_Fast_CSharp
             this.AbortWorker();
             this.Initialize(restoreState);
             this.Start(!restoreState);
+            txtStepSize.Visible = this.Gol.Paused;
+            btnForward.Visible = this.Gol.Paused;
         }
 
         private void Initialize(bool restoreState)
@@ -67,8 +69,10 @@ namespace JVida_Fast_CSharp
             bool prevShowFps = this.Graph == null ? true : this.Graph.ShowFps;
             this.splitContainer.Panel2.Controls.Remove(this.Graph);
             Cell[,] ex_matrix = null;
+            bool exPaused = false;
             if (restoreState)
             {
+                exPaused = this.Gol.Paused;
                 ex_matrix = this.Gol.Matrix;
             }
             this.Gol = new GameOfLife(this.GridSize.Width, this.GridSize.Height, this.AlgorithmSymbol, this.MaximumAge,
@@ -93,6 +97,10 @@ namespace JVida_Fast_CSharp
             txtGridSize.Text = $"{GridSize.Width}x{GridSize.Height}";
             picColor.BackColor =  this.Graph.ForeColor;
             colorDialog1.Color = picColor.BackColor;
+            if (restoreState && exPaused)
+            {
+                this.Gol.Pause();
+            }
         }
 
         private void FillAlgorithmCombo()
@@ -155,9 +163,25 @@ namespace JVida_Fast_CSharp
                 || e.Point.Y + pattern.Bitmap.GetLength(1) > GridSize.Height)
             {
                 this.Gol.Pause();
-                MessageBox.Show($"Pattern will overflow {pattern.Bitmap.GetLength(0)}x{pattern.Bitmap.GetLength(1)}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-                this.Gol.Resume();
-                return;
+                var dlg =
+                    MessageBox.Show(
+                        $"Pattern will overflow {pattern.Bitmap.GetLength(0)}x{pattern.Bitmap.GetLength(1)}. Automatically resize/reposition the pattern?",
+                        "Reposition", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (dlg == DialogResult.Yes)
+                {
+                    e.Point = new Point(0, 0);
+                    if (pattern.Bitmap.GetLength(0) > GridSize.Width || pattern.Bitmap.GetLength(1) > GridSize.Height)
+                    {
+                        //resize grid to fit the pattern
+                        this.GridSize = new Size(pattern.Bitmap.GetLength(0), pattern.Bitmap.GetLength(1));
+                        this.Restart(true);
+                    }
+                }
+                else
+                {
+                    Resume();
+                    return;
+                }
             }
             this.Gol.Plot(e.Point, pattern.Bitmap);
             if (pattern.Algorithm.HasValue && pattern.Algorithm.Value.Symbol != this.Gol.AlgorithmSymbol)
@@ -377,17 +401,23 @@ namespace JVida_Fast_CSharp
                 this.Graph.ShowFps = false;
                 if (!restart)
                 {
-                    this.Gol.Resume();
-                    this.Graph.LowerLeftInfo = "";
-                    btnForward.Visible = false;
-                    txtStepSize.Visible = false;
+                    Resume();
                 }
             }
+        }
+
+        private void Resume()
+        {
+            this.Gol.Resume();
+            this.Graph.LowerLeftInfo = "";
+            btnForward.Visible = false;
+            txtStepSize.Visible = false;
         }
 
         private void StopRecording()
         {
             this.IsRecording = false;
+            Thread.Sleep(5);
             this.Graph.FootInfo = string.Empty;
             this.Graph.ShowFps = true;
             this.Avi.Close();
@@ -429,6 +459,8 @@ namespace JVida_Fast_CSharp
                 {
                     using (Graphics g = Graphics.FromImage(this.BmpAvi))
                     {
+                        g.ScaleTransform(1.0F, -1.0F);
+                        g.TranslateTransform(0.0F, -(float)this.BmpAvi.Height);
                         g.DrawImage(this.Graph.UniverseBitmap, 0, 0, this.BmpAvi.Width, this.BmpAvi.Height);
                     }
                     this.Avi.AddFrame();
@@ -489,11 +521,7 @@ namespace JVida_Fast_CSharp
 
         private void btnPlay_Click(object sender, EventArgs e)
         {
-            this.Gol.Resume();
-            this.Graph.LowerLeftInfo = "";
-            btnForward.Visible = false;
-            txtStepSize.Visible = false;
-
+            Resume();
         }
 
         private void btnRandom_MouseEnter(object sender, EventArgs e)
@@ -585,7 +613,7 @@ namespace JVida_Fast_CSharp
                 picColor.BackColor = colorDialog1.Color;
                 this.Graph.ForeColor = colorDialog1.Color;
             }
-            this.Gol.Paused = false;
+            Resume();
         }
 
         private void chkFps_CheckedChanged(object sender, EventArgs e)
