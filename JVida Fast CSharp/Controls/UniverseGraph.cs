@@ -14,6 +14,7 @@ namespace JVida_Fast_CSharp
     public partial class UniverseGraph : UserControl
     {
         #region Fields
+        private bool selectionModeEnabled = false;
         private Color backColor = Color.Black;
         private Color foreColor = Color.Red;
         private Color fontColor = Color.LightBlue;
@@ -25,9 +26,20 @@ namespace JVida_Fast_CSharp
         private long qty = 0;
         private Stopwatch stp = new Stopwatch();
         private Font font = new Font("Times New Roman", 9);
+        private bool importing = false;
         #endregion
 
         #region Properties
+        public event EventHandler<PointSelectedEventArgs> PointSelected;
+        protected virtual void OnPointSelected(PointSelectedEventArgs e)
+        {
+            var eh = PointSelected;
+            if (eh != null)
+            {
+                eh(this, e);
+            }
+        }
+
         public override Color BackColor
         {
             get { return this.backColor; }
@@ -58,6 +70,12 @@ namespace JVida_Fast_CSharp
         public bool ShowFps { get; set; }
 
         public string UpperRightInfo { get; set; }
+
+        public string SelectionInfo { get; set; }
+
+        public string LowerLeftInfo { get; set; }
+
+
         #endregion
 
         #region Constructor
@@ -73,10 +91,22 @@ namespace JVida_Fast_CSharp
             this.maxX = maxX;
             this.maxY = maxY;
             this.Initialize();
-        } 
+        }
         #endregion
 
         #region Public Methods
+        public void EnterSelectionMode(bool isImporting)
+        {
+            selectionModeEnabled = true;
+            importing = isImporting;
+            this.Invalidate();
+        }
+        public void ExitSelectionMode()
+        {
+            selectionModeEnabled = false;
+            SelectionInfo = string.Empty;
+            this.Invalidate();
+        }
         /// <summary>
         /// Draw the bitmap at the given position
         /// </summary>
@@ -129,7 +159,7 @@ namespace JVida_Fast_CSharp
                 this.stp.Start();
                 this.qty = 0;
             }
-            this.qty += 1;
+            this.qty++;
             lock (this.bmp)
             {
                 this.region = new Rectangle(0, 0, this.maxX - 1, this.maxY - 1);
@@ -137,7 +167,7 @@ namespace JVida_Fast_CSharp
                 g.DrawImage(this.bmp, rect, this.region, GraphicsUnit.Pixel);
                 if (this.ShowFps)
                 {
-                    string info = string.Format("{0} fps", (1000 * this.qty / this.stp.ElapsedMilliseconds));
+                    string info = string.Format("{0} fps", (int)(1000 * this.qty / this.stp.Elapsed.TotalMilliseconds));
                     SizeF size = g.MeasureString(info, this.font);
                     g.DrawString(info, this.font, br, this.Width - size.Width, this.Height - size.Height);
                 }
@@ -155,15 +185,45 @@ namespace JVida_Fast_CSharp
                     SizeF size = g.MeasureString(this.UpperRightInfo, this.font);
                     g.DrawString(this.UpperRightInfo, this.font, br, this.Width - size.Width, 0);
                 }
+                if (!string.IsNullOrEmpty(this.SelectionInfo))
+                {
+                    SizeF size = g.MeasureString(this.SelectionInfo, this.font);
+                    g.DrawString(this.SelectionInfo, this.font, br, this.Width /2 - size.Width/2, this.Height/2 - size.Height/2);
+                }
+                if (!string.IsNullOrEmpty(this.LowerLeftInfo))
+                {
+                    SizeF size = g.MeasureString(this.LowerLeftInfo, this.font);
+                    g.DrawString(this.LowerLeftInfo, this.font, br, 0, this.Height - size.Height);
+                }
             }
         }
 
         private void Graph_Resize(object sender, System.EventArgs e)
         {
             this.Invalidate();
-        } 
+        }
 
-        
+        private void UniverseGraph_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (selectionModeEnabled)
+            {
+                var x = e.Location.X * maxX / this.Width;
+                var y = e.Location.Y * maxY / this.Height;
+                SelectionInfo = (importing ? "Select location\n" : "") + new Point(x, y);
+                this.Invalidate();
+            }
+        }
+
+        private void UniverseGraph_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (selectionModeEnabled)
+            {
+                var x = e.Location.X * maxX / this.Width;
+                var y = e.Location.Y * maxY / this.Height;
+                OnPointSelected(new PointSelectedEventArgs(x, y, importing));
+                selectionModeEnabled = false;
+            }
+        }
         #endregion
     }
 }

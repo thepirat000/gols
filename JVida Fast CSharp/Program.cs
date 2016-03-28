@@ -1,7 +1,12 @@
 ﻿// Thepirat 2011
 // thepirat000@hotmail.com
+
+using System.IO;
+using System.Linq;
+
 namespace JVida_Fast_CSharp
 {
+    using Parsers;
     using System;
     using System.Diagnostics;
     using System.Reflection;

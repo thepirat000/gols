@@ -1,22 +1,24 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JVida Fast", "JVida Fast CSharp\JVida Fast.csproj", "{D553EE3A-F0AC-4FCE-BC49-D6CE4CB775DC}"
-EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{677B159D-9D9C-48DF-AEF6-7B694FA8BADA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
 		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D553EE3A-F0AC-4FCE-BC49-D6CE4CB775DC}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{D553EE3A-F0AC-4FCE-BC49-D6CE4CB775DC}.Debug|x86.ActiveCfg = Debug|x86
 		{D553EE3A-F0AC-4FCE-BC49-D6CE4CB775DC}.Debug|x86.Build.0 = Debug|x86
+		{D553EE3A-F0AC-4FCE-BC49-D6CE4CB775DC}.Release|Any CPU.ActiveCfg = Release|x86
 		{D553EE3A-F0AC-4FCE-BC49-D6CE4CB775DC}.Release|x86.ActiveCfg = Release|x86
 		{D553EE3A-F0AC-4FCE-BC49-D6CE4CB775DC}.Release|x86.Build.0 = Release|x86
-		{677B159D-9D9C-48DF-AEF6-7B694FA8BADA}.Debug|x86.ActiveCfg = Debug
-		{677B159D-9D9C-48DF-AEF6-7B694FA8BADA}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

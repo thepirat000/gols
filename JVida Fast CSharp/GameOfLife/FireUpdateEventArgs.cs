@@ -6,6 +6,23 @@
     using System.Linq;
     using System.Text;
 
+    public class PointSelectedEventArgs : EventArgs
+    {
+        public PointSelectedEventArgs(int x, int y)
+        {
+            Point = new Point(x, y);
+        }
+
+        public PointSelectedEventArgs(int x, int y, bool isImporting)
+        {
+            Point = new Point(x, y);
+            IsImporting = isImporting;
+        }
+
+        public Point Point { get; set; }
+        public bool IsImporting { get; set; }
+    }
+
     public class FireUpdateEventArgs : EventArgs
     {
         public ICollection<Point> Born { get; set; }

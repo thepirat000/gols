@@ -23,17 +23,20 @@ namespace JVida_Fast_CSharp
     public class GameOfLife
     {
         #region Fields
-        private Cell[,] Matrix;
+        public Cell[,] Matrix { get; private set; }
 
         private List<Point> Alive;
-
-        private Algorithm Algorithm;
 
         private int MaximumAge;
 
         private double InitialOccupation;
+        private double InitialMargin;
 
         private bool @Stop = false;
+
+        public bool Paused { get; set; }
+        // To indicate how many algorithm steps to do when paused (0 means, pause forever)
+        public int DoSteps { get; set; }
 
         private delegate void MyEventHandler(List<Point> Born, List<Point> Dead);
 
@@ -51,10 +54,12 @@ namespace JVida_Fast_CSharp
             {
                 this.FireUpdate(this, new FireUpdateEventArgs(Born, Dead));
             }
-        } 
+        }
         #endregion
 
         #region Properties
+        public Algorithm Algorithm { get; set; }
+
         public string AlgorithmSymbol
         {
             get { return this.Algorithm.Symbol; }
@@ -62,18 +67,19 @@ namespace JVida_Fast_CSharp
         #endregion
 
         #region Constructor
-        public GameOfLife(int maxX, int maxY, string AlgorithmSymbol, int MaximumAge, double InitialOccupation)
+        public GameOfLife(int maxX, int maxY, string AlgorithmSymbol, int MaximumAge, double InitialOccupation, double initialMargin, bool wrapAround)
         {
             this.MyFireUpdater = new MyEventHandler(this.OnFireUpdate);
             this.MaximumAge = MaximumAge;
             this.Algorithm = new Algorithm(AlgorithmSymbol);
             this.InitialOccupation = InitialOccupation;
-            this.Init(maxX, maxY);
-        } 
+            this.Init(maxX, maxY, wrapAround);
+            this.InitialMargin = initialMargin;
+        }
         #endregion
 
         #region Private Methods
-        private void Init(int maxX, int maxY)
+        private void Init(int maxX, int maxY, bool wrapAround)
         {
             this.Matrix = new Cell[maxX, maxY];
             for (int x = 0; x <= maxX - 1; x++)
@@ -89,14 +95,42 @@ namespace JVida_Fast_CSharp
                 for (int y = 0; y <= maxY - 1; y++)
                 {
                     Cell cell = this.Matrix[x, y];
-                    cell.Neighbors.Add(prev(maxX, x), prev(maxY, y));  // Upper Left
-                    cell.Neighbors.Add(x, prev(maxY, y));               // Upper Center
-                    cell.Neighbors.Add(next(maxX, x), prev(maxY, y));  // Upper Right
-                    cell.Neighbors.Add(prev(maxX, x), y);               // Middle Left
-                    cell.Neighbors.Add(next(maxX, x), y);               // Middle Right
-                    cell.Neighbors.Add(prev(maxX, x), next(maxY, y));  // Lower Left
-                    cell.Neighbors.Add(x, next(maxY, y));               // Lower Center
-                    cell.Neighbors.Add(next(maxX, x), next(maxY, y));  // Lower Right
+                    bool isFirstColumn = x == 0;
+                    bool isLastColumn = x == maxX;
+                    bool isFirstRow = y == 0;
+                    bool isLastRow = y == maxY;
+                    if (wrapAround || (!isFirstColumn && !isFirstRow))
+                    {
+                        cell.Neighbors.Add(prev(maxX, x), prev(maxY, y));  // Upper Left
+                    }
+                    if (wrapAround || (!isFirstRow))
+                    {
+                        cell.Neighbors.Add(x, prev(maxY, y));               // Upper Center
+                    }
+                    if (wrapAround || (!isFirstRow && !isLastColumn))
+                    {
+                        cell.Neighbors.Add(next(maxX, x), prev(maxY, y));  // Upper Right
+                    }
+                    if (wrapAround || (!isFirstColumn && !isLastRow))
+                    {
+                        cell.Neighbors.Add(prev(maxX, x), y);               // Middle Left
+                    }
+                    if (wrapAround || (!isLastColumn))
+                    {
+                        cell.Neighbors.Add(next(maxX, x), y);               // Middle Right
+                    }
+                    if (wrapAround || (!isFirstRow && !isLastRow))
+                    {
+                        cell.Neighbors.Add(prev(maxX, x), next(maxY, y));  // Lower Left
+                    }
+                    if (wrapAround || (!isFirstColumn && !isLastRow))
+                    {
+                        cell.Neighbors.Add(x, next(maxY, y)); // Lower Center
+                    }
+                    if (wrapAround || (!isLastRow && !isLastColumn))
+                    {
+                        cell.Neighbors.Add(next(maxX, x), next(maxY, y)); // Lower Right
+                    }
                 }
             }
             this.Alive = new List<Point>();
@@ -218,8 +252,9 @@ namespace JVida_Fast_CSharp
             return ret;
         }
 
-        private void Randomize()
+        public void Randomize()
         {
+            double margin = this.InitialMargin;
             Random rnd = new Random();
             List<Point> alive = new List<Point>();
             for (int i = 0; i <= this.Matrix.GetLength(0) - 1; i++)
@@ -227,10 +262,10 @@ namespace JVida_Fast_CSharp
                 for (int j = 0; j <= this.Matrix.GetLength(1) - 1; j++)
                 {
                     if (rnd.NextDouble() > (1 - this.InitialOccupation) &&
-                        i > this.Matrix.GetLength(0) * 2 / 5 &&
-                        i < this.Matrix.GetLength(0) * 3 / 5 &&
-                        j > this.Matrix.GetLength(1) * 2 / 5 &&
-                        j < this.Matrix.GetLength(1) * 3 / 5)
+                        i >= this.Matrix.GetLength(0) * margin &&
+                        i <= this.Matrix.GetLength(0) * (1 - margin) &&
+                        j >= this.Matrix.GetLength(1) * margin &&
+                        j <= this.Matrix.GetLength(1) * (1 - margin))
                     {
                         alive.Add(i, j);
                     }
@@ -239,20 +274,122 @@ namespace JVida_Fast_CSharp
             this.SetAlive(alive);
             List<Point> deads = new List<Point>();
             this.OnFireUpdate(alive, deads);
-        } 
+        }
         #endregion
 
         #region Public Methods
+        public void TogglePause()
+        {
+            Paused = !Paused;
+        }
+
+        public void Pause()
+        {
+            Paused = true;
+        }
+        public void Resume()
+        {
+            Paused = false;
+        }
+
+        public void Clear()
+        {
+            var wasPaused = Paused;
+            Paused = true;
+            System.Threading.Thread.Sleep(1);
+            for (int x = 0; x < this.Matrix.GetLength(0); x++)
+            {
+                for (int y = 0; y < this.Matrix.GetLength(1); y++)
+                {
+                    this.Matrix[x, y].Age = 0;
+                    this.Matrix[x, y].AliveNeighbors = 0;
+                    this.Matrix[x, y].IsAlive = false;
+                }
+            }
+            MyFireUpdater.Invoke(new List<Point>(), this.Alive);
+            this.Alive = new List<Point>();
+            Paused = wasPaused;
+        }
+
+        public void Plot(Point offset, Cell[,] matrix)
+        {
+            byte[,] byteMatrix = new byte[matrix.GetLength(0), matrix.GetLength(1)];
+            for (int i = 0; i < matrix.GetLength(0); i++)
+                for (int j = 0; j < matrix.GetLength(1); j++)
+                    byteMatrix[i, j] = (byte)(matrix[i, j].IsAlive ? 1 : 0);
+            Plot(offset, byteMatrix);
+        }
+        /// <summary>
+        /// Plots the specified glyph on the given offset.
+        /// </summary>
+        public void Plot(Point offset, byte[,] matrix)
+        {
+            var wasPaused = Paused;
+            Paused = true;
+            System.Threading.Thread.Sleep(5);
+            var dead = new List<Point>();
+            var born = new List<Point>();
+            for (int i = 0; i < matrix.GetLength(0); i++)
+            {
+                for (int j = 0; j < matrix.GetLength(1); j++)
+                {
+                    var x = offset.X + i;
+                    var y = offset.Y + j;
+                    if (x >= Matrix.GetLength(0) || y >= Matrix.GetLength(1))
+                    {
+                        continue;
+                    }
+                    this.Matrix[x, y].Age = 0;
+                    var wasAlive = this.Matrix[x, y].IsAlive;
+                    this.Matrix[x, y].IsAlive = matrix[i,j] > 0;
+                    if (wasAlive != this.Matrix[x, y].IsAlive)
+                    {
+                        if (wasAlive)
+                        {
+                            // was alive and is dead
+                            foreach (Point neighbor in this.Matrix[x, y].Neighbors)
+                            {
+                                Cell neighborCell = this.Matrix[neighbor.X, neighbor.Y];
+                                neighborCell.AliveNeighbors--;
+                            }
+                            this.Alive.Remove(new Point(x, y));
+                            dead.Add(new Point(x, y));
+                        }
+                        else
+                        {
+                            // was dead and is alive
+                            foreach (Point neighbor in this.Matrix[x, y].Neighbors)
+                            {
+                                Cell neighborCell = this.Matrix[neighbor.X, neighbor.Y];
+                                neighborCell.AliveNeighbors++;
+                            }
+                            this.Alive.Add(new Point(x, y));
+                            born.Add(new Point(x, y));
+                        }
+                    }
+                }
+            }
+            MyFireUpdater.Invoke(born, dead);
+            Paused = wasPaused;
+        }
+
         public void Play()
         {
-            this.Randomize();
             List<Point> born = null;
             List<Point> dead = null;
             while (!@Stop)
             {
                 this.GameStep(ref born, ref dead);
                 this.MyFireUpdater.Invoke(born, dead);
+                if (DoSteps > 0)
+                {
+                    DoSteps--;
+                }
                 System.Threading.Thread.Sleep(1);
+                while (Paused && DoSteps <= 0)
+                {
+                    System.Threading.Thread.Sleep(1);
+                }
             }
         } 
         #endregion
