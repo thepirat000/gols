@@ -35,6 +35,8 @@
             this.splitContainer = new System.Windows.Forms.SplitContainer();
             this.flowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.pnlPlayer = new System.Windows.Forms.Panel();
+            this.btnClear = new System.Windows.Forms.PictureBox();
+            this.btnImport = new System.Windows.Forms.PictureBox();
             this.txtStepSize = new System.Windows.Forms.NumericUpDown();
             this.btnHelp = new System.Windows.Forms.PictureBox();
             this.btnRecord = new System.Windows.Forms.PictureBox();
@@ -44,30 +46,30 @@
             this.btnPause = new System.Windows.Forms.PictureBox();
             this.btnPlay = new System.Windows.Forms.PictureBox();
             this.pnlGrid = new System.Windows.Forms.Panel();
+            this.btnOneToOne = new System.Windows.Forms.PictureBox();
+            this.cmbAlgorithm = new System.Windows.Forms.ComboBox();
             this.picColor = new System.Windows.Forms.PictureBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.btnRandomAlgorithm = new System.Windows.Forms.PictureBox();
             this.btnRandomColor = new System.Windows.Forms.PictureBox();
             this.txtGridSize = new System.Windows.Forms.TextBox();
             this.chkWrapAround = new System.Windows.Forms.CheckBox();
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.pnlDisplay = new System.Windows.Forms.Panel();
             this.chkPosition = new System.Windows.Forms.CheckBox();
             this.chkAlgo = new System.Windows.Forms.CheckBox();
             this.chkFps = new System.Windows.Forms.CheckBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.cmbAlgorithm = new System.Windows.Forms.ComboBox();
-            this.btnRandomAlgorithm = new System.Windows.Forms.PictureBox();
-            this.btnOneToOne = new System.Windows.Forms.PictureBox();
-            this.btnImport = new System.Windows.Forms.PictureBox();
-            this.btnClear = new System.Windows.Forms.PictureBox();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
             this.splitContainer.SuspendLayout();
             this.flowLayoutPanel.SuspendLayout();
             this.pnlPlayer.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.btnClear)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnImport)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtStepSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnHelp)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnRecord)).BeginInit();
@@ -77,13 +79,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.btnPause)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnPlay)).BeginInit();
             this.pnlGrid.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.btnOneToOne)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picColor)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnRandomAlgorithm)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnRandomColor)).BeginInit();
             this.pnlDisplay.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.btnRandomAlgorithm)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnOneToOne)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnImport)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnClear)).BeginInit();
             this.SuspendLayout();
             // 
             // saveFileDialog1
@@ -143,6 +143,34 @@
             this.pnlPlayer.Size = new System.Drawing.Size(207, 82);
             this.pnlPlayer.TabIndex = 2;
             // 
+            // btnClear
+            // 
+            this.btnClear.Image = ((System.Drawing.Image)(resources.GetObject("btnClear.Image")));
+            this.btnClear.Location = new System.Drawing.Point(174, 49);
+            this.btnClear.Margin = new System.Windows.Forms.Padding(0);
+            this.btnClear.Name = "btnClear";
+            this.btnClear.Size = new System.Drawing.Size(24, 24);
+            this.btnClear.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.btnClear.TabIndex = 9;
+            this.btnClear.TabStop = false;
+            this.toolTip.SetToolTip(this.btnClear, "Clear all");
+            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
+            // 
+            // btnImport
+            // 
+            this.btnImport.Image = ((System.Drawing.Image)(resources.GetObject("btnImport.Image")));
+            this.btnImport.Location = new System.Drawing.Point(170, 10);
+            this.btnImport.Margin = new System.Windows.Forms.Padding(0);
+            this.btnImport.Name = "btnImport";
+            this.btnImport.Size = new System.Drawing.Size(32, 32);
+            this.btnImport.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.btnImport.TabIndex = 8;
+            this.btnImport.TabStop = false;
+            this.toolTip.SetToolTip(this.btnImport, "Import a pattern file (.cells, etc)");
+            this.btnImport.MouseClick += new System.Windows.Forms.MouseEventHandler(this.btnImport_MouseClick);
+            this.btnImport.MouseEnter += new System.EventHandler(this.btnImport_MouseEnter);
+            this.btnImport.MouseLeave += new System.EventHandler(this.btnImport_MouseLeave);
+            // 
             // txtStepSize
             // 
             this.txtStepSize.Location = new System.Drawing.Point(74, 50);
@@ -166,7 +194,7 @@
             0,
             0,
             0});
-            this.txtStepSize.Visible = false;
+            this.txtStepSize.ValueChanged += new System.EventHandler(this.txtStepSize_ValueChanged);
             // 
             // btnHelp
             // 
@@ -240,7 +268,6 @@
             this.btnForward.TabIndex = 4;
             this.btnForward.TabStop = false;
             this.toolTip.SetToolTip(this.btnForward, "Fast forward N steps");
-            this.btnForward.Visible = false;
             this.btnForward.Click += new System.EventHandler(this.btnForward_Click);
             this.btnForward.MouseEnter += new System.EventHandler(this.btnForward_MouseEnter);
             this.btnForward.MouseLeave += new System.EventHandler(this.btnForward_MouseLeave);
@@ -294,6 +321,31 @@
             this.pnlGrid.Size = new System.Drawing.Size(208, 83);
             this.pnlGrid.TabIndex = 3;
             // 
+            // btnOneToOne
+            // 
+            this.btnOneToOne.Image = ((System.Drawing.Image)(resources.GetObject("btnOneToOne.Image")));
+            this.btnOneToOne.Location = new System.Drawing.Point(74, 20);
+            this.btnOneToOne.Margin = new System.Windows.Forms.Padding(0);
+            this.btnOneToOne.Name = "btnOneToOne";
+            this.btnOneToOne.Size = new System.Drawing.Size(16, 16);
+            this.btnOneToOne.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.btnOneToOne.TabIndex = 9;
+            this.btnOneToOne.TabStop = false;
+            this.toolTip.SetToolTip(this.btnOneToOne, "Set the grid size as 1 cell per pixel");
+            this.btnOneToOne.Click += new System.EventHandler(this.btnOneToOne_Click);
+            // 
+            // cmbAlgorithm
+            // 
+            this.cmbAlgorithm.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbAlgorithm.DropDownWidth = 200;
+            this.cmbAlgorithm.FormattingEnabled = true;
+            this.cmbAlgorithm.Location = new System.Drawing.Point(5, 57);
+            this.cmbAlgorithm.MaxDropDownItems = 10;
+            this.cmbAlgorithm.Name = "cmbAlgorithm";
+            this.cmbAlgorithm.Size = new System.Drawing.Size(168, 21);
+            this.cmbAlgorithm.TabIndex = 8;
+            this.cmbAlgorithm.SelectedIndexChanged += new System.EventHandler(this.cmbAlgorithm_SelectedIndexChanged);
+            // 
             // picColor
             // 
             this.picColor.BackColor = System.Drawing.Color.Red;
@@ -314,6 +366,15 @@
             this.label2.Text = "Color";
             this.label2.UseCompatibleTextRendering = true;
             // 
+            // label3
+            // 
+            this.label3.Location = new System.Drawing.Point(3, 42);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(59, 13);
+            this.label3.TabIndex = 6;
+            this.label3.Text = "Algorithm";
+            this.label3.UseCompatibleTextRendering = true;
+            // 
             // label1
             // 
             this.label1.Location = new System.Drawing.Point(5, 3);
@@ -322,6 +383,20 @@
             this.label1.TabIndex = 6;
             this.label1.Text = "Size";
             this.label1.UseCompatibleTextRendering = true;
+            // 
+            // btnRandomAlgorithm
+            // 
+            this.btnRandomAlgorithm.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.btnRandomAlgorithm.Image = ((System.Drawing.Image)(resources.GetObject("btnRandomAlgorithm.Image")));
+            this.btnRandomAlgorithm.Location = new System.Drawing.Point(176, 58);
+            this.btnRandomAlgorithm.Margin = new System.Windows.Forms.Padding(0);
+            this.btnRandomAlgorithm.Name = "btnRandomAlgorithm";
+            this.btnRandomAlgorithm.Size = new System.Drawing.Size(24, 17);
+            this.btnRandomAlgorithm.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.btnRandomAlgorithm.TabIndex = 3;
+            this.btnRandomAlgorithm.TabStop = false;
+            this.toolTip.SetToolTip(this.btnRandomAlgorithm, "Select a known random algorithm (right-click for any random algorithm)");
+            this.btnRandomAlgorithm.MouseClick += new System.Windows.Forms.MouseEventHandler(this.btnRandomAlgorithm_MouseClick);
             // 
             // btnRandomColor
             // 
@@ -361,34 +436,6 @@
             this.chkWrapAround.UseCompatibleTextRendering = true;
             this.chkWrapAround.UseVisualStyleBackColor = true;
             this.chkWrapAround.CheckedChanged += new System.EventHandler(this.chkWrapAround_CheckedChanged);
-            // 
-            // imageList1
-            // 
-            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
-            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList1.Images.SetKeyName(0, "button_black_pause.ico");
-            this.imageList1.Images.SetKeyName(1, "button_black_play.ico");
-            this.imageList1.Images.SetKeyName(2, "button_black_rec.ico");
-            this.imageList1.Images.SetKeyName(3, "button_black_stop.ico");
-            this.imageList1.Images.SetKeyName(4, "button_grey_pause.ico");
-            this.imageList1.Images.SetKeyName(5, "button_grey_play.ico");
-            this.imageList1.Images.SetKeyName(6, "button_grey_rec.ico");
-            this.imageList1.Images.SetKeyName(7, "button_grey_stop.ico");
-            this.imageList1.Images.SetKeyName(8, "button_black_random.ico");
-            this.imageList1.Images.SetKeyName(9, "button_grey_random.ico");
-            this.imageList1.Images.SetKeyName(10, "button_black_last.ico");
-            this.imageList1.Images.SetKeyName(11, "button_grey_last.ico");
-            this.imageList1.Images.SetKeyName(12, "button_black_ffw.ico");
-            this.imageList1.Images.SetKeyName(13, "button_grey_ffw.ico");
-            this.imageList1.Images.SetKeyName(14, "alien_black_help.ico");
-            this.imageList1.Images.SetKeyName(15, "alien_gray_help.ico");
-            this.imageList1.Images.SetKeyName(16, "button_black_eject.ico");
-            this.imageList1.Images.SetKeyName(17, "button_grey_eject.ico");
-            this.imageList1.Images.SetKeyName(18, "button_blue_eject.ico");
-            // 
-            // colorDialog1
-            // 
-            this.colorDialog1.FullOpen = true;
             // 
             // pnlDisplay
             // 
@@ -443,81 +490,33 @@
             this.chkFps.UseVisualStyleBackColor = true;
             this.chkFps.CheckedChanged += new System.EventHandler(this.chkFps_CheckedChanged);
             // 
-            // label3
+            // imageList1
             // 
-            this.label3.Location = new System.Drawing.Point(3, 42);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(59, 13);
-            this.label3.TabIndex = 6;
-            this.label3.Text = "Algorithm";
-            this.label3.UseCompatibleTextRendering = true;
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList1.Images.SetKeyName(0, "button_black_pause.ico");
+            this.imageList1.Images.SetKeyName(1, "button_black_play.ico");
+            this.imageList1.Images.SetKeyName(2, "button_black_rec.ico");
+            this.imageList1.Images.SetKeyName(3, "button_black_stop.ico");
+            this.imageList1.Images.SetKeyName(4, "button_grey_pause.ico");
+            this.imageList1.Images.SetKeyName(5, "button_grey_play.ico");
+            this.imageList1.Images.SetKeyName(6, "button_grey_rec.ico");
+            this.imageList1.Images.SetKeyName(7, "button_grey_stop.ico");
+            this.imageList1.Images.SetKeyName(8, "button_black_random.ico");
+            this.imageList1.Images.SetKeyName(9, "button_grey_random.ico");
+            this.imageList1.Images.SetKeyName(10, "button_black_last.ico");
+            this.imageList1.Images.SetKeyName(11, "button_grey_last.ico");
+            this.imageList1.Images.SetKeyName(12, "button_black_ffw.ico");
+            this.imageList1.Images.SetKeyName(13, "button_grey_ffw.ico");
+            this.imageList1.Images.SetKeyName(14, "alien_black_help.ico");
+            this.imageList1.Images.SetKeyName(15, "alien_gray_help.ico");
+            this.imageList1.Images.SetKeyName(16, "button_black_eject.ico");
+            this.imageList1.Images.SetKeyName(17, "button_grey_eject.ico");
+            this.imageList1.Images.SetKeyName(18, "button_blue_eject.ico");
             // 
-            // cmbAlgorithm
+            // colorDialog1
             // 
-            this.cmbAlgorithm.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbAlgorithm.DropDownWidth = 200;
-            this.cmbAlgorithm.FormattingEnabled = true;
-            this.cmbAlgorithm.Location = new System.Drawing.Point(5, 57);
-            this.cmbAlgorithm.MaxDropDownItems = 10;
-            this.cmbAlgorithm.Name = "cmbAlgorithm";
-            this.cmbAlgorithm.Size = new System.Drawing.Size(168, 21);
-            this.cmbAlgorithm.TabIndex = 8;
-            this.cmbAlgorithm.SelectedIndexChanged += new System.EventHandler(this.cmbAlgorithm_SelectedIndexChanged);
-            // 
-            // btnRandomAlgorithm
-            // 
-            this.btnRandomAlgorithm.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.btnRandomAlgorithm.Image = ((System.Drawing.Image)(resources.GetObject("btnRandomAlgorithm.Image")));
-            this.btnRandomAlgorithm.Location = new System.Drawing.Point(176, 58);
-            this.btnRandomAlgorithm.Margin = new System.Windows.Forms.Padding(0);
-            this.btnRandomAlgorithm.Name = "btnRandomAlgorithm";
-            this.btnRandomAlgorithm.Size = new System.Drawing.Size(24, 17);
-            this.btnRandomAlgorithm.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.btnRandomAlgorithm.TabIndex = 3;
-            this.btnRandomAlgorithm.TabStop = false;
-            this.toolTip.SetToolTip(this.btnRandomAlgorithm, "Select a known random algorithm (right-click for any random algorithm)");
-            this.btnRandomAlgorithm.MouseClick += new System.Windows.Forms.MouseEventHandler(this.btnRandomAlgorithm_MouseClick);
-            // 
-            // btnOneToOne
-            // 
-            this.btnOneToOne.Image = ((System.Drawing.Image)(resources.GetObject("btnOneToOne.Image")));
-            this.btnOneToOne.Location = new System.Drawing.Point(74, 20);
-            this.btnOneToOne.Margin = new System.Windows.Forms.Padding(0);
-            this.btnOneToOne.Name = "btnOneToOne";
-            this.btnOneToOne.Size = new System.Drawing.Size(16, 16);
-            this.btnOneToOne.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.btnOneToOne.TabIndex = 9;
-            this.btnOneToOne.TabStop = false;
-            this.toolTip.SetToolTip(this.btnOneToOne, "Set the grid size as 1 cell per pixel");
-            this.btnOneToOne.Click += new System.EventHandler(this.btnOneToOne_Click);
-            // 
-            // btnImport
-            // 
-            this.btnImport.Image = ((System.Drawing.Image)(resources.GetObject("btnImport.Image")));
-            this.btnImport.Location = new System.Drawing.Point(170, 10);
-            this.btnImport.Margin = new System.Windows.Forms.Padding(0);
-            this.btnImport.Name = "btnImport";
-            this.btnImport.Size = new System.Drawing.Size(32, 32);
-            this.btnImport.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.btnImport.TabIndex = 8;
-            this.btnImport.TabStop = false;
-            this.toolTip.SetToolTip(this.btnImport, "Import a pattern file (.cells, etc)");
-            this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
-            this.btnImport.MouseEnter += new System.EventHandler(this.btnImport_MouseEnter);
-            this.btnImport.MouseLeave += new System.EventHandler(this.btnImport_MouseLeave);
-            // 
-            // btnClear
-            // 
-            this.btnClear.Image = ((System.Drawing.Image)(resources.GetObject("btnClear.Image")));
-            this.btnClear.Location = new System.Drawing.Point(174, 49);
-            this.btnClear.Margin = new System.Windows.Forms.Padding(0);
-            this.btnClear.Name = "btnClear";
-            this.btnClear.Size = new System.Drawing.Size(24, 24);
-            this.btnClear.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.btnClear.TabIndex = 9;
-            this.btnClear.TabStop = false;
-            this.toolTip.SetToolTip(this.btnClear, "Clear all");
-            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
+            this.colorDialog1.FullOpen = true;
             // 
             // MainForm
             // 
@@ -534,6 +533,8 @@
             this.splitContainer.ResumeLayout(false);
             this.flowLayoutPanel.ResumeLayout(false);
             this.pnlPlayer.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.btnClear)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnImport)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtStepSize)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnHelp)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnRecord)).EndInit();
@@ -544,14 +545,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.btnPlay)).EndInit();
             this.pnlGrid.ResumeLayout(false);
             this.pnlGrid.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.btnOneToOne)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picColor)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnRandomAlgorithm)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnRandomColor)).EndInit();
             this.pnlDisplay.ResumeLayout(false);
             this.pnlDisplay.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.btnRandomAlgorithm)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnOneToOne)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnImport)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnClear)).EndInit();
             this.ResumeLayout(false);
 
         }

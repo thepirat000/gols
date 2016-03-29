@@ -1,5 +1,11 @@
 ﻿// Thepirat 2011
 // thepirat000@hotmail.com
+
+using System.IO;
+using System.IO.Pipes;
+using System.Linq;
+using System.Threading.Tasks;
+
 namespace JVida_Fast_CSharp
 {
     using Parsers;
@@ -31,23 +37,42 @@ namespace JVida_Fast_CSharp
         private bool IsRecording = false;
         private AviWriter Avi;
         private Bitmap BmpAvi;
+        private string InitialFilePath;
+        public const string LoadPatternPipeName = "GOLS_LoadPattern";
+        private NamedPipeServerStream loadPipe;
         #endregion
 
         #region Constructor
-        public MainForm()
+        public MainForm(string initialFilePath)
         {
             // This call is required by the Windows Form Designer.
-            this.InitializeComponent();
-
+            InitializeComponent();
+            InitialFilePath = initialFilePath;
             // Add any initialization after the InitializeComponent() call.
-            this.Shown += this.Form1_Shown;
-            this.KeyDown += this.Form1_KeyDown;
-            this.FormClosing += this.Form1_FormClosing;
+            Shown += Form1_Shown;
+            KeyDown += Form1_KeyDown;
+            FormClosing += Form1_FormClosing;
             txtGridSize.GotFocus += txtGridSize_GotFocus;
             txtGridSize.LostFocus += txtGridSize_LostFocus;
             FillAlgorithmCombo();
 
-            this.Initialize(false);
+            loadPipe = new NamedPipeServerStream(LoadPatternPipeName, PipeDirection.In);
+            Task.Factory.StartNew(() =>
+            {
+                while (true)
+                {
+                    loadPipe.WaitForConnection();
+                    StreamReader reader = new StreamReader(loadPipe);
+                        var filePath = reader.ReadLine();
+                        if (!string.IsNullOrEmpty(filePath))
+                        {
+                            this.Invoke(new Action(() => LoadPatternFile(filePath)));
+                        }
+                    loadPipe.Disconnect();
+                }
+            });
+
+            Initialize(false);
         }
 
         #endregion
@@ -55,52 +80,50 @@ namespace JVida_Fast_CSharp
         #region Private Methods
         private void Restart(bool restoreState)
         {
-            this.AbortWorker();
-            this.Initialize(restoreState);
-            this.Start(!restoreState);
-            txtStepSize.Visible = this.Gol.Paused;
-            btnForward.Visible = this.Gol.Paused;
+            AbortWorker();
+            Initialize(restoreState);
+            Start(!restoreState);
         }
 
         private void Initialize(bool restoreState)
         {
-            Color prevColor = this.Graph == null ? Color.Red : this.Graph.ForeColor;
-            string prevUpperRightInfo = this.Graph == null ? string.Empty : this.AlgorithmSymbol;
-            bool prevShowFps = this.Graph == null ? true : this.Graph.ShowFps;
-            this.splitContainer.Panel2.Controls.Remove(this.Graph);
+            Color prevColor = Graph == null ? Color.Red : Graph.ForeColor;
+            string prevUpperRightInfo = Graph == null ? string.Empty : AlgorithmSymbol;
+            bool prevShowFps = Graph == null ? true : Graph.ShowFps;
+            splitContainer.Panel2.Controls.Remove(Graph);
             Cell[,] ex_matrix = null;
             bool exPaused = false;
             if (restoreState)
             {
-                exPaused = this.Gol.Paused;
-                ex_matrix = this.Gol.Matrix;
+                exPaused = Gol.Paused;
+                ex_matrix = Gol.Matrix;
             }
-            this.Gol = new GameOfLife(this.GridSize.Width, this.GridSize.Height, this.AlgorithmSymbol, this.MaximumAge,
-                                      this.InitialOccupation, this.InitialMargin, this.WrapAround);
+            Gol = new GameOfLife(GridSize.Width, GridSize.Height, AlgorithmSymbol, MaximumAge,
+                                      InitialOccupation, InitialMargin, WrapAround);
             if (restoreState)
             {
-                this.Gol.Plot(new Point(0, 0), ex_matrix);
+                Gol.Plot(new Point(0, 0), ex_matrix);
             }
-            this.Gol.FireUpdate += this.jv_FireUpdate;
-            this.Graph = new UniverseGraph(this.GridSize.Width, this.GridSize.Height)
+            if (restoreState && exPaused)
+            {
+                Pause();
+            }
+            Gol.FireUpdate += jv_FireUpdate;
+            Graph = new UniverseGraph(GridSize.Width, GridSize.Height)
             {
                 Dock = DockStyle.Fill,
                 ForeColor = prevColor,
                 UpperRightInfo = prevUpperRightInfo,
                 ShowFps = prevShowFps
             };
-            this.Graph.PointSelected += Graph_PointSelected;
-            this.splitContainer.Panel2.Controls.Add(this.Graph);
-            chkFps.Checked = this.Graph.ShowFps;
-            chkAlgo.Checked = !string.IsNullOrEmpty(this.Graph.UpperRightInfo);
-            chkWrapAround.Checked = this.WrapAround;
+            Graph.PointSelected += Graph_PointSelected;
+            splitContainer.Panel2.Controls.Add(Graph);
+            chkFps.Checked = Graph.ShowFps;
+            chkAlgo.Checked = !string.IsNullOrEmpty(Graph.UpperRightInfo);
+            chkWrapAround.Checked = WrapAround;
             txtGridSize.Text = $"{GridSize.Width}x{GridSize.Height}";
-            picColor.BackColor =  this.Graph.ForeColor;
+            picColor.BackColor =  Graph.ForeColor;
             colorDialog1.Color = picColor.BackColor;
-            if (restoreState && exPaused)
-            {
-                this.Gol.Pause();
-            }
         }
 
         private void FillAlgorithmCombo()
@@ -156,13 +179,26 @@ namespace JVida_Fast_CSharp
             {
                 return;
             }
-            var parser = ParserFactory.GetParser(openFileDialog1.FileName);
-            var pattern = parser.Parse(new System.IO.StreamReader(openFileDialog1.FileName));
-            this.Graph.ExitSelectionMode();
-            if (e.Point.X + pattern.Bitmap.GetLength(0) > GridSize.Width
-                || e.Point.Y + pattern.Bitmap.GetLength(1) > GridSize.Height)
+            Pattern pattern;
+            Graph.ExitSelectionMode();
+            try
             {
-                this.Gol.Pause();
+                var parser = ParserFactory.GetParser(openFileDialog1.FileName);
+                pattern = parser.Parse(new StreamReader(openFileDialog1.FileName));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error parsing file {openFileDialog1.FileName}. {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            if (e.Button == MouseButtons.Right)
+            {
+                LoadPatternFile(openFileDialog1.FileName);
+                return;
+            }
+            if (e.Point.X + pattern.Bitmap.GetLength(0) > GridSize.Width || e.Point.Y + pattern.Bitmap.GetLength(1) > GridSize.Height)
+            {
+                Pause();
                 var dlg =
                     MessageBox.Show(
                         $"Pattern will overflow {pattern.Bitmap.GetLength(0)}x{pattern.Bitmap.GetLength(1)}. Automatically resize/reposition the pattern?",
@@ -173,8 +209,8 @@ namespace JVida_Fast_CSharp
                     if (pattern.Bitmap.GetLength(0) > GridSize.Width || pattern.Bitmap.GetLength(1) > GridSize.Height)
                     {
                         //resize grid to fit the pattern
-                        this.GridSize = new Size(pattern.Bitmap.GetLength(0), pattern.Bitmap.GetLength(1));
-                        this.Restart(true);
+                        GridSize = new Size(pattern.Bitmap.GetLength(0), pattern.Bitmap.GetLength(1));
+                        Restart(true);
                     }
                 }
                 else
@@ -183,14 +219,14 @@ namespace JVida_Fast_CSharp
                     return;
                 }
             }
-            this.Gol.Plot(e.Point, pattern.Bitmap);
-            if (pattern.Algorithm.HasValue && pattern.Algorithm.Value.Symbol != this.Gol.AlgorithmSymbol)
+            Gol.Plot(e.Point, pattern.Bitmap);
+            if (pattern.Algorithm.HasValue && pattern.Algorithm.Value.Symbol != Gol.AlgorithmSymbol)
             {
                 // change algorythm
-                this.Gol.Algorithm = pattern.Algorithm.Value;
-                this.AlgorithmSymbol = pattern.Algorithm.Value.Symbol;
-                FindSelectAlgorithm(this.AlgorithmSymbol);
-                this.Restart(true);
+                Gol.Algorithm = pattern.Algorithm.Value;
+                AlgorithmSymbol = pattern.Algorithm.Value.Symbol;
+                FindSelectAlgorithm(AlgorithmSymbol);
+                Restart(true);
             }
         }
 
@@ -210,26 +246,26 @@ namespace JVida_Fast_CSharp
 
         private void Start(bool randomize)
         {
-            this.AbortWorker();
+            AbortWorker();
             if (randomize)
             {
-                this.Gol.Randomize();
+                Gol.Randomize();
             }
-            this.workerThread = new Thread(this.Gol.Play);
-            this.workerThread.Priority = ThreadPriority.AboveNormal;
-            this.workerThread.Start();
+            workerThread = new Thread(Gol.Play);
+            workerThread.Priority = ThreadPriority.AboveNormal;
+            workerThread.Start();
         }
 
         private void AbortWorker()
         {
-            if (this.IsRecording && !this.Avi.IsClosed)
+            if (IsRecording && !Avi.IsClosed)
             {
-                this.Avi.Close();
+                Avi.Close();
             }
-            if (this.workerThread != null && this.workerThread.IsAlive)
+            if (workerThread != null && workerThread.IsAlive)
             {
-                this.workerThread.Abort();
-                this.workerThread.Join();
+                workerThread.Abort();
+                workerThread.Join();
             }
         }
 
@@ -252,11 +288,11 @@ namespace JVida_Fast_CSharp
             sb.AppendLine("Esc: Exit Application");
             sb.AppendLine("Enter: Change alive cell color");
             sb.AppendLine();
-            sb.AppendFormat("Algorithm: {0}. Max Age: {1}. Size: {2}.", this.AlgorithmSymbol, this.MaximumAge, this.GridSize);
+            sb.AppendFormat("Algorithm: {0}. Max Age: {1}. Size: {2}.", AlgorithmSymbol, MaximumAge, GridSize);
             return sb.ToString();
         }
 
-        private void Form1_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
             if (txtGridSize.Focused || cmbAlgorithm.Focused)
             {
@@ -272,81 +308,79 @@ namespace JVida_Fast_CSharp
                 case Keys.Return:
                     // Change alive cell color
                     Random rnd = new Random();
-                    this.Graph.ForeColor = Color.FromArgb(rnd.Next(0, 255), rnd.Next(0, 255), rnd.Next(0, 255));
-                    picColor.BackColor = this.Graph.ForeColor;
+                    Graph.ForeColor = Color.FromArgb(rnd.Next(0, 255), rnd.Next(0, 255), rnd.Next(0, 255));
+                    picColor.BackColor = Graph.ForeColor;
                     break;
                 case Keys.A:
                     // change algorithm
                     string newAlgorithm;
                     string help = "Enter the new algorithm in ddd/DDD format.\nA living cell still alive iif it has exactly d neighbors.\nAn empty cell is born iif it has exactly D alive neighbors.\nExample: 23/3 = Conway algorithm. 34/34 = Life 34.";
-                    if (InputBox.Show("Algorithm", help, this.AlgorithmSymbol, out newAlgorithm) == System.Windows.Forms.DialogResult.OK)
+                    if (InputBox.Show("Algorithm", help, AlgorithmSymbol, out newAlgorithm) == DialogResult.OK)
                     {
-                        this.AlgorithmSymbol = newAlgorithm;
-                        this.Restart(true);
+                        AlgorithmSymbol = newAlgorithm;
+                        Restart(true);
                     }
                     break;
                 case Keys.Q:
                     // change to random algorithm
                     newAlgorithm = Algorithm.GetRandomAlgorithm();
-                    this.AlgorithmSymbol = newAlgorithm;
+                    AlgorithmSymbol = newAlgorithm;
                     redraw = true;
                     break;
                 case Keys.G:
                     // Change gridsize
                     string newgridSize;
-                    if (InputBox.Show("Grid size", "Enter the new Grid Size (format WIDTHxHEIGHT)", $"{GridSize.Width}x{GridSize.Height}", out newgridSize) == System.Windows.Forms.DialogResult.OK)
+                    if (InputBox.Show("Grid size", "Enter the new Grid Size (format WIDTHxHEIGHT)", $"{GridSize.Width}x{GridSize.Height}", out newgridSize) == DialogResult.OK)
                     {
                         var newSizeValues = newgridSize.Split('x');
                         if (newSizeValues.Length == 2)
                         {
-                            this.GridSize = new Size(int.Parse(newSizeValues[0]), int.Parse(newSizeValues[1]));
-                            this.Restart(true);
+                            GridSize = new Size(int.Parse(newSizeValues[0]), int.Parse(newSizeValues[1]));
+                            Restart(true);
                         }
                     }
                     break;
                 case Keys.E:
                     // Change maximum age
                     string newMaxAge;
-                    if (InputBox.Show("Age", "Enter the new Maximum Age.\nThe maximum age is the maximum number of cycles after which any living cell dies.", this.MaximumAge.ToString(), out newMaxAge) == System.Windows.Forms.DialogResult.OK)
+                    if (InputBox.Show("Age", "Enter the new Maximum Age.\nThe maximum age is the maximum number of cycles after which any living cell dies.", MaximumAge.ToString(), out newMaxAge) == DialogResult.OK)
                     {
-                        this.MaximumAge = int.Parse(newMaxAge);
-                        this.Restart(true);
+                        MaximumAge = int.Parse(newMaxAge);
+                        Restart(true);
                     }
                     break;
                 case Keys.F:
-                    this.Graph.ShowFps = !this.Graph.ShowFps;
+                    Graph.ShowFps = !Graph.ShowFps;
                     break;
                 case Keys.L:
-                    this.Graph.UpperRightInfo = string.IsNullOrEmpty(this.Graph.UpperRightInfo) ? this.AlgorithmSymbol : string.Empty;
+                    Graph.UpperRightInfo = string.IsNullOrEmpty(Graph.UpperRightInfo) ? AlgorithmSymbol : string.Empty;
                     break;
                 case Keys.O:
                     // Chage initial occupation
                     redraw = ChangeOccupation();
                     break;
                 case Keys.C:
-                    this.Gol.Clear();
+                    Gol.Clear();
                     break;
                 case Keys.P:
-                    this.Gol.TogglePause();
-                    this.Graph.LowerLeftInfo = this.Gol.Paused ? "< Paused - Press 'P' to resume >" : "";
-                    btnForward.Visible = this.Gol.Paused;
-                    txtStepSize.Visible = this.Gol.Paused;
+                    Gol.TogglePause();
+                    Graph.LowerLeftInfo = Gol.Paused ? "< PAUSED >" : "";
                     break;
                 case Keys.I:
                     var res = openFileDialog1.ShowDialog();
                     if (res == DialogResult.OK)
                     {
-                        this.Graph.EnterSelectionMode(true);
+                        Graph.EnterSelectionMode(true);
                     }
                     break;
                 case Keys.Escape:
                     Application.Exit();
                     break;
                 case Keys.F1:
-                    this.Graph.OverlayInfo = string.IsNullOrEmpty(this.Graph.OverlayInfo) ? this.GetKeysHelp() : null;
+                    Graph.OverlayInfo = string.IsNullOrEmpty(Graph.OverlayInfo) ? GetKeysHelp() : null;
                     break;
                 case Keys.S:
-                    if (!this.IsRecording)
+                    if (!IsRecording)
                     {
                         StartRecording();
                     }
@@ -358,21 +392,21 @@ namespace JVida_Fast_CSharp
             }
             if (redraw)
             {
-                this.Restart(false);
+                Restart(false);
             }
         }
 
         private bool ChangeOccupation()
         {
             string newOccup;
-            var def = string.Format("{0},{1}", this.InitialOccupation * 100, this.InitialMargin * 100);
-            if (InputBox.Show("Initial occupation", "Enter the initial occupation percentage (density) optionally followed by the initial margin percentage to not cover: PPP,AAA.\nValues of PPP between 1 and 100\nValues of AAA between 0 and 49.", def, out newOccup) == System.Windows.Forms.DialogResult.OK)
+            var def = string.Format("{0},{1}", InitialOccupation * 100, InitialMargin * 100);
+            if (InputBox.Show("Initial occupation", "Enter the initial occupation percentage (density) optionally followed by the initial margin percentage to not cover: PPP,AAA.\nValues of PPP between 1 and 100\nValues of AAA between 0 and 49.", def, out newOccup) == DialogResult.OK)
             {
                 var values = newOccup.Split(',');
-                this.InitialOccupation = double.Parse(values[0]) / 100;
+                InitialOccupation = double.Parse(values[0]) / 100;
                 if (values.Length > 1)
                 {
-                    this.InitialMargin = double.Parse(values[1]) / 100;
+                    InitialMargin = double.Parse(values[1]) / 100;
                 }
                 return true;
             }
@@ -381,24 +415,24 @@ namespace JVida_Fast_CSharp
 
         private void StartRecording()
         {
-            bool restart = !this.Gol.Paused;
-            this.Gol.Pause();
-            this.Avi = new AviWriter();
-            this.saveFileDialog1.FileName = "Algorithm " + this.AlgorithmSymbol.Replace('/', '^') + " - MaxAge " + this.MaximumAge + " - Density " + (int)(this.InitialOccupation * 100);
-            if (this.saveFileDialog1.ShowDialog() == DialogResult.OK)
+            bool restart = !Gol.Paused;
+            Gol.Pause();
+            Avi = new AviWriter();
+            saveFileDialog1.FileName = "Algorithm " + AlgorithmSymbol.Replace('/', '^') + " - MaxAge " + MaximumAge + " - Density " + (int)(InitialOccupation * 100);
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 if (restart)
                 {
-                    this.AbortWorker();
+                    AbortWorker();
                 }
-                this.BmpAvi = this.Avi.Open(this.saveFileDialog1.FileName, 30, this.GridSize.Width, this.GridSize.Height);
+                BmpAvi = Avi.Open(saveFileDialog1.FileName, 30, GridSize.Width, GridSize.Height);
                 if (restart)
                 {
-                    this.Restart(false);
+                    Restart(false);
                 }
-                this.IsRecording = true;
-                this.Graph.FootInfo = "Recording... Press 'S' or click the Stop button to finish.";
-                this.Graph.ShowFps = false;
+                IsRecording = true;
+                Graph.FootInfo = "Recording... Press 'S' or click the Stop button to finish.";
+                Graph.ShowFps = false;
                 if (!restart)
                 {
                     Resume();
@@ -408,62 +442,71 @@ namespace JVida_Fast_CSharp
 
         private void Resume()
         {
-            this.Gol.Resume();
-            this.Graph.LowerLeftInfo = "";
-            btnForward.Visible = false;
-            txtStepSize.Visible = false;
+            Gol.Resume();
+            Graph.LowerLeftInfo = "";
         }
 
         private void StopRecording()
         {
-            this.IsRecording = false;
+            IsRecording = false;
             Thread.Sleep(5);
-            this.Graph.FootInfo = string.Empty;
-            this.Graph.ShowFps = true;
-            this.Avi.Close();
-            this.BmpAvi.Dispose();
-            Process.Start(@"explorer", @"/select,""" + this.saveFileDialog1.FileName + @"""");
+            Graph.FootInfo = string.Empty;
+            Graph.ShowFps = true;
+            Avi.Close();
+            BmpAvi.Dispose();
+            Process.Start(@"explorer", @"/select,""" + saveFileDialog1.FileName + @"""");
         }
-        private void Form1_FormClosing(object sender, System.Windows.Forms.FormClosingEventArgs e)
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            this.AbortWorker();
+            AbortWorker();
         }
 
-        private void Form1_Shown(object sender, System.EventArgs e)
+        private void Form1_Shown(object sender, EventArgs e)
         {
-            this.Start(true);
+            Graph.Focus();
+            if (InitialFilePath == null)
+            {
+                Start(true);
+            }
+            else
+            {
+                if (File.Exists(InitialFilePath))
+                {
+                    LoadPatternFile(InitialFilePath);
+                }
+            }
         }
 
         private void jv_FireUpdate(object sender, FireUpdateEventArgs e)
         {
             foreach (Point born in e.Born)
             {
-                this.Graph.PlotBmp(born.X, born.Y, 1);
+                Graph.PlotBmp(born.X, born.Y, 1);
             }
             foreach (Point dead in e.Dead)
             {
-                this.Graph.PlotBmp(dead.X, dead.Y, 0);
+                Graph.PlotBmp(dead.X, dead.Y, 0);
             }
-            this.Graph.Invalidate();
-            if (this.IsRecording)
+            Graph.Invalidate();
+            if (IsRecording)
             {
-                this.RecordFrame();
+                RecordFrame();
             }
         }
 
         private void RecordFrame()
         {
-            lock (this.Graph.UniverseBitmap)
+            lock (Graph.UniverseBitmap)
             {
-                if (!this.Avi.IsClosed)
+                if (!Avi.IsClosed)
                 {
-                    using (Graphics g = Graphics.FromImage(this.BmpAvi))
+                    using (Graphics g = Graphics.FromImage(BmpAvi))
                     {
                         g.ScaleTransform(1.0F, -1.0F);
-                        g.TranslateTransform(0.0F, -(float)this.BmpAvi.Height);
-                        g.DrawImage(this.Graph.UniverseBitmap, 0, 0, this.BmpAvi.Width, this.BmpAvi.Height);
+                        g.TranslateTransform(0.0F, -(float)BmpAvi.Height);
+                        g.DrawImage(Graph.UniverseBitmap, 0, 0, BmpAvi.Width, BmpAvi.Height);
                     }
-                    this.Avi.AddFrame();
+                    Avi.AddFrame();
                 }
             }
         }
@@ -471,14 +514,14 @@ namespace JVida_Fast_CSharp
 
         private void btnStop_Click(object sender, EventArgs e)
         {
-            if (this.IsRecording)
+            if (IsRecording)
             {
                 StopRecording();
                 return;
             }
-            this.Gol.Pause();
-            this.Graph.LowerLeftInfo = "< STOPPED >";
-            this.Gol.Clear();
+            Gol.Pause();
+            Graph.LowerLeftInfo = "< STOPPED >";
+            Gol.Clear();
         }
 
         private void btnStop_MouseEnter(object sender, EventArgs e)
@@ -513,10 +556,13 @@ namespace JVida_Fast_CSharp
 
         private void btnPause_Click(object sender, EventArgs e)
         {
-            this.Gol.Pause();
-            this.Graph.LowerLeftInfo = "< PAUSED >";
-            btnForward.Visible = true;
-            txtStepSize.Visible = true;
+            Pause();
+        }
+
+        private void Pause()
+        {
+            Gol.Pause();
+            Graph.LowerLeftInfo = "< PAUSED >";
         }
 
         private void btnPlay_Click(object sender, EventArgs e)
@@ -544,7 +590,7 @@ namespace JVida_Fast_CSharp
             {
                 ChangeOccupation();
             }
-            this.Restart(false);
+            Restart(false);
         }
 
         private void btnForward_MouseEnter(object sender, EventArgs e)
@@ -559,15 +605,16 @@ namespace JVida_Fast_CSharp
 
         private void btnForward_Click(object sender, EventArgs e)
         {
-            this.Gol.DoSteps = (int) txtStepSize.Value;
+            Pause();
+            Gol.DoSteps = (int) txtStepSize.Value;
         }
 
         private void btnHelp_Click(object sender, EventArgs e)
         {
-            this.Graph.OverlayInfo = string.IsNullOrEmpty(this.Graph.OverlayInfo) ? this.GetKeysHelp() : null;
-            if (this.Gol.Paused)
+            Graph.OverlayInfo = string.IsNullOrEmpty(Graph.OverlayInfo) ? GetKeysHelp() : null;
+            if (Gol.Paused)
             {
-                this.Gol.DoSteps = 1;
+                Gol.DoSteps = 1;
             }
         }
 
@@ -583,10 +630,10 @@ namespace JVida_Fast_CSharp
 
         private void txtGridSize_MouseUp(object sender, MouseEventArgs e)
         {
-            if (!GridSizeFocused && this.txtGridSize.SelectionLength == 0)
+            if (!GridSizeFocused && txtGridSize.SelectionLength == 0)
             {
                 GridSizeFocused = true;
-                this.txtGridSize.SelectAll();
+                txtGridSize.SelectAll();
             }
         }
 
@@ -599,36 +646,36 @@ namespace JVida_Fast_CSharp
         {
             if (MouseButtons == MouseButtons.None)
             {
-                this.txtGridSize.SelectAll();
+                txtGridSize.SelectAll();
                 GridSizeFocused = true;
             }
         }
 
         private void picColor_Click(object sender, EventArgs e)
         {
-            this.Gol.Paused = true;
+            Gol.Paused = true;
             var dlg = colorDialog1.ShowDialog();
             if (dlg == DialogResult.OK)
             {
                 picColor.BackColor = colorDialog1.Color;
-                this.Graph.ForeColor = colorDialog1.Color;
+                Graph.ForeColor = colorDialog1.Color;
             }
             Resume();
         }
 
         private void chkFps_CheckedChanged(object sender, EventArgs e)
         {
-            this.Graph.ShowFps = chkFps.Checked;
+            Graph.ShowFps = chkFps.Checked;
         }
 
         private void chkAlgo_CheckedChanged(object sender, EventArgs e)
         {
-            this.Graph.UpperRightInfo = chkAlgo.Checked ? this.AlgorithmSymbol : string.Empty;
+            Graph.UpperRightInfo = chkAlgo.Checked ? AlgorithmSymbol : string.Empty;
         }
 
         private void chkWrapAround_CheckedChanged(object sender, EventArgs e)
         {
-            this.WrapAround = chkWrapAround.Checked;
+            WrapAround = chkWrapAround.Checked;
             Restart(true);
         }
 
@@ -651,10 +698,10 @@ namespace JVida_Fast_CSharp
             if (newSizeValues.Length == 2)
             {
                 var newSize = new Size(int.Parse(newSizeValues[0]), int.Parse(newSizeValues[1]));
-                if (this.GridSize != newSize)
+                if (GridSize != newSize)
                 {
-                    this.GridSize = newSize;
-                    this.Restart(true);
+                    GridSize = newSize;
+                    Restart(true);
                     Graph?.Focus();
                 }
             }
@@ -663,8 +710,8 @@ namespace JVida_Fast_CSharp
         private void btnRandomColor_Click(object sender, EventArgs e)
         {
             Random rnd = new Random();
-            this.Graph.ForeColor = Color.FromArgb(rnd.Next(0, 255), rnd.Next(0, 255), rnd.Next(0, 255));
-            picColor.BackColor = this.Graph.ForeColor;
+            Graph.ForeColor = Color.FromArgb(rnd.Next(0, 255), rnd.Next(0, 255), rnd.Next(0, 255));
+            picColor.BackColor = Graph.ForeColor;
         }
 
         private void btnRecord_MouseEnter(object sender, EventArgs e)
@@ -679,9 +726,9 @@ namespace JVida_Fast_CSharp
 
         private void btnRecord_Click(object sender, EventArgs e)
         {
-            if (!this.IsRecording)
+            if (!IsRecording)
             {
-                this.StartRecording();
+                StartRecording();
             }
         }
 
@@ -689,11 +736,11 @@ namespace JVida_Fast_CSharp
         {
             if (chkPosition.Checked)
             {
-                this.Graph.EnterSelectionMode(false);
+                Graph.EnterSelectionMode(false);
             }
             else
             {
-                this.Graph.ExitSelectionMode();
+                Graph.ExitSelectionMode();
             }
         }
 
@@ -704,16 +751,16 @@ namespace JVida_Fast_CSharp
             {
                 string newAlgorithm;
                 string help = "Enter the new algorithm in ddd/DDD format.\nA living cell still alive iif it has exactly d neighbors.\nAn empty cell is born iif it has exactly D alive neighbors.\nExample: 23/3 = Conway algorithm. 34/34 = Life 34.";
-                if (InputBox.Show("Algorithm", help, this.AlgorithmSymbol, out newAlgorithm) == DialogResult.OK)
+                if (InputBox.Show("Algorithm", help, AlgorithmSymbol, out newAlgorithm) == DialogResult.OK)
                 {
-                    this.AlgorithmSymbol = newAlgorithm;
-                    this.Restart(true);
+                    AlgorithmSymbol = newAlgorithm;
+                    Restart(true);
                 }
             }
             else if (valueSelected != AlgorithmSymbol)
             {
-                this.AlgorithmSymbol = valueSelected;
-                this.Restart(true);
+                AlgorithmSymbol = valueSelected;
+                Restart(true);
             }
             Graph?.Focus();
         }
@@ -731,8 +778,8 @@ namespace JVida_Fast_CSharp
                 cmbAlgorithm.SelectedIndexChanged -= cmbAlgorithm_SelectedIndexChanged;
                 cmbAlgorithm.SelectedIndex = cmbAlgorithm.Items.Count - 1;
                 cmbAlgorithm.SelectedIndexChanged += cmbAlgorithm_SelectedIndexChanged;
-                this.AlgorithmSymbol = Algorithm.GetRandomAlgorithm();
-                this.Restart(true);
+                AlgorithmSymbol = Algorithm.GetRandomAlgorithm();
+                Restart(true);
             }
             else if (e.Button == MouseButtons.Left)
             {
@@ -752,18 +799,60 @@ namespace JVida_Fast_CSharp
             btnImport.Image = imageList1.Images["button_blue_eject.ico"];
         }
 
-        private void btnImport_Click(object sender, EventArgs e)
+        private void btnImport_MouseClick(object sender, MouseEventArgs e)
         {
-            var res = openFileDialog1.ShowDialog();
-            if (res == DialogResult.OK)
+            if (e.Button == MouseButtons.Left)
             {
-                this.Graph.EnterSelectionMode(true);
+                var res = openFileDialog1.ShowDialog();
+                if (res == DialogResult.OK)
+                {
+                    Graph.EnterSelectionMode(true);
+                }
             }
         }
 
         private void btnClear_Click(object sender, EventArgs e)
         {
-            this.Gol.Clear();
+            Gol.Clear();
         }
+
+        private void txtStepSize_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        // Stops and Clears the current simulation (if any), and loads a centered pattern into the simulation
+        private void LoadPatternFile(string filePath)
+        {
+            Pause();
+            Gol.Clear();
+            var parser = ParserFactory.GetParser(filePath);
+            Pattern pattern;
+            try
+            {
+                pattern = parser.Parse(new StreamReader(filePath));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error parsing file {filePath}. {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            var startPoint = new Point(0, 0);
+            if (pattern.Bitmap.GetLength(0) > GridSize.Width || pattern.Bitmap.GetLength(1) > GridSize.Height)
+            {
+                //overflow, resize grid to fit the pattern
+                GridSize = new Size(pattern.Bitmap.GetLength(0), pattern.Bitmap.GetLength(1));
+                Restart(true);
+            }
+            else
+            {
+                // calculate upper-left point to show the pattern centered
+                startPoint.X = GridSize.Width/2 - pattern.Bitmap.GetLength(0)/2;
+                startPoint.Y = GridSize.Height/2 - pattern.Bitmap.GetLength(1)/2;
+            }
+            Gol.Plot(startPoint, pattern.Bitmap);
+        }
+
+
     }
 }

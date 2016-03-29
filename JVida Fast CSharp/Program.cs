@@ -2,7 +2,10 @@
 // thepirat000@hotmail.com
 
 using System.IO;
+using System.IO.Pipes;
 using System.Linq;
+using System.Security.Principal;
+using JVida_Fast_CSharp.Helpers;
 
 namespace JVida_Fast_CSharp
 {
@@ -18,14 +21,42 @@ namespace JVida_Fast_CSharp
         private static Mutex mutex;
 
         [STAThread]
-        public static void Main()
+        public static void Main(string[] args)
         {
+            var initialFilePath = args.Length > 0 ? args[0] : null;
             if (PrevInstance())
             {
-                Application.Exit();
+                if (initialFilePath != null)
+                {
+                    using (var pipe = new NamedPipeClientStream(".", MainForm.LoadPatternPipeName, PipeDirection.Out))
+                    using (var stream = new StreamWriter(pipe))
+                    {
+                        pipe.Connect();
+                        stream.WriteLine(initialFilePath);
+                    }
+                }
+                else
+                {
+                    Application.Exit();
+                }
                 return;
             }
-            Application.Run(new MainForm());
+            if (HasAdminPrivileges())
+            {
+                try
+                {
+                    FileAssociation.AssociateFileTypes(Application.ExecutablePath);
+                }
+                catch (Exception)
+                {
+                }
+            }
+            Application.Run(new MainForm(initialFilePath));
+        }
+
+        public static bool HasAdminPrivileges()
+        {
+            return (new WindowsPrincipal(WindowsIdentity.GetCurrent())).IsInRole(WindowsBuiltInRole.Administrator);
         }
 
         /// <summary>

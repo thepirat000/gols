@@ -1,4 +1,6 @@
-﻿namespace JVida_Fast_CSharp
+﻿using System.Windows.Forms;
+
+namespace JVida_Fast_CSharp
 {
     using System;
     using System.Collections.Generic;
@@ -13,14 +15,16 @@
             Point = new Point(x, y);
         }
 
-        public PointSelectedEventArgs(int x, int y, bool isImporting)
+        public PointSelectedEventArgs(int x, int y, bool isImporting, MouseButtons button)
         {
             Point = new Point(x, y);
             IsImporting = isImporting;
+            Button = button;
         }
 
         public Point Point { get; set; }
         public bool IsImporting { get; set; }
+        public MouseButtons Button { get; set; }
     }
 
     public class FireUpdateEventArgs : EventArgs

@@ -220,7 +220,7 @@ namespace JVida_Fast_CSharp
             {
                 var x = e.Location.X * maxX / this.Width;
                 var y = e.Location.Y * maxY / this.Height;
-                OnPointSelected(new PointSelectedEventArgs(x, y, importing));
+                OnPointSelected(new PointSelectedEventArgs(x, y, importing, e.Button));
                 selectionModeEnabled = false;
             }
         }
