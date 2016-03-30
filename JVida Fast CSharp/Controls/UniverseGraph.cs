@@ -40,6 +40,16 @@ namespace JVida_Fast_CSharp
             }
         }
 
+        public new event EventHandler<DragEventArgs> DragDropCell;
+        protected virtual void OnDragDropCell(DragEventArgs e)
+        {
+            var eh = DragDropCell;
+            if (eh != null)
+            {
+                eh(this, e);
+            }
+        }
+
         public override Color BackColor
         {
             get { return this.backColor; }
@@ -225,5 +235,31 @@ namespace JVida_Fast_CSharp
             }
         }
         #endregion
+
+        private void UniverseGraph_DragOver(object sender, DragEventArgs e)
+        {
+            if (selectionModeEnabled)
+            {
+                var point = this.PointToClient(new Point(e.X, e.Y));
+                var x = point.X * maxX / this.Width;
+                var y = point.Y * maxY / this.Height;
+                SelectionInfo = (importing ? "Select location\n" : "") + new Point(x, y);
+                this.Invalidate();
+            }
+        }
+
+        private void UniverseGraph_DragLeave(object sender, EventArgs e)
+        {
+            SelectionInfo = "";
+            this.Invalidate();
+        }
+
+        private void UniverseGraph_DragDrop(object sender, DragEventArgs e)
+        {
+            var point = this.PointToClient(new Point(e.X, e.Y));
+            var x = point.X * maxX / this.Width;
+            var y = point.Y * maxY / this.Height;
+            OnDragDropCell(new DragEventArgs(e.Data, e.KeyState, x, y, e.AllowedEffect, e.Effect));
+        }
     }
 }

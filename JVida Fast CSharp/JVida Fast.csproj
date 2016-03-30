@@ -125,6 +125,9 @@
     <Compile Include="Parsers\ParserBase.cs" />
     <Compile Include="Parsers\ParserErrorException.cs" />
     <Compile Include="Parsers\ParserFactory.cs" />
+    <Compile Include="Parsers\ParserLif.cs" />
+    <Compile Include="Parsers\ParserLif105.cs" />
+    <Compile Include="Parsers\ParserLif106.cs" />
     <Compile Include="Parsers\ParserPlainText.cs" />
     <Compile Include="Parsers\ParserRle.cs" />
     <Compile Include="Parsers\Pattern.cs" />

@@ -23,6 +23,14 @@ namespace JVida_Fast_CSharp.Parsers
             }
             return (ParserBase) Activator.CreateInstance(type);
         }
+
+        public static IEnumerable<string> GetAvailableExtensions()
+        {
+            return typeof(ParserBase).Assembly.GetTypes()
+                .Where(t => typeof(ParserBase).IsAssignableFrom(t)
+                       && t.GetCustomAttribute<ForExtensionsAttribute>() != null)
+                .SelectMany(t => t.GetCustomAttribute<ForExtensionsAttribute>().Extensions);
+        }
     }
     
 }

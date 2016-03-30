@@ -103,7 +103,7 @@ namespace JVida_Fast_CSharp.Parsers
                 }
                 if (_wrongDataRegex.IsMatch(line))
                 {
-                    throw new ParserErrorException(lineNumber, $"Line {lineNumber} contains incorrect characters");
+                    throw new ParserErrorException(lineNumber, $"Line {lineNumber} contains invalid characters");
                 }
                 tokens.AddRange(GetTokensForString(line));
             }

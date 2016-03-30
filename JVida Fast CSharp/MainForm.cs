@@ -4,7 +4,9 @@
 using System.IO;
 using System.IO.Pipes;
 using System.Linq;
+using System.Security.Principal;
 using System.Threading.Tasks;
+using JVida_Fast_CSharp.Helpers;
 
 namespace JVida_Fast_CSharp
 {
@@ -40,6 +42,7 @@ namespace JVida_Fast_CSharp
         private string InitialFilePath;
         public const string LoadPatternPipeName = "GOLS_LoadPattern";
         private NamedPipeServerStream loadPipe;
+        private HashSet<string> availableExtensions;
         #endregion
 
         #region Constructor
@@ -55,7 +58,17 @@ namespace JVida_Fast_CSharp
             txtGridSize.GotFocus += txtGridSize_GotFocus;
             txtGridSize.LostFocus += txtGridSize_LostFocus;
             FillAlgorithmCombo();
+            SetBtnFileAssocText();
+            SetFilePatternListener();
+            availableExtensions = new HashSet<string>(ParserFactory.GetAvailableExtensions());
+            Initialize(false);
+        }
+        #endregion
 
+        #region Private Methods
+
+        private void SetFilePatternListener()
+        {
             loadPipe = new NamedPipeServerStream(LoadPatternPipeName, PipeDirection.In);
             Task.Factory.StartNew(() =>
             {
@@ -63,21 +76,16 @@ namespace JVida_Fast_CSharp
                 {
                     loadPipe.WaitForConnection();
                     StreamReader reader = new StreamReader(loadPipe);
-                        var filePath = reader.ReadLine();
-                        if (!string.IsNullOrEmpty(filePath))
-                        {
-                            this.Invoke(new Action(() => LoadPatternFile(filePath)));
-                        }
+                    var filePath = reader.ReadLine();
+                    if (!string.IsNullOrEmpty(filePath))
+                    {
+                        this.Invoke(new Action(() => LoadPatternFileCentered(filePath)));
+                    }
                     loadPipe.Disconnect();
                 }
             });
-
-            Initialize(false);
         }
 
-        #endregion
-
-        #region Private Methods
         private void Restart(bool restoreState)
         {
             AbortWorker();
@@ -114,9 +122,12 @@ namespace JVida_Fast_CSharp
                 Dock = DockStyle.Fill,
                 ForeColor = prevColor,
                 UpperRightInfo = prevUpperRightInfo,
-                ShowFps = prevShowFps
+                ShowFps = prevShowFps,
+                AllowDrop = true
             };
             Graph.PointSelected += Graph_PointSelected;
+            Graph.DragEnter += Graph_DragEnter;
+            Graph.DragDropCell += Graph_DragDropCell;
             splitContainer.Panel2.Controls.Add(Graph);
             chkFps.Checked = Graph.ShowFps;
             chkAlgo.Checked = !string.IsNullOrEmpty(Graph.UpperRightInfo);
@@ -179,55 +190,33 @@ namespace JVida_Fast_CSharp
             {
                 return;
             }
-            Pattern pattern;
             Graph.ExitSelectionMode();
-            try
-            {
-                var parser = ParserFactory.GetParser(openFileDialog1.FileName);
-                pattern = parser.Parse(new StreamReader(openFileDialog1.FileName));
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error parsing file {openFileDialog1.FileName}. {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            Pattern pattern = TryParsePattern(openFileDialog1.FileName);
+            if (pattern == null)
+            { 
                 return;
             }
             if (e.Button == MouseButtons.Right)
             {
-                LoadPatternFile(openFileDialog1.FileName);
+                LoadPatternFileCentered(openFileDialog1.FileName);
                 return;
             }
-            if (e.Point.X + pattern.Bitmap.GetLength(0) > GridSize.Width || e.Point.Y + pattern.Bitmap.GetLength(1) > GridSize.Height)
+            PlotPattern(e.Point, pattern);
+        }
+
+        private Pattern TryParsePattern(string filePath)
+        {
+            Pattern pattern = null;
+            var parser = ParserFactory.GetParser(filePath);
+            try
             {
-                Pause();
-                var dlg =
-                    MessageBox.Show(
-                        $"Pattern will overflow {pattern.Bitmap.GetLength(0)}x{pattern.Bitmap.GetLength(1)}. Automatically resize/reposition the pattern?",
-                        "Reposition", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (dlg == DialogResult.Yes)
-                {
-                    e.Point = new Point(0, 0);
-                    if (pattern.Bitmap.GetLength(0) > GridSize.Width || pattern.Bitmap.GetLength(1) > GridSize.Height)
-                    {
-                        //resize grid to fit the pattern
-                        GridSize = new Size(pattern.Bitmap.GetLength(0), pattern.Bitmap.GetLength(1));
-                        Restart(true);
-                    }
-                }
-                else
-                {
-                    Resume();
-                    return;
-                }
+                pattern = parser.Parse(new StreamReader(filePath));
             }
-            Gol.Plot(e.Point, pattern.Bitmap);
-            if (pattern.Algorithm.HasValue && pattern.Algorithm.Value.Symbol != Gol.AlgorithmSymbol)
+            catch (Exception ex)
             {
-                // change algorythm
-                Gol.Algorithm = pattern.Algorithm.Value;
-                AlgorithmSymbol = pattern.Algorithm.Value.Symbol;
-                FindSelectAlgorithm(AlgorithmSymbol);
-                Restart(true);
+                MessageBox.Show($"Error parsing file {filePath}. {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            return pattern;
         }
 
         private void FindSelectAlgorithm(string symbol)
@@ -472,7 +461,7 @@ namespace JVida_Fast_CSharp
             {
                 if (File.Exists(InitialFilePath))
                 {
-                    LoadPatternFile(InitialFilePath);
+                    LoadPatternFileCentered(InitialFilePath);
                 }
             }
         }
@@ -821,20 +810,51 @@ namespace JVida_Fast_CSharp
 
         }
 
+        // Plots a pattern starting at a given point
+        private void PlotPattern(Point startPoint, Pattern pattern)
+        {
+            if (startPoint.X + pattern.Bitmap.GetLength(0) > GridSize.Width || startPoint.Y + pattern.Bitmap.GetLength(1) > GridSize.Height)
+            {
+                Pause();
+                var dlg =
+                    MessageBox.Show(
+                        $"Pattern will overflow {pattern.Bitmap.GetLength(0)}x{pattern.Bitmap.GetLength(1)}. Automatically resize/reposition the pattern?",
+                        "Reposition", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (dlg == DialogResult.Yes)
+                {
+                    startPoint = new Point(0, 0);
+                    if (pattern.Bitmap.GetLength(0) > GridSize.Width || pattern.Bitmap.GetLength(1) > GridSize.Height)
+                    {
+                        //resize grid to fit the pattern
+                        GridSize = new Size(pattern.Bitmap.GetLength(0), pattern.Bitmap.GetLength(1));
+                        Restart(true);
+                    }
+                }
+                else
+                {
+                    Resume();
+                    return;
+                }
+            }
+            if (pattern.Algorithm.HasValue && pattern.Algorithm.Value.Symbol != Gol.AlgorithmSymbol)
+            {
+                // change algorythm
+                Gol.Algorithm = pattern.Algorithm.Value;
+                AlgorithmSymbol = pattern.Algorithm.Value.Symbol;
+                FindSelectAlgorithm(AlgorithmSymbol);
+                Restart(true);
+            }
+            Gol.Plot(startPoint, pattern.Bitmap);
+        }
+
         // Stops and Clears the current simulation (if any), and loads a centered pattern into the simulation
-        private void LoadPatternFile(string filePath)
+        private void LoadPatternFileCentered(string filePath)
         {
             Pause();
             Gol.Clear();
-            var parser = ParserFactory.GetParser(filePath);
-            Pattern pattern;
-            try
-            {
-                pattern = parser.Parse(new StreamReader(filePath));
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error parsing file {filePath}. {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            Pattern pattern = TryParsePattern(filePath);
+            if (pattern == null)
+            { 
                 return;
             }
             var startPoint = new Point(0, 0);
@@ -850,7 +870,81 @@ namespace JVida_Fast_CSharp
                 startPoint.X = GridSize.Width/2 - pattern.Bitmap.GetLength(0)/2;
                 startPoint.Y = GridSize.Height/2 - pattern.Bitmap.GetLength(1)/2;
             }
+            if (pattern.Algorithm.HasValue && pattern.Algorithm.Value.Symbol != Gol.AlgorithmSymbol)
+            {
+                // change algorythm
+                Gol.Algorithm = pattern.Algorithm.Value;
+                AlgorithmSymbol = pattern.Algorithm.Value.Symbol;
+                FindSelectAlgorithm(AlgorithmSymbol);
+                Restart(true);
+            }
             Gol.Plot(startPoint, pattern.Bitmap);
+
+
+        }
+
+        private void btnSetFileAssoc_Click(object sender, EventArgs e)
+        {
+            if (btnFileAssoc.Text.StartsWith("Set"))
+            {
+                FileAssociation.AssociateFileTypes(Application.ExecutablePath);
+            }
+            else
+            {
+                FileAssociation.RemoveFileTypeAssociations();
+            }
+            SetBtnFileAssocText();
+        }
+
+        private void SetBtnFileAssocText()
+        {
+            if (!HasAdminPrivileges())
+            {
+                btnFileAssoc.Visible = false;
+            }
+            else
+            {
+                bool associated = FileAssociation.AlreadyAssociated();
+                btnFileAssoc.Text = associated ? "Remove file assoc." : "Set file assoc.";
+                toolTip.SetToolTip(btnFileAssoc, $"{(associated ? "Remove" : "Set")} the file associations to open .cells, .rle and .lif files");
+            }
+        }
+
+        public static bool HasAdminPrivileges()
+        {
+            return new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
+        }
+
+        private void Graph_DragDropCell(object sender, DragEventArgs e)
+        {
+            Graph.ExitSelectionMode();
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            if (files.Length > 0)
+            {
+                var file = files[0];
+                var pattern = TryParsePattern(file);
+                if (pattern != null)
+                {
+                    PlotPattern(new Point(e.X, e.Y), pattern);
+                }
+            }
+        }
+
+        private void Graph_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                var fileName = ((string[])e.Data.GetData("FileName", true))[0];
+                if (availableExtensions.Any(ext => fileName.EndsWith(ext)))
+                {
+                    e.Effect = DragDropEffects.Copy;
+                    Graph.EnterSelectionMode(false);
+                }
+                else
+                {
+                    e.Effect = DragDropEffects.None;
+                }
+            }
         }
 
 

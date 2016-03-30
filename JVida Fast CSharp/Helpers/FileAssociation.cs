@@ -10,6 +10,9 @@ namespace JVida_Fast_CSharp.Helpers
 {
     public class FileAssociation
     {
+        private const string CellsProgId = "GameOfLifeSimulator.Cells";
+        private const string RleProgId = "GameOfLifeSimulator.Rle";
+        private const string LifProgId = "GameOfLifeSimulator.Lif";
         /// <summary>
         /// Notifies the system of an event that an application has performed. An application should use this function if it performs an action that may affect the Shell. 
         /// </summary>
@@ -212,29 +215,83 @@ namespace JVida_Fast_CSharp.Helpers
                 IntPtr.Zero);
         }
 
+        public static bool AlreadyAssociated()
+        {
+            return Registry.ClassesRoot.OpenSubKey(CellsProgId) != null 
+                && Registry.ClassesRoot.OpenSubKey(RleProgId) != null
+                && Registry.ClassesRoot.OpenSubKey(LifProgId) != null;
+        }
+
+        public static void RemoveFileTypeAssociations()
+        {
+            bool changed = false;
+            if (Registry.ClassesRoot.OpenSubKey(CellsProgId) != null)
+            {
+                Registry.ClassesRoot.DeleteSubKeyTree(CellsProgId);
+                changed = true;
+            }
+            if (Registry.ClassesRoot.OpenSubKey(RleProgId) != null)
+            {
+                Registry.ClassesRoot.DeleteSubKeyTree(RleProgId);
+                changed = true;
+            }
+            if (Registry.ClassesRoot.OpenSubKey(LifProgId) != null)
+            {
+                Registry.ClassesRoot.DeleteSubKeyTree(LifProgId);
+                changed = true;
+            }
+            if (Registry.ClassesRoot.OpenSubKey(".rle") != null)
+            {
+                Registry.ClassesRoot.DeleteSubKeyTree(".rle");
+                changed = true;
+            }
+            if (Registry.ClassesRoot.OpenSubKey(".cells") != null)
+            {
+                Registry.ClassesRoot.DeleteSubKeyTree(".cells");
+                changed = true;
+            }
+            if (Registry.ClassesRoot.OpenSubKey(".lif") != null)
+            {
+                Registry.ClassesRoot.DeleteSubKeyTree(".lif");
+                changed = true;
+            }
+            if (changed)
+            {
+                NotifyOfChange();
+            }
+        }
+
         public static void AssociateFileTypes(string exePath)
         {
             bool changed = false;
-            var cellsProgId = "GameOfLifeSimulator.Cells";
-            if (Registry.ClassesRoot.OpenSubKey(cellsProgId) == null)
+            if (Registry.ClassesRoot.OpenSubKey(CellsProgId) == null)
             {
                 var cellsKey = Registry.ClassesRoot.CreateSubKey(".cells");
-                cellsKey.SetValue("", cellsProgId, RegistryValueKind.String);
-                var cellsProgKey = Registry.ClassesRoot.CreateSubKey(cellsProgId);
+                cellsKey.SetValue("", CellsProgId, RegistryValueKind.String);
+                var cellsProgKey = Registry.ClassesRoot.CreateSubKey(CellsProgId);
                 cellsProgKey.SetValue("", "Cells file (Game of Life Simulator)", RegistryValueKind.String);
                 var cellsCmdKey = cellsProgKey.CreateSubKey("shell").CreateSubKey("open").CreateSubKey("command");
                 cellsCmdKey.SetValue("", $"\"{exePath}\" \"%1\"", RegistryValueKind.ExpandString);
                 changed = true;
             }
-            var rleProgId = "GameOfLifeSimulator.Rle";
-            if (Registry.ClassesRoot.OpenSubKey(rleProgId) == null)
+            if (Registry.ClassesRoot.OpenSubKey(RleProgId) == null)
             {
                 var rleKey = Registry.ClassesRoot.CreateSubKey(".rle");
-                rleKey.SetValue("", rleProgId, RegistryValueKind.String);
-                var rleProgKey = Registry.ClassesRoot.CreateSubKey(rleProgId);
+                rleKey.SetValue("", RleProgId, RegistryValueKind.String);
+                var rleProgKey = Registry.ClassesRoot.CreateSubKey(RleProgId);
                 rleProgKey.SetValue("", "RLE file (Game of Life Simulator)", RegistryValueKind.String);
                 var rleCmdKey = rleProgKey.CreateSubKey("shell").CreateSubKey("open").CreateSubKey("command");
                 rleCmdKey.SetValue("", $"\"{exePath}\" \"%1\"", RegistryValueKind.ExpandString);
+                changed = true;
+            }
+            if (Registry.ClassesRoot.OpenSubKey(LifProgId) == null)
+            {
+                var lifKey = Registry.ClassesRoot.CreateSubKey(".lif");
+                lifKey.SetValue("", LifProgId, RegistryValueKind.String);
+                var lifProgKey = Registry.ClassesRoot.CreateSubKey(LifProgId);
+                lifProgKey.SetValue("", "LIF file (Game of Life Simulator)", RegistryValueKind.String);
+                var lifCmdKey = lifProgKey.CreateSubKey("shell").CreateSubKey("open").CreateSubKey("command");
+                lifCmdKey.SetValue("", $"\"{exePath}\" \"%1\"", RegistryValueKind.ExpandString);
                 changed = true;
             }
             if (changed)

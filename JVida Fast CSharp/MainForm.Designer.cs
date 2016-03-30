@@ -63,6 +63,7 @@
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.btnFileAssoc = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
             this.splitContainer.SuspendLayout();
@@ -95,7 +96,7 @@
             // 
             // openFileDialog1
             // 
-            this.openFileDialog1.Filter = "Cells files|*.cells;*.rle";
+            this.openFileDialog1.Filter = "Cells files|*.cells;*.rle;*.lif";
             this.openFileDialog1.RestoreDirectory = true;
             // 
             // splitContainer
@@ -441,19 +442,20 @@
             // 
             this.pnlDisplay.BackColor = System.Drawing.Color.White;
             this.pnlDisplay.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlDisplay.Controls.Add(this.btnFileAssoc);
             this.pnlDisplay.Controls.Add(this.chkPosition);
             this.pnlDisplay.Controls.Add(this.chkAlgo);
             this.pnlDisplay.Controls.Add(this.chkFps);
             this.pnlDisplay.Location = new System.Drawing.Point(430, 3);
             this.pnlDisplay.Name = "pnlDisplay";
-            this.pnlDisplay.Size = new System.Drawing.Size(114, 83);
+            this.pnlDisplay.Size = new System.Drawing.Size(215, 83);
             this.pnlDisplay.TabIndex = 4;
             // 
             // chkPosition
             // 
             this.chkPosition.AutoSize = true;
             this.chkPosition.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.chkPosition.Location = new System.Drawing.Point(9, 9);
+            this.chkPosition.Location = new System.Drawing.Point(9, 31);
             this.chkPosition.Name = "chkPosition";
             this.chkPosition.Size = new System.Drawing.Size(93, 18);
             this.chkPosition.TabIndex = 5;
@@ -466,7 +468,7 @@
             // 
             this.chkAlgo.AutoSize = true;
             this.chkAlgo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.chkAlgo.Location = new System.Drawing.Point(9, 57);
+            this.chkAlgo.Location = new System.Drawing.Point(108, 10);
             this.chkAlgo.Name = "chkAlgo";
             this.chkAlgo.Size = new System.Drawing.Size(100, 18);
             this.chkAlgo.TabIndex = 6;
@@ -480,7 +482,7 @@
             // 
             this.chkFps.AutoSize = true;
             this.chkFps.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.chkFps.Location = new System.Drawing.Point(9, 33);
+            this.chkFps.Location = new System.Drawing.Point(9, 10);
             this.chkFps.Name = "chkFps";
             this.chkFps.Size = new System.Drawing.Size(69, 18);
             this.chkFps.TabIndex = 7;
@@ -517,6 +519,17 @@
             // colorDialog1
             // 
             this.colorDialog1.FullOpen = true;
+            // 
+            // btnFileAssoc
+            // 
+            this.btnFileAssoc.Location = new System.Drawing.Point(3, 55);
+            this.btnFileAssoc.Name = "btnFileAssoc";
+            this.btnFileAssoc.Size = new System.Drawing.Size(115, 23);
+            this.btnFileAssoc.TabIndex = 8;
+            this.btnFileAssoc.Text = "Set file assoc.";
+            this.toolTip.SetToolTip(this.btnFileAssoc, "Set the file associations to open .cells and .rle files");
+            this.btnFileAssoc.UseVisualStyleBackColor = true;
+            this.btnFileAssoc.Click += new System.EventHandler(this.btnSetFileAssoc_Click);
             // 
             // MainForm
             // 
@@ -590,5 +603,6 @@
         private System.Windows.Forms.PictureBox btnOneToOne;
         private System.Windows.Forms.PictureBox btnImport;
         private System.Windows.Forms.PictureBox btnClear;
+        private System.Windows.Forms.Button btnFileAssoc;
     }
 }

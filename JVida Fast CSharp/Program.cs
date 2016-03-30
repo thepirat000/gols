@@ -28,12 +28,7 @@ namespace JVida_Fast_CSharp
             {
                 if (initialFilePath != null)
                 {
-                    using (var pipe = new NamedPipeClientStream(".", MainForm.LoadPatternPipeName, PipeDirection.Out))
-                    using (var stream = new StreamWriter(pipe))
-                    {
-                        pipe.Connect();
-                        stream.WriteLine(initialFilePath);
-                    }
+                    SignalLoadPattern(initialFilePath);
                 }
                 else
                 {
@@ -41,22 +36,25 @@ namespace JVida_Fast_CSharp
                 }
                 return;
             }
-            if (HasAdminPrivileges())
-            {
-                try
-                {
-                    FileAssociation.AssociateFileTypes(Application.ExecutablePath);
-                }
-                catch (Exception)
-                {
-                }
-            }
             Application.Run(new MainForm(initialFilePath));
         }
 
-        public static bool HasAdminPrivileges()
+        private static void SignalLoadPattern(string initialFilePath)
         {
-            return (new WindowsPrincipal(WindowsIdentity.GetCurrent())).IsInRole(WindowsBuiltInRole.Administrator);
+            try
+            {
+                using (var pipe = new NamedPipeClientStream(".", MainForm.LoadPatternPipeName, PipeDirection.Out))
+                using (var stream = new StreamWriter(pipe))
+                {
+                    pipe.Connect();
+                    stream.WriteLine(initialFilePath);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Unable to load pattern. {ex.Message}.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Application.Exit();
+            }
         }
 
         /// <summary>
