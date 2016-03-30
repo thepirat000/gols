@@ -236,8 +236,8 @@ namespace JVida_Fast_CSharp
 
             BITMAPINFOHEADER bi = new BITMAPINFOHEADER();
             bi.biSize = 40;
-            bi.biWidth = (Int32)this.width;
-            bi.biHeight = (Int32)this.height;
+            bi.biWidth = (Int32)(this.width % 2 == 0 ? this.width : this.width+1);
+            bi.biHeight = (Int32)(this.height % 2 == 0 ? this.height : this.height + 1);
             bi.biPlanes = 1;
             bi.biBitCount = 24;
             bi.biCompression = 0;  // 0 = BI_RGB
