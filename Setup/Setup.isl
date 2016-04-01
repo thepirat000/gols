@@ -4662,9 +4662,9 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<col def="I2">Sequence</col>
 		<col def="L255">Command</col>
 		<col def="L255">Argument</col>
-		<row><td>cells</td><td>open</td><td/><td>open</td><td>%1</td></row>
-		<row><td>lif</td><td>open</td><td/><td>open</td><td>%1</td></row>
-		<row><td>rle</td><td>open</td><td/><td>open</td><td>%1</td></row>
+		<row><td>cells</td><td>open</td><td/><td>open</td><td>"%1"</td></row>
+		<row><td>lif</td><td>open</td><td/><td>open</td><td>"%1"</td></row>
+		<row><td>rle</td><td>open</td><td/><td>open</td><td>"%1"</td></row>
 	</table>
 
 	<table name="_Validation">
