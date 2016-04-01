@@ -16,4 +16,4 @@ Features
  
 ![GOL image](http://i.imgur.com/GWmYC4g.png) 
 
-Note: Run the application with admin rights.
+Note: Run the application with admin rights to set file associations (.cells, .rle, .lif).
