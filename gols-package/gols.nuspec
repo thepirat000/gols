@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <metadata>
+    <id>gols</id>
+    <title>(Yet another) Game of Life Simulator</title>
+    <version>1.0.0</version>
+    <authors>Federico Colombo</authors>
+    <owners>Federico Colombo</owners>
+    <summary>Conway's Game of Life Simulator.</summary>
+    <description>All parameters can be changed in real-time, record the current simulation, DragDrop patterns files.</description>
+    <projectUrl>https://github.com/thepirat000/gols</projectUrl>
+    <tags>GameOfLife Conway Game</tags>
+    <licenseUrl>https://opensource.org/licenses/MIT</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance> <!-- or true if you require the user to accept the License before installing -->
+    <iconUrl>http://i.imgur.com/P8ptkY6.png</iconUrl>
+  </metadata>
+</package>
