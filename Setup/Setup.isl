@@ -340,8 +340,8 @@
 		<col def="S0">ISDotNetInstallerArgsCommit</col>
 		<col def="S0">ISDotNetInstallerArgsUninstall</col>
 		<col def="S0">ISDotNetInstallerArgsRollback</col>
+		<row><td>Game_of_Life_Simulator.Primary_output</td><td>{E7FE1674-2AA1-4279-B2FE-B149FEF9D787}</td><td>INSTALLDIR</td><td>2</td><td/><td>game_of_life_simulator.prima</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ISX_DEFAULTCOMPONENT1</td><td>{0D8104D4-E6C4-407C-BF06-571C52F4C3F5}</td><td>INSTALLDIR</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>JVida_Fast.Primary_output</td><td>{C1F19A06-B546-4613-89AE-31EE7A0FA8BE}</td><td>GOLS</td><td>2</td><td/><td>jvida_fast.primary_output</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 	</table>
 
 	<table name="Condition">
@@ -1050,9 +1050,8 @@
 	<table name="CreateFolder">
 		<col key="yes" def="s72">Directory_</col>
 		<col key="yes" def="s72">Component_</col>
-		<row><td>GOLS</td><td>JVida_Fast.Primary_output</td></row>
+		<row><td>INSTALLDIR</td><td>Game_of_Life_Simulator.Primary_output</td></row>
 		<row><td>INSTALLDIR</td><td>ISX_DEFAULTCOMPONENT1</td></row>
-		<row><td>INSTALLDIR</td><td>JVida_Fast.Primary_output</td></row>
 	</table>
 
 	<table name="CustomAction">
@@ -1844,9 +1843,6 @@
 		<col def="S255">ProgId_</col>
 		<col def="S64">MIME_</col>
 		<col def="s38">Feature_</col>
-		<row><td>.cells</td><td>JVida_Fast.Primary_output</td><td>GameOfLifeSimulator.Cells</td><td/><td>AlwaysInstall</td></row>
-		<row><td>.lif</td><td>JVida_Fast.Primary_output</td><td>GameOfLifeSimulator.Lif</td><td/><td>AlwaysInstall</td></row>
-		<row><td>.rle</td><td>JVida_Fast.Primary_output</td><td>GameOfLifeSimulator.Rle</td><td/><td>AlwaysInstall</td></row>
 	</table>
 
 	<table name="Feature">
@@ -1868,8 +1864,8 @@
 	<table name="FeatureComponents">
 		<col key="yes" def="s38">Feature_</col>
 		<col key="yes" def="s72">Component_</col>
+		<row><td>AlwaysInstall</td><td>Game_of_Life_Simulator.Primary_output</td></row>
 		<row><td>AlwaysInstall</td><td>ISX_DEFAULTCOMPONENT1</td></row>
-		<row><td>AlwaysInstall</td><td>JVida_Fast.Primary_output</td></row>
 	</table>
 
 	<table name="File">
@@ -1884,7 +1880,7 @@
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="I4">ISAttributes</col>
 		<col def="S72">ISComponentSubFolder_</col>
-		<row><td>jvida_fast.primary_output</td><td>JVida_Fast.Primary_output</td><td>JVida Fast.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;JVida Fast&gt;|Built</td><td>3</td><td/></row>
+		<row><td>game_of_life_simulator.prima</td><td>Game_of_Life_Simulator.Primary_output</td><td>Game of Life Simulator.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;Game of Life Simulator&gt;|Built</td><td>3</td><td/></row>
 	</table>
 
 	<table name="FileSFPCatalog">
@@ -2026,8 +2022,8 @@
 		<col def="S0">FTPLocation</col>
 		<col def="S0">HTTPLocation</col>
 		<col def="S0">Miscellaneous</col>
+		<row><td>Game_of_Life_Simulator.Primary_output</td><td/><td/><td>_BFE8FAF7_40AC_446C_9B23_0FFC19807BF2_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>ISX_DEFAULTCOMPONENT1</td><td/><td/><td>_CF420129_F67D_4BBA_A244_CB977474E779_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>JVida_Fast.Primary_output</td><td/><td/><td>_643EE428_347D_405D_87CB_1A7036ADB3EB_FILTER</td><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="ISCustomActionReference">
@@ -2306,6 +2302,7 @@
 		<col def="S255">TestValue</col>
 		<col def="i4">Type</col>
 		<row><td>CommonFilesFolder</td><td/><td/><td>1</td></row>
+		<row><td>Game of Life Simulator</td><td>JVida Fast CSharp\Game of Life Simulator.csproj</td><td/><td>2</td></row>
 		<row><td>ISPROJECTDIR</td><td/><td/><td>1</td></row>
 		<row><td>ISProductFolder</td><td/><td/><td>1</td></row>
 		<row><td>ISProjectDataFolder</td><td/><td/><td>1</td></row>
@@ -4274,9 +4271,6 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<col def="S72">Icon_</col>
 		<col def="I2">IconIndex</col>
 		<col def="I4">ISAttributes</col>
-		<row><td>GameOfLifeSimulator.Cells</td><td/><td/><td>CELLS file (Game of Life Simulator)</td><td/><td>0</td><td/></row>
-		<row><td>GameOfLifeSimulator.Lif</td><td/><td/><td>LIF file (Game of Life Simulator)</td><td/><td>0</td><td/></row>
-		<row><td>GameOfLifeSimulator.Rle</td><td/><td/><td>RLE file (Game of Life Simulator)</td><td/><td>0</td><td/></row>
 	</table>
 
 	<table name="Property">
@@ -4430,9 +4424,6 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<col def="L255">FileName</col>
 		<col def="s72">DirProperty</col>
 		<col def="i2">InstallMode</col>
-		<row><td>FileKey1</td><td>JVida_Fast.Primary_output</td><td/><td>federico_colombo</td><td>2</td></row>
-		<row><td>FileKey2</td><td>JVida_Fast.Primary_output</td><td/><td>game_of_life_simulator</td><td>2</td></row>
-		<row><td>_Built</td><td>JVida_Fast.Primary_output</td><td/><td>game_of_life_simulator</td><td>2</td></row>
 	</table>
 
 	<table name="RemoveIniFile">
@@ -4518,8 +4509,6 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<col def="S255">ISComments</col>
 		<col def="S255">ISShortcutName</col>
 		<col def="I4">ISAttributes</col>
-		<row><td>_Built</td><td>game_of_life_simulator</td><td>##IDS_SHORTCUT_DISPLAY_NAME1##</td><td>JVida_Fast.Primary_output</td><td>AlwaysInstall</td><td/><td/><td/><td/><td/><td>1</td><td/><td/><td/><td/><td/><td/><td/><td/></row>
-		<row><td>_Built1</td><td>DesktopFolder</td><td>##IDS_SHORTCUT_DISPLAY_NAME1##</td><td>JVida_Fast.Primary_output</td><td>AlwaysInstall</td><td/><td/><td/><td/><td/><td>1</td><td/><td/><td/><td/><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="Signature">
@@ -4650,9 +4639,6 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<col def="I2">Sequence</col>
 		<col def="L255">Command</col>
 		<col def="L255">Argument</col>
-		<row><td>.cells</td><td>open</td><td/><td>open</td><td>%1</td></row>
-		<row><td>.lif</td><td>open</td><td/><td>open</td><td>%1</td></row>
-		<row><td>.rle</td><td>open</td><td/><td>open</td><td>%1</td></row>
 	</table>
 
 	<table name="_Validation">

@@ -29,8 +29,8 @@
 	</ItemGroup>
 	<Import Project="$(MSBuildExtensionsPath32)\InstallShield\2015Limited\InstallShield.targets"/>
 	<ItemGroup>
-		<ProjectReference Include="..\JVida Fast CSharp\JVida Fast.csproj">
-			<Name>JVida Fast</Name>
+		<ProjectReference Include="..\JVida Fast CSharp\Game of Life Simulator.csproj">
+			<Name>Game of Life Simulator</Name>
 			<Project>{D553EE3A-F0AC-4FCE-BC49-D6CE4CB775DC}</Project>
 		</ProjectReference>
 	</ItemGroup>
