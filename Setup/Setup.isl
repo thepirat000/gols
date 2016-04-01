@@ -1843,11 +1843,14 @@
 		<col def="S255">ProgId_</col>
 		<col def="S64">MIME_</col>
 		<col def="s38">Feature_</col>
-		<row><td>.cells</td><td>Game_of_Life_Simulator.Primary_output</td><td>GameOfLifeSimulator.Cells</td><td/><td>AlwaysInstall</td></row>
-		<row><td>.lif</td><td>Game_of_Life_Simulator.Primary_output</td><td>GameOfLifeSimulator.Lif</td><td/><td>AlwaysInstall</td></row>
-		<row><td>.rle</td><td>Game_of_Life_Simulator.Primary_output</td><td>GameOfLifeSimulator.Rle</td><td/><td>AlwaysInstall</td></row>
 		<row><td>NewExtension1</td><td>Game_of_Life_Simulator.Primary_output</td><td/><td/><td>AlwaysInstall</td></row>
 		<row><td>NewExtension2</td><td>Game_of_Life_Simulator.Primary_output</td><td>GameOfLifeSimulator.Cells</td><td/><td>AlwaysInstall</td></row>
+		<row><td>NewExtension3</td><td>Game_of_Life_Simulator.Primary_output</td><td>GameOfLifeSimulator.Lif</td><td/><td>AlwaysInstall</td></row>
+		<row><td>NewExtension4</td><td>Game_of_Life_Simulator.Primary_output</td><td>GameOfLifeSimulator.Cells</td><td/><td>AlwaysInstall</td></row>
+		<row><td>NewExtension5</td><td>Game_of_Life_Simulator.Primary_output</td><td>GameOfLifeSimulator.Cells</td><td/><td>AlwaysInstall</td></row>
+		<row><td>cells</td><td>Game_of_Life_Simulator.Primary_output</td><td>GameOfLifeSimulator.Cells</td><td/><td>AlwaysInstall</td></row>
+		<row><td>lif</td><td>Game_of_Life_Simulator.Primary_output</td><td>GameOfLifeSimulator.Lif</td><td/><td>AlwaysInstall</td></row>
+		<row><td>rle</td><td>Game_of_Life_Simulator.Primary_output</td><td>GameOfLifeSimulator.Rle</td><td/><td>AlwaysInstall</td></row>
 	</table>
 
 	<table name="Feature">
@@ -3730,6 +3733,9 @@
 		<row><td>NEW_STRING1</td><td>1033</td><td>cells</td><td>0</td><td/><td>-106642445</td></row>
 		<row><td>NEW_STRING10</td><td>1033</td><td>.lif</td><td>0</td><td/><td>170171488</td></row>
 		<row><td>NEW_STRING11</td><td>1033</td><td>.rle</td><td>0</td><td/><td>170166056</td></row>
+		<row><td>NEW_STRING12</td><td>1033</td><td>cells</td><td>0</td><td/><td>170155241</td></row>
+		<row><td>NEW_STRING13</td><td>1033</td><td>lif</td><td>0</td><td/><td>170161385</td></row>
+		<row><td>NEW_STRING14</td><td>1033</td><td>rle</td><td>0</td><td/><td>170163433</td></row>
 		<row><td>NEW_STRING2</td><td>1033</td><td>.cells</td><td>0</td><td/><td>-106679277</td></row>
 		<row><td>NEW_STRING3</td><td>1033</td><td>.rle</td><td>0</td><td/><td>-106671053</td></row>
 		<row><td>NEW_STRING4</td><td>1033</td><td>.lif</td><td>0</td><td/><td>-106640333</td></row>
@@ -4656,9 +4662,9 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<col def="I2">Sequence</col>
 		<col def="L255">Command</col>
 		<col def="L255">Argument</col>
-		<row><td>.cells</td><td>open</td><td/><td>open</td><td>%1</td></row>
-		<row><td>.lif</td><td>open</td><td/><td>open</td><td>%1</td></row>
-		<row><td>.rle</td><td>open</td><td/><td>open</td><td>%1</td></row>
+		<row><td>cells</td><td>open</td><td/><td>open</td><td>%1</td></row>
+		<row><td>lif</td><td>open</td><td/><td>open</td><td>%1</td></row>
+		<row><td>rle</td><td>open</td><td/><td>open</td><td>%1</td></row>
 	</table>
 
 	<table name="_Validation">
