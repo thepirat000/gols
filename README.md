@@ -14,5 +14,3 @@ Features
  - Drag & Drop to load patterns from _.cells_, _.rle_ or _.lif_ files. (Download [the collection](http://www.conwaylife.com/patterns/all.zip) from LifeWiki).
  
 ![GOL image](http://i.imgur.com/GWmYC4g.png) 
-
-Note: Run the application with admin rights to set file associations (.cells, .rle, .lif).
