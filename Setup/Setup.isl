@@ -1843,6 +1843,9 @@
 		<col def="S255">ProgId_</col>
 		<col def="S64">MIME_</col>
 		<col def="s38">Feature_</col>
+		<row><td>.cells</td><td>Game_of_Life_Simulator.Primary_output</td><td>GameOfLifeSimulator.Cells</td><td/><td>AlwaysInstall</td></row>
+		<row><td>.lif</td><td>Game_of_Life_Simulator.Primary_output</td><td>GameOfLifeSimulator.Lif</td><td/><td>AlwaysInstall</td></row>
+		<row><td>.rle</td><td>Game_of_Life_Simulator.Primary_output</td><td>GameOfLifeSimulator.Rle</td><td/><td>AlwaysInstall</td></row>
 	</table>
 
 	<table name="Feature">
@@ -3427,6 +3430,7 @@
 		<row><td>IDS_SETUPEXE_EXPIRE_MSG</td><td>1033</td><td>This setup works until %s. The setup will now exit.</td><td>0</td><td/><td>-106677357</td></row>
 		<row><td>IDS_SETUPEXE_LAUNCH_COND_E</td><td>1033</td><td>This setup was built with an evaluation version of InstallShield and can only be launched from setup.exe.</td><td>0</td><td/><td>-106677357</td></row>
 		<row><td>IDS_SHORTCUT_DISPLAY_NAME1</td><td>1033</td><td>Launch |Built</td><td>0</td><td/><td>-106642477</td></row>
+		<row><td>IDS_SHORTCUT_DISPLAY_NAME2</td><td>1033</td><td>Launch |Built</td><td>0</td><td/><td>170140768</td></row>
 		<row><td>IDS_SQLBROWSE_INTRO</td><td>1033</td><td>From the list of servers below, select the database server you would like to target.</td><td>0</td><td/><td>-106677357</td></row>
 		<row><td>IDS_SQLBROWSE_INTRO_DB</td><td>1033</td><td>From the list of catalog names below, select the database catalog you would like to target.</td><td>0</td><td/><td>-106677357</td></row>
 		<row><td>IDS_SQLBROWSE_INTRO_TEMPLATE</td><td>1033</td><td>[IS_SQLBROWSE_INTRO]</td><td>0</td><td/><td>-106677357</td></row>
@@ -3719,14 +3723,18 @@
 		<row><td>ID_STRING2</td><td>1033</td><td>https://github.com/thepirat000/gols</td><td>0</td><td/><td>-106689613</td></row>
 		<row><td>ID_STRING3</td><td>1033</td><td>Federico Colombo</td><td>0</td><td/><td>-106646637</td></row>
 		<row><td>ID_STRING4</td><td>1033</td><td>Launch |Built</td><td>0</td><td/><td>-106638381</td></row>
+		<row><td>ID_STRING5</td><td>1033</td><td>Launch |Built</td><td>0</td><td/><td>170142816</td></row>
 		<row><td>IIDS_UITEXT_FeatureUninstalled</td><td>1033</td><td>This feature will remain uninstalled.</td><td>0</td><td/><td>-106677357</td></row>
 		<row><td>NEW_STRING1</td><td>1033</td><td>cells</td><td>0</td><td/><td>-106642445</td></row>
+		<row><td>NEW_STRING10</td><td>1033</td><td>.lif</td><td>0</td><td/><td>170171488</td></row>
 		<row><td>NEW_STRING2</td><td>1033</td><td>.cells</td><td>0</td><td/><td>-106679277</td></row>
 		<row><td>NEW_STRING3</td><td>1033</td><td>.rle</td><td>0</td><td/><td>-106671053</td></row>
 		<row><td>NEW_STRING4</td><td>1033</td><td>.lif</td><td>0</td><td/><td>-106640333</td></row>
 		<row><td>NEW_STRING5</td><td>1033</td><td>.cells</td><td>0</td><td/><td>-106654605</td></row>
 		<row><td>NEW_STRING6</td><td>1033</td><td>.rle</td><td>0</td><td/><td>-106650509</td></row>
 		<row><td>NEW_STRING7</td><td>1033</td><td>.lif</td><td>0</td><td/><td>-106646413</td></row>
+		<row><td>NEW_STRING8</td><td>1033</td><td>.cells</td><td>0</td><td/><td>170163296</td></row>
+		<row><td>NEW_STRING9</td><td>1033</td><td>.rle</td><td>0</td><td/><td>170167392</td></row>
 	</table>
 
 	<table name="ISSwidtagProperty">
@@ -4271,6 +4279,9 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<col def="S72">Icon_</col>
 		<col def="I2">IconIndex</col>
 		<col def="I4">ISAttributes</col>
+		<row><td>GameOfLifeSimulator.Cells</td><td/><td/><td>CELLS file (Game of Life Simulator)</td><td/><td>0</td><td/></row>
+		<row><td>GameOfLifeSimulator.Lif</td><td/><td/><td/><td/><td>0</td><td/></row>
+		<row><td>GameOfLifeSimulator.Rle</td><td/><td/><td/><td/><td>0</td><td/></row>
 	</table>
 
 	<table name="Property">
@@ -4424,6 +4435,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<col def="L255">FileName</col>
 		<col def="s72">DirProperty</col>
 		<col def="i2">InstallMode</col>
+		<row><td>_Built</td><td>Game_of_Life_Simulator.Primary_output</td><td/><td>game_of_life_simulator</td><td>2</td></row>
 	</table>
 
 	<table name="RemoveIniFile">
@@ -4509,6 +4521,8 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<col def="S255">ISComments</col>
 		<col def="S255">ISShortcutName</col>
 		<col def="I4">ISAttributes</col>
+		<row><td>_Built</td><td>game_of_life_simulator</td><td>##IDS_SHORTCUT_DISPLAY_NAME2##</td><td>Game_of_Life_Simulator.Primary_output</td><td>AlwaysInstall</td><td/><td/><td/><td/><td/><td>1</td><td/><td/><td/><td/><td/><td/><td/><td/></row>
+		<row><td>_Built1</td><td>DesktopFolder</td><td>##IDS_SHORTCUT_DISPLAY_NAME2##</td><td>Game_of_Life_Simulator.Primary_output</td><td>AlwaysInstall</td><td/><td/><td/><td/><td/><td>1</td><td/><td/><td/><td/><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="Signature">
@@ -4639,6 +4653,9 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<col def="I2">Sequence</col>
 		<col def="L255">Command</col>
 		<col def="L255">Argument</col>
+		<row><td>.cells</td><td>open</td><td/><td>open</td><td>%1</td></row>
+		<row><td>.lif</td><td>open</td><td/><td>open</td><td>%1</td></row>
+		<row><td>.rle</td><td>open</td><td/><td>open</td><td>%1</td></row>
 	</table>
 
 	<table name="_Validation">
