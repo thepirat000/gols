@@ -104,14 +104,14 @@
             this.splitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.splitContainer.Margin = new System.Windows.Forms.Padding(4);
             this.splitContainer.Name = "splitContainer";
             this.splitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // splitContainer.Panel1
             // 
             this.splitContainer.Panel1.Controls.Add(this.flowLayoutPanel);
-            this.splitContainer.Size = new System.Drawing.Size(819, 520);
+            this.splitContainer.Size = new System.Drawing.Size(874, 583);
             this.splitContainer.SplitterDistance = 101;
             this.splitContainer.SplitterWidth = 5;
             this.splitContainer.TabIndex = 0;
@@ -123,9 +123,9 @@
             this.flowLayoutPanel.Controls.Add(this.pnlDisplay);
             this.flowLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel.Location = new System.Drawing.Point(0, 0);
-            this.flowLayoutPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.flowLayoutPanel.Margin = new System.Windows.Forms.Padding(4);
             this.flowLayoutPanel.Name = "flowLayoutPanel";
-            this.flowLayoutPanel.Size = new System.Drawing.Size(819, 101);
+            this.flowLayoutPanel.Size = new System.Drawing.Size(874, 101);
             this.flowLayoutPanel.TabIndex = 1;
             // 
             // pnlPlayer
@@ -143,7 +143,7 @@
             this.pnlPlayer.Controls.Add(this.btnPause);
             this.pnlPlayer.Controls.Add(this.btnPlay);
             this.pnlPlayer.Location = new System.Drawing.Point(4, 4);
-            this.pnlPlayer.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pnlPlayer.Margin = new System.Windows.Forms.Padding(4);
             this.pnlPlayer.Name = "pnlPlayer";
             this.pnlPlayer.Size = new System.Drawing.Size(275, 100);
             this.pnlPlayer.TabIndex = 2;
@@ -179,7 +179,7 @@
             // txtStepSize
             // 
             this.txtStepSize.Location = new System.Drawing.Point(99, 62);
-            this.txtStepSize.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtStepSize.Margin = new System.Windows.Forms.Padding(4);
             this.txtStepSize.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -322,7 +322,7 @@
             this.pnlGrid.Controls.Add(this.txtGridSize);
             this.pnlGrid.Controls.Add(this.chkWrapAround);
             this.pnlGrid.Location = new System.Drawing.Point(287, 4);
-            this.pnlGrid.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pnlGrid.Margin = new System.Windows.Forms.Padding(4);
             this.pnlGrid.Name = "pnlGrid";
             this.pnlGrid.Size = new System.Drawing.Size(277, 102);
             this.pnlGrid.TabIndex = 3;
@@ -346,7 +346,7 @@
             this.cmbAlgorithm.DropDownWidth = 200;
             this.cmbAlgorithm.FormattingEnabled = true;
             this.cmbAlgorithm.Location = new System.Drawing.Point(7, 70);
-            this.cmbAlgorithm.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cmbAlgorithm.Margin = new System.Windows.Forms.Padding(4);
             this.cmbAlgorithm.MaxDropDownItems = 10;
             this.cmbAlgorithm.Name = "cmbAlgorithm";
             this.cmbAlgorithm.Size = new System.Drawing.Size(223, 24);
@@ -358,7 +358,7 @@
             this.picColor.BackColor = System.Drawing.Color.Red;
             this.picColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.picColor.Location = new System.Drawing.Point(197, 23);
-            this.picColor.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.picColor.Margin = new System.Windows.Forms.Padding(4);
             this.picColor.Name = "picColor";
             this.picColor.Size = new System.Drawing.Size(33, 20);
             this.picColor.TabIndex = 7;
@@ -427,7 +427,7 @@
             // 
             this.txtGridSize.AcceptsReturn = true;
             this.txtGridSize.Location = new System.Drawing.Point(7, 22);
-            this.txtGridSize.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtGridSize.Margin = new System.Windows.Forms.Padding(4);
             this.txtGridSize.Name = "txtGridSize";
             this.txtGridSize.Size = new System.Drawing.Size(85, 22);
             this.txtGridSize.TabIndex = 5;
@@ -440,7 +440,7 @@
             this.chkWrapAround.AutoSize = true;
             this.chkWrapAround.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.chkWrapAround.Location = new System.Drawing.Point(129, 23);
-            this.chkWrapAround.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.chkWrapAround.Margin = new System.Windows.Forms.Padding(4);
             this.chkWrapAround.Name = "chkWrapAround";
             this.chkWrapAround.Size = new System.Drawing.Size(52, 21);
             this.chkWrapAround.TabIndex = 4;
@@ -459,7 +459,7 @@
             this.pnlDisplay.Controls.Add(this.chkAlgo);
             this.pnlDisplay.Controls.Add(this.chkFps);
             this.pnlDisplay.Location = new System.Drawing.Point(572, 4);
-            this.pnlDisplay.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pnlDisplay.Margin = new System.Windows.Forms.Padding(4);
             this.pnlDisplay.Name = "pnlDisplay";
             this.pnlDisplay.Size = new System.Drawing.Size(235, 102);
             this.pnlDisplay.TabIndex = 4;
@@ -467,7 +467,7 @@
             // btnFileAssoc
             // 
             this.btnFileAssoc.Location = new System.Drawing.Point(4, 68);
-            this.btnFileAssoc.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnFileAssoc.Margin = new System.Windows.Forms.Padding(4);
             this.btnFileAssoc.Name = "btnFileAssoc";
             this.btnFileAssoc.Size = new System.Drawing.Size(153, 28);
             this.btnFileAssoc.TabIndex = 8;
@@ -481,7 +481,7 @@
             this.chkPosition.AutoSize = true;
             this.chkPosition.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.chkPosition.Location = new System.Drawing.Point(12, 38);
-            this.chkPosition.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.chkPosition.Margin = new System.Windows.Forms.Padding(4);
             this.chkPosition.Name = "chkPosition";
             this.chkPosition.Size = new System.Drawing.Size(106, 21);
             this.chkPosition.TabIndex = 5;
@@ -495,7 +495,7 @@
             this.chkAlgo.AutoSize = true;
             this.chkAlgo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.chkAlgo.Location = new System.Drawing.Point(118, 12);
-            this.chkAlgo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.chkAlgo.Margin = new System.Windows.Forms.Padding(4);
             this.chkAlgo.Name = "chkAlgo";
             this.chkAlgo.Size = new System.Drawing.Size(115, 21);
             this.chkAlgo.TabIndex = 6;
@@ -510,7 +510,7 @@
             this.chkFps.AutoSize = true;
             this.chkFps.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.chkFps.Location = new System.Drawing.Point(12, 12);
-            this.chkFps.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.chkFps.Margin = new System.Windows.Forms.Padding(4);
             this.chkFps.Name = "chkFps";
             this.chkFps.Size = new System.Drawing.Size(78, 21);
             this.chkFps.TabIndex = 7;
@@ -552,11 +552,11 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(819, 520);
+            this.ClientSize = new System.Drawing.Size(874, 583);
             this.Controls.Add(this.splitContainer);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "MainForm";
             this.Text = "Game Of Life Simulator";
             this.splitContainer.Panel1.ResumeLayout(false);

@@ -63,7 +63,7 @@ namespace JVida_Fast_CSharp
             SetFilePatternListener();
             availableExtensions = new HashSet<string>(ParserFactory.GetAvailableExtensions());
             splitContainer.SplitterDistance = pnlDisplay.Height + 3;
-            GridSize = new Size(splitContainer.Panel2.Width, splitContainer.Panel2.Height);
+            GridSize = new Size(splitContainer.Panel2.Width / 2, splitContainer.Panel2.Height / 2);
             Initialize(false);
         }
         #endregion

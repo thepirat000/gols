@@ -157,7 +157,7 @@ namespace JVida_Fast_CSharp
         private void GameStep(ref List<Point> Born, ref List<Point> Dead)
         {
             // Set the neighbor alive count to 0, and increment age
-            foreach (Point item in this.Alive.AsParallel())
+            foreach (Point item in this.Alive)
             {
                 this.Matrix[item.X, item.Y].AliveNeighbors = 0;
                 this.Matrix[item.X, item.Y].Age++;
@@ -169,7 +169,7 @@ namespace JVida_Fast_CSharp
 
             // Compute neighbors alive in each alive cell
             // Add 1 to each neighbor of the living cells
-            foreach (Point item in this.Alive.AsParallel())
+            foreach (Point item in this.Alive)
             {
                 foreach (Point neighbor in this.Matrix[item.X, item.Y].Neighbors)
                 {
@@ -192,7 +192,7 @@ namespace JVida_Fast_CSharp
             List<Point> ret = new List<Point>();
 
             // Born
-            foreach (Point item in this.Alive.AsParallel())
+            foreach (Point item in this.Alive)
             {
                 foreach (Point neighbor in this.Matrix[item.X, item.Y].Neighbors)
                 {
@@ -217,7 +217,7 @@ namespace JVida_Fast_CSharp
             List<Point> ret = new List<Point>();
 
             // Survives
-            foreach (Point item in this.Alive.AsParallel())
+            foreach (Point item in this.Alive)
             {
                 Cell c1 = this.Matrix[item.X, item.Y];
                 bool survives = this.Algorithm.NextState(1, c1.AliveNeighbors);
@@ -232,7 +232,7 @@ namespace JVida_Fast_CSharp
         private List<Point> GetDeads()
         {
             List<Point> ret = new List<Point>();
-            foreach (Point item in this.Alive.AsParallel())
+            foreach (Point item in this.Alive)
             {
                 Cell c1 = this.Matrix[item.X, item.Y];
                 if (c1.Age >= this.MaximumAge)

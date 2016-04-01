@@ -15,8 +15,8 @@ namespace JVida_Fast_CSharp.Parsers
             var ext = Path.GetExtension(filename);
             var type = typeof (ParserBase).Assembly.GetTypes()
                 .FirstOrDefault(t => typeof (ParserBase).IsAssignableFrom(t)
-                                     && t.GetCustomAttribute<ForExtensionsAttribute>() != null
-                                     && t.GetCustomAttribute<ForExtensionsAttribute>().Extensions.Contains(ext));
+                                     && t.GetCustomAttributes(typeof(ForExtensionsAttribute), false).Any()
+                                     && ((ForExtensionsAttribute)t.GetCustomAttributes(typeof(ForExtensionsAttribute), false).First()).Extensions.Contains(ext));
             if (type == null)
             {
                 type = typeof (ParserPlainText);
@@ -28,8 +28,8 @@ namespace JVida_Fast_CSharp.Parsers
         {
             return typeof(ParserBase).Assembly.GetTypes()
                 .Where(t => typeof(ParserBase).IsAssignableFrom(t)
-                       && t.GetCustomAttribute<ForExtensionsAttribute>() != null)
-                .SelectMany(t => t.GetCustomAttribute<ForExtensionsAttribute>().Extensions);
+                       && t.GetCustomAttributes(typeof(ForExtensionsAttribute), false).Any())
+                .SelectMany(t => ((ForExtensionsAttribute)t.GetCustomAttributes(typeof(ForExtensionsAttribute), false).First()).Extensions);
         }
     }
     
