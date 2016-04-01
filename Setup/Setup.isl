@@ -1846,6 +1846,8 @@
 		<row><td>.cells</td><td>Game_of_Life_Simulator.Primary_output</td><td>GameOfLifeSimulator.Cells</td><td/><td>AlwaysInstall</td></row>
 		<row><td>.lif</td><td>Game_of_Life_Simulator.Primary_output</td><td>GameOfLifeSimulator.Lif</td><td/><td>AlwaysInstall</td></row>
 		<row><td>.rle</td><td>Game_of_Life_Simulator.Primary_output</td><td>GameOfLifeSimulator.Rle</td><td/><td>AlwaysInstall</td></row>
+		<row><td>NewExtension1</td><td>Game_of_Life_Simulator.Primary_output</td><td/><td/><td>AlwaysInstall</td></row>
+		<row><td>NewExtension2</td><td>Game_of_Life_Simulator.Primary_output</td><td>GameOfLifeSimulator.Cells</td><td/><td>AlwaysInstall</td></row>
 	</table>
 
 	<table name="Feature">
@@ -3727,6 +3729,7 @@
 		<row><td>IIDS_UITEXT_FeatureUninstalled</td><td>1033</td><td>This feature will remain uninstalled.</td><td>0</td><td/><td>-106677357</td></row>
 		<row><td>NEW_STRING1</td><td>1033</td><td>cells</td><td>0</td><td/><td>-106642445</td></row>
 		<row><td>NEW_STRING10</td><td>1033</td><td>.lif</td><td>0</td><td/><td>170171488</td></row>
+		<row><td>NEW_STRING11</td><td>1033</td><td>.rle</td><td>0</td><td/><td>170166056</td></row>
 		<row><td>NEW_STRING2</td><td>1033</td><td>.cells</td><td>0</td><td/><td>-106679277</td></row>
 		<row><td>NEW_STRING3</td><td>1033</td><td>.rle</td><td>0</td><td/><td>-106671053</td></row>
 		<row><td>NEW_STRING4</td><td>1033</td><td>.lif</td><td>0</td><td/><td>-106640333</td></row>
@@ -4280,8 +4283,8 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<col def="I2">IconIndex</col>
 		<col def="I4">ISAttributes</col>
 		<row><td>GameOfLifeSimulator.Cells</td><td/><td/><td>CELLS file (Game of Life Simulator)</td><td/><td>0</td><td/></row>
-		<row><td>GameOfLifeSimulator.Lif</td><td/><td/><td/><td/><td>0</td><td/></row>
-		<row><td>GameOfLifeSimulator.Rle</td><td/><td/><td/><td/><td>0</td><td/></row>
+		<row><td>GameOfLifeSimulator.Lif</td><td/><td/><td>LIF file (Game of Life Simulator)</td><td/><td>0</td><td/></row>
+		<row><td>GameOfLifeSimulator.Rle</td><td/><td/><td>RLE file (Game of Life Simulator)</td><td/><td>0</td><td/></row>
 	</table>
 
 	<table name="Property">
