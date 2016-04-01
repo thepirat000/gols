@@ -64,6 +64,7 @@ namespace JVida_Fast_CSharp
             availableExtensions = new HashSet<string>(ParserFactory.GetAvailableExtensions());
             splitContainer.SplitterDistance = pnlDisplay.Height + 3;
             GridSize = new Size(splitContainer.Panel2.Width / 2, splitContainer.Panel2.Height / 2);
+            openFileDialog1.InitialDirectory = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), @"Patterns\");
             Initialize(false);
         }
         #endregion
@@ -406,28 +407,16 @@ namespace JVida_Fast_CSharp
 
         private void StartRecording()
         {
-            bool restart = !Gol.Paused;
             Gol.Pause();
             Avi = new AviWriter();
             saveFileDialog1.FileName = "Algorithm " + AlgorithmSymbol.Replace('/', '^') + " - MaxAge " + MaximumAge + " - Density " + (int)(InitialOccupation * 100);
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                if (restart)
-                {
-                    AbortWorker();
-                }
                 BmpAvi = Avi.Open(saveFileDialog1.FileName, 30, GridSize.Width, GridSize.Height);
-                if (restart)
-                {
-                    Restart(false);
-                }
                 IsRecording = true;
                 Graph.FootInfo = "Recording... Press 'S' or click the Stop button to finish.";
                 Graph.ShowFps = false;
-                if (!restart)
-                {
-                    Resume();
-                }
+                Resume();
             }
         }
 
@@ -946,5 +935,10 @@ namespace JVida_Fast_CSharp
             }
         }
         #endregion
+
+        private void lnkLifeWiki_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start("http://www.conwaylife.com/wiki");
+        }
     }
 }

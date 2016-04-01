@@ -57,6 +57,7 @@
             this.txtGridSize = new System.Windows.Forms.TextBox();
             this.chkWrapAround = new System.Windows.Forms.CheckBox();
             this.pnlDisplay = new System.Windows.Forms.Panel();
+            this.lnkLifeWiki = new System.Windows.Forms.LinkLabel();
             this.btnFileAssoc = new System.Windows.Forms.Button();
             this.chkPosition = new System.Windows.Forms.CheckBox();
             this.chkAlgo = new System.Windows.Forms.CheckBox();
@@ -454,6 +455,7 @@
             // 
             this.pnlDisplay.BackColor = System.Drawing.Color.White;
             this.pnlDisplay.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlDisplay.Controls.Add(this.lnkLifeWiki);
             this.pnlDisplay.Controls.Add(this.btnFileAssoc);
             this.pnlDisplay.Controls.Add(this.chkPosition);
             this.pnlDisplay.Controls.Add(this.chkAlgo);
@@ -463,6 +465,18 @@
             this.pnlDisplay.Name = "pnlDisplay";
             this.pnlDisplay.Size = new System.Drawing.Size(235, 102);
             this.pnlDisplay.TabIndex = 4;
+            // 
+            // lnkLifeWiki
+            // 
+            this.lnkLifeWiki.AutoSize = true;
+            this.lnkLifeWiki.Location = new System.Drawing.Point(164, 73);
+            this.lnkLifeWiki.Name = "lnkLifeWiki";
+            this.lnkLifeWiki.Size = new System.Drawing.Size(57, 17);
+            this.lnkLifeWiki.TabIndex = 9;
+            this.lnkLifeWiki.TabStop = true;
+            this.lnkLifeWiki.Text = "LifeWiki";
+            this.toolTip.SetToolTip(this.lnkLifeWiki, "Wiki collecting information about Conway\'s Game of Life");
+            this.lnkLifeWiki.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkLifeWiki_LinkClicked);
             // 
             // btnFileAssoc
             // 
@@ -622,5 +636,6 @@
         private System.Windows.Forms.PictureBox btnImport;
         private System.Windows.Forms.PictureBox btnClear;
         private System.Windows.Forms.Button btnFileAssoc;
+        private System.Windows.Forms.LinkLabel lnkLifeWiki;
     }
 }

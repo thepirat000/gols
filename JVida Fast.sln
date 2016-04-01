@@ -3,22 +3,65 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JVida Fast", "JVida Fast CSharp\JVida Fast.csproj", "{D553EE3A-F0AC-4FCE-BC49-D6CE4CB775DC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Game of Life Simulator", "JVida Fast CSharp\Game of Life Simulator.csproj", "{D553EE3A-F0AC-4FCE-BC49-D6CE4CB775DC}"
+EndProject
+Project("{6141683F-8A12-4E36-9623-2EB02B2C2303}") = "Setup", "Setup\Setup.isproj", "{AD0F821F-6BF3-4E57-896F-F15FFD22858E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D553EE3A-F0AC-4FCE-BC49-D6CE4CB775DC} = {D553EE3A-F0AC-4FCE-BC49-D6CE4CB775DC}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		CD_ROM|Any CPU = CD_ROM|Any CPU
+		CD_ROM|x86 = CD_ROM|x86
 		Debug|Any CPU = Debug|Any CPU
 		Debug|x86 = Debug|x86
+		DVD-5|Any CPU = DVD-5|Any CPU
+		DVD-5|x86 = DVD-5|x86
 		Release|Any CPU = Release|Any CPU
 		Release|x86 = Release|x86
+		SingleImage|Any CPU = SingleImage|Any CPU
+		SingleImage|x86 = SingleImage|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D553EE3A-F0AC-4FCE-BC49-D6CE4CB775DC}.CD_ROM|Any CPU.ActiveCfg = Release|x86
+		{D553EE3A-F0AC-4FCE-BC49-D6CE4CB775DC}.CD_ROM|Any CPU.Build.0 = Release|x86
+		{D553EE3A-F0AC-4FCE-BC49-D6CE4CB775DC}.CD_ROM|x86.ActiveCfg = Release|x86
+		{D553EE3A-F0AC-4FCE-BC49-D6CE4CB775DC}.CD_ROM|x86.Build.0 = Release|x86
 		{D553EE3A-F0AC-4FCE-BC49-D6CE4CB775DC}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{D553EE3A-F0AC-4FCE-BC49-D6CE4CB775DC}.Debug|x86.ActiveCfg = Debug|x86
 		{D553EE3A-F0AC-4FCE-BC49-D6CE4CB775DC}.Debug|x86.Build.0 = Debug|x86
+		{D553EE3A-F0AC-4FCE-BC49-D6CE4CB775DC}.DVD-5|Any CPU.ActiveCfg = Release|x86
+		{D553EE3A-F0AC-4FCE-BC49-D6CE4CB775DC}.DVD-5|Any CPU.Build.0 = Release|x86
+		{D553EE3A-F0AC-4FCE-BC49-D6CE4CB775DC}.DVD-5|x86.ActiveCfg = Debug|x86
+		{D553EE3A-F0AC-4FCE-BC49-D6CE4CB775DC}.DVD-5|x86.Build.0 = Debug|x86
 		{D553EE3A-F0AC-4FCE-BC49-D6CE4CB775DC}.Release|Any CPU.ActiveCfg = Release|x86
 		{D553EE3A-F0AC-4FCE-BC49-D6CE4CB775DC}.Release|x86.ActiveCfg = Release|x86
 		{D553EE3A-F0AC-4FCE-BC49-D6CE4CB775DC}.Release|x86.Build.0 = Release|x86
+		{D553EE3A-F0AC-4FCE-BC49-D6CE4CB775DC}.SingleImage|Any CPU.ActiveCfg = Release|x86
+		{D553EE3A-F0AC-4FCE-BC49-D6CE4CB775DC}.SingleImage|Any CPU.Build.0 = Release|x86
+		{D553EE3A-F0AC-4FCE-BC49-D6CE4CB775DC}.SingleImage|x86.ActiveCfg = Release|x86
+		{D553EE3A-F0AC-4FCE-BC49-D6CE4CB775DC}.SingleImage|x86.Build.0 = Release|x86
+		{AD0F821F-6BF3-4E57-896F-F15FFD22858E}.CD_ROM|Any CPU.ActiveCfg = CD_ROM
+		{AD0F821F-6BF3-4E57-896F-F15FFD22858E}.CD_ROM|Any CPU.Build.0 = CD_ROM
+		{AD0F821F-6BF3-4E57-896F-F15FFD22858E}.CD_ROM|x86.ActiveCfg = CD_ROM
+		{AD0F821F-6BF3-4E57-896F-F15FFD22858E}.CD_ROM|x86.Build.0 = CD_ROM
+		{AD0F821F-6BF3-4E57-896F-F15FFD22858E}.Debug|Any CPU.ActiveCfg = DVD-5
+		{AD0F821F-6BF3-4E57-896F-F15FFD22858E}.Debug|Any CPU.Build.0 = DVD-5
+		{AD0F821F-6BF3-4E57-896F-F15FFD22858E}.Debug|x86.ActiveCfg = SingleImage
+		{AD0F821F-6BF3-4E57-896F-F15FFD22858E}.Debug|x86.Build.0 = SingleImage
+		{AD0F821F-6BF3-4E57-896F-F15FFD22858E}.DVD-5|Any CPU.ActiveCfg = DVD-5
+		{AD0F821F-6BF3-4E57-896F-F15FFD22858E}.DVD-5|Any CPU.Build.0 = DVD-5
+		{AD0F821F-6BF3-4E57-896F-F15FFD22858E}.DVD-5|x86.ActiveCfg = DVD-5
+		{AD0F821F-6BF3-4E57-896F-F15FFD22858E}.DVD-5|x86.Build.0 = DVD-5
+		{AD0F821F-6BF3-4E57-896F-F15FFD22858E}.Release|Any CPU.ActiveCfg = SingleImage
+		{AD0F821F-6BF3-4E57-896F-F15FFD22858E}.Release|Any CPU.Build.0 = SingleImage
+		{AD0F821F-6BF3-4E57-896F-F15FFD22858E}.Release|x86.ActiveCfg = SingleImage
+		{AD0F821F-6BF3-4E57-896F-F15FFD22858E}.Release|x86.Build.0 = SingleImage
+		{AD0F821F-6BF3-4E57-896F-F15FFD22858E}.SingleImage|Any CPU.ActiveCfg = SingleImage
+		{AD0F821F-6BF3-4E57-896F-F15FFD22858E}.SingleImage|Any CPU.Build.0 = SingleImage
+		{AD0F821F-6BF3-4E57-896F-F15FFD22858E}.SingleImage|x86.ActiveCfg = SingleImage
+		{AD0F821F-6BF3-4E57-896F-F15FFD22858E}.SingleImage|x86.Build.0 = SingleImage
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

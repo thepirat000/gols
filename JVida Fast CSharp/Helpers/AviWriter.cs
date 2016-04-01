@@ -112,6 +112,8 @@ namespace JVida_Fast_CSharp
         {
             this.closed = false;
             this.frameRate = frameRate;
+            width = (width % 2 == 0 ? width : width - 1);
+            height = (height%2 == 0 ? height : height - 1);
             this.width = (UInt32)width;
             this.height = (UInt32)height;
             this.bmp = new Bitmap(width, height, PixelFormat.Format24bppRgb);
@@ -236,8 +238,8 @@ namespace JVida_Fast_CSharp
 
             BITMAPINFOHEADER bi = new BITMAPINFOHEADER();
             bi.biSize = 40;
-            bi.biWidth = (Int32)(this.width % 2 == 0 ? this.width : this.width+1);
-            bi.biHeight = (Int32)(this.height % 2 == 0 ? this.height : this.height + 1);
+            bi.biWidth = (Int32)(this.width);
+            bi.biHeight = (Int32)(this.height);
             bi.biPlanes = 1;
             bi.biBitCount = 24;
             bi.biCompression = 0;  // 0 = BI_RGB
