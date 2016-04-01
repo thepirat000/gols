@@ -27,7 +27,7 @@ namespace JVida_Fast_CSharp
         #region Fields
         private GameOfLife Gol;
         private UniverseGraph Graph;
-        private Size GridSize = new Size(400, 300);
+        private Size GridSize;
 
         private double InitialOccupation = .5;
         private int MaximumAge = int.MaxValue;
@@ -43,6 +43,7 @@ namespace JVida_Fast_CSharp
         public const string LoadPatternPipeName = "GOLS_LoadPattern";
         private NamedPipeServerStream loadPipe;
         private HashSet<string> availableExtensions;
+        private bool GridSizeFocused;
         #endregion
 
         #region Constructor
@@ -61,12 +62,13 @@ namespace JVida_Fast_CSharp
             SetBtnFileAssocText();
             SetFilePatternListener();
             availableExtensions = new HashSet<string>(ParserFactory.GetAvailableExtensions());
+            splitContainer.SplitterDistance = pnlDisplay.Height + 3;
+            GridSize = new Size(splitContainer.Panel2.Width, splitContainer.Panel2.Height);
             Initialize(false);
         }
         #endregion
 
         #region Private Methods
-
         private void SetFilePatternListener()
         {
             loadPipe = new NamedPipeServerStream(LoadPatternPipeName, PipeDirection.In);
@@ -499,8 +501,125 @@ namespace JVida_Fast_CSharp
                 }
             }
         }
+
+        private void Pause()
+        {
+            Gol.Pause();
+            Graph.LowerLeftInfo = "< PAUSED >";
+        }
+
+        private void ChangeGridSize()
+        {
+            var newSizeValues = txtGridSize.Text.Split('x');
+            if (newSizeValues.Length == 2)
+            {
+                var newSize = new Size(int.Parse(newSizeValues[0]), int.Parse(newSizeValues[1]));
+                if (GridSize != newSize)
+                {
+                    GridSize = newSize;
+                    Restart(true);
+                    Graph?.Focus();
+                }
+            }
+        }
+
+        // Plots a pattern starting at a given point
+        private void PlotPattern(Point startPoint, Pattern pattern)
+        {
+            if (startPoint.X + pattern.Bitmap.GetLength(0) > GridSize.Width || startPoint.Y + pattern.Bitmap.GetLength(1) > GridSize.Height)
+            {
+                Pause();
+                var dlg =
+                    MessageBox.Show(
+                        $"Pattern will overflow {pattern.Bitmap.GetLength(0)}x{pattern.Bitmap.GetLength(1)}. Automatically resize/reposition the pattern?",
+                        "Reposition", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (dlg == DialogResult.Yes)
+                {
+                    startPoint = new Point(0, 0);
+                    if (pattern.Bitmap.GetLength(0) > GridSize.Width || pattern.Bitmap.GetLength(1) > GridSize.Height)
+                    {
+                        //resize grid to fit the pattern
+                        GridSize = new Size(pattern.Bitmap.GetLength(0), pattern.Bitmap.GetLength(1));
+                        Restart(true);
+                    }
+                }
+                else
+                {
+                    Resume();
+                    return;
+                }
+            }
+            if (pattern.Algorithm.HasValue && pattern.Algorithm.Value.Symbol != Gol.AlgorithmSymbol)
+            {
+                // change algorythm
+                Gol.Algorithm = pattern.Algorithm.Value;
+                AlgorithmSymbol = pattern.Algorithm.Value.Symbol;
+                FindSelectAlgorithm(AlgorithmSymbol);
+                Restart(true);
+            }
+            Gol.Plot(startPoint, pattern.Bitmap);
+        }
+
+        // Stops and Clears the current simulation (if any), and loads a centered pattern into the simulation
+        private void LoadPatternFileCentered(string filePath)
+        {
+            var shiftPressed = ModifierKeys.HasFlag(Keys.Shift);
+            Pause();
+            Gol.Clear();
+            Pattern pattern = TryParsePattern(filePath);
+            if (pattern == null)
+            {
+                return;
+            }
+            var startPoint = new Point(0, 0);
+            if (pattern.Bitmap.GetLength(0) > GridSize.Width || pattern.Bitmap.GetLength(1) > GridSize.Height)
+            {
+                //overflow, resize grid to fit the pattern
+                GridSize = new Size(pattern.Bitmap.GetLength(0), pattern.Bitmap.GetLength(1));
+                Restart(true);
+            }
+            else
+            {
+                // calculate upper-left point to show the pattern centered
+                startPoint.X = GridSize.Width / 2 - pattern.Bitmap.GetLength(0) / 2;
+                startPoint.Y = GridSize.Height / 2 - pattern.Bitmap.GetLength(1) / 2;
+            }
+            if (pattern.Algorithm.HasValue && pattern.Algorithm.Value.Symbol != Gol.AlgorithmSymbol)
+            {
+                // change algorythm
+                Gol.Algorithm = pattern.Algorithm.Value;
+                AlgorithmSymbol = pattern.Algorithm.Value.Symbol;
+                FindSelectAlgorithm(AlgorithmSymbol);
+                Restart(true);
+            }
+            Gol.Plot(startPoint, pattern.Bitmap);
+            if (shiftPressed)
+            {
+                Resume();
+            }
+        }
+
+        private void SetBtnFileAssocText()
+        {
+            if (!HasAdminPrivileges())
+            {
+                btnFileAssoc.Visible = false;
+            }
+            else
+            {
+                bool associated = FileAssociation.AlreadyAssociated();
+                btnFileAssoc.Text = associated ? "Remove file assoc." : "Set file assoc.";
+                toolTip.SetToolTip(btnFileAssoc, $"{(associated ? "Remove" : "Set")} the file associations to open .cells, .rle and .lif files");
+            }
+        }
+
+        public static bool HasAdminPrivileges()
+        {
+            return new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
+        }
         #endregion
 
+        #region Control Events
         private void btnStop_Click(object sender, EventArgs e)
         {
             if (IsRecording)
@@ -546,12 +665,6 @@ namespace JVida_Fast_CSharp
         private void btnPause_Click(object sender, EventArgs e)
         {
             Pause();
-        }
-
-        private void Pause()
-        {
-            Gol.Pause();
-            Graph.LowerLeftInfo = "< PAUSED >";
         }
 
         private void btnPlay_Click(object sender, EventArgs e)
@@ -614,8 +727,6 @@ namespace JVida_Fast_CSharp
         private void btnHelp_MouseLeave(object sender, EventArgs e)
         {
         }
-
-        private bool GridSizeFocused;
 
         private void txtGridSize_MouseUp(object sender, MouseEventArgs e)
         {
@@ -681,21 +792,6 @@ namespace JVida_Fast_CSharp
             }
         }
 
-        private void ChangeGridSize()
-        {
-            var newSizeValues = txtGridSize.Text.Split('x');
-            if (newSizeValues.Length == 2)
-            {
-                var newSize = new Size(int.Parse(newSizeValues[0]), int.Parse(newSizeValues[1]));
-                if (GridSize != newSize)
-                {
-                    GridSize = newSize;
-                    Restart(true);
-                    Graph?.Focus();
-                }
-            }
-        }
-
         private void btnRandomColor_Click(object sender, EventArgs e)
         {
             Random rnd = new Random();
@@ -735,7 +831,7 @@ namespace JVida_Fast_CSharp
 
         private void cmbAlgorithm_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string valueSelected = ((dynamic) cmbAlgorithm.SelectedItem).Value;
+            string valueSelected = ((dynamic)cmbAlgorithm.SelectedItem).Value;
             if (valueSelected == "Custom")
             {
                 string newAlgorithm;
@@ -805,84 +901,6 @@ namespace JVida_Fast_CSharp
             Gol.Clear();
         }
 
-        private void txtStepSize_ValueChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        // Plots a pattern starting at a given point
-        private void PlotPattern(Point startPoint, Pattern pattern)
-        {
-            if (startPoint.X + pattern.Bitmap.GetLength(0) > GridSize.Width || startPoint.Y + pattern.Bitmap.GetLength(1) > GridSize.Height)
-            {
-                Pause();
-                var dlg =
-                    MessageBox.Show(
-                        $"Pattern will overflow {pattern.Bitmap.GetLength(0)}x{pattern.Bitmap.GetLength(1)}. Automatically resize/reposition the pattern?",
-                        "Reposition", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (dlg == DialogResult.Yes)
-                {
-                    startPoint = new Point(0, 0);
-                    if (pattern.Bitmap.GetLength(0) > GridSize.Width || pattern.Bitmap.GetLength(1) > GridSize.Height)
-                    {
-                        //resize grid to fit the pattern
-                        GridSize = new Size(pattern.Bitmap.GetLength(0), pattern.Bitmap.GetLength(1));
-                        Restart(true);
-                    }
-                }
-                else
-                {
-                    Resume();
-                    return;
-                }
-            }
-            if (pattern.Algorithm.HasValue && pattern.Algorithm.Value.Symbol != Gol.AlgorithmSymbol)
-            {
-                // change algorythm
-                Gol.Algorithm = pattern.Algorithm.Value;
-                AlgorithmSymbol = pattern.Algorithm.Value.Symbol;
-                FindSelectAlgorithm(AlgorithmSymbol);
-                Restart(true);
-            }
-            Gol.Plot(startPoint, pattern.Bitmap);
-        }
-
-        // Stops and Clears the current simulation (if any), and loads a centered pattern into the simulation
-        private void LoadPatternFileCentered(string filePath)
-        {
-            Pause();
-            Gol.Clear();
-            Pattern pattern = TryParsePattern(filePath);
-            if (pattern == null)
-            { 
-                return;
-            }
-            var startPoint = new Point(0, 0);
-            if (pattern.Bitmap.GetLength(0) > GridSize.Width || pattern.Bitmap.GetLength(1) > GridSize.Height)
-            {
-                //overflow, resize grid to fit the pattern
-                GridSize = new Size(pattern.Bitmap.GetLength(0), pattern.Bitmap.GetLength(1));
-                Restart(true);
-            }
-            else
-            {
-                // calculate upper-left point to show the pattern centered
-                startPoint.X = GridSize.Width/2 - pattern.Bitmap.GetLength(0)/2;
-                startPoint.Y = GridSize.Height/2 - pattern.Bitmap.GetLength(1)/2;
-            }
-            if (pattern.Algorithm.HasValue && pattern.Algorithm.Value.Symbol != Gol.AlgorithmSymbol)
-            {
-                // change algorythm
-                Gol.Algorithm = pattern.Algorithm.Value;
-                AlgorithmSymbol = pattern.Algorithm.Value.Symbol;
-                FindSelectAlgorithm(AlgorithmSymbol);
-                Restart(true);
-            }
-            Gol.Plot(startPoint, pattern.Bitmap);
-
-
-        }
-
         private void btnSetFileAssoc_Click(object sender, EventArgs e)
         {
             if (btnFileAssoc.Text.StartsWith("Set"))
@@ -894,25 +912,6 @@ namespace JVida_Fast_CSharp
                 FileAssociation.RemoveFileTypeAssociations();
             }
             SetBtnFileAssocText();
-        }
-
-        private void SetBtnFileAssocText()
-        {
-            if (!HasAdminPrivileges())
-            {
-                btnFileAssoc.Visible = false;
-            }
-            else
-            {
-                bool associated = FileAssociation.AlreadyAssociated();
-                btnFileAssoc.Text = associated ? "Remove file assoc." : "Set file assoc.";
-                toolTip.SetToolTip(btnFileAssoc, $"{(associated ? "Remove" : "Set")} the file associations to open .cells, .rle and .lif files");
-            }
-        }
-
-        public static bool HasAdminPrivileges()
-        {
-            return new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
         }
 
         private void Graph_DragDropCell(object sender, DragEventArgs e)
@@ -946,7 +945,6 @@ namespace JVida_Fast_CSharp
                 }
             }
         }
-
-
+        #endregion
     }
 }

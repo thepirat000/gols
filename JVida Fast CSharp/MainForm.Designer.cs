@@ -57,13 +57,13 @@
             this.txtGridSize = new System.Windows.Forms.TextBox();
             this.chkWrapAround = new System.Windows.Forms.CheckBox();
             this.pnlDisplay = new System.Windows.Forms.Panel();
+            this.btnFileAssoc = new System.Windows.Forms.Button();
             this.chkPosition = new System.Windows.Forms.CheckBox();
             this.chkAlgo = new System.Windows.Forms.CheckBox();
             this.chkFps = new System.Windows.Forms.CheckBox();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            this.btnFileAssoc = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
             this.splitContainer.SuspendLayout();
@@ -104,14 +104,16 @@
             this.splitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.splitContainer.Name = "splitContainer";
             this.splitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // splitContainer.Panel1
             // 
             this.splitContainer.Panel1.Controls.Add(this.flowLayoutPanel);
-            this.splitContainer.Size = new System.Drawing.Size(868, 601);
-            this.splitContainer.SplitterDistance = 86;
+            this.splitContainer.Size = new System.Drawing.Size(819, 520);
+            this.splitContainer.SplitterDistance = 101;
+            this.splitContainer.SplitterWidth = 5;
             this.splitContainer.TabIndex = 0;
             // 
             // flowLayoutPanel
@@ -121,8 +123,9 @@
             this.flowLayoutPanel.Controls.Add(this.pnlDisplay);
             this.flowLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel.Location = new System.Drawing.Point(0, 0);
+            this.flowLayoutPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.flowLayoutPanel.Name = "flowLayoutPanel";
-            this.flowLayoutPanel.Size = new System.Drawing.Size(868, 86);
+            this.flowLayoutPanel.Size = new System.Drawing.Size(819, 101);
             this.flowLayoutPanel.TabIndex = 1;
             // 
             // pnlPlayer
@@ -139,18 +142,19 @@
             this.pnlPlayer.Controls.Add(this.btnForward);
             this.pnlPlayer.Controls.Add(this.btnPause);
             this.pnlPlayer.Controls.Add(this.btnPlay);
-            this.pnlPlayer.Location = new System.Drawing.Point(3, 3);
+            this.pnlPlayer.Location = new System.Drawing.Point(4, 4);
+            this.pnlPlayer.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.pnlPlayer.Name = "pnlPlayer";
-            this.pnlPlayer.Size = new System.Drawing.Size(207, 82);
+            this.pnlPlayer.Size = new System.Drawing.Size(275, 100);
             this.pnlPlayer.TabIndex = 2;
             // 
             // btnClear
             // 
             this.btnClear.Image = ((System.Drawing.Image)(resources.GetObject("btnClear.Image")));
-            this.btnClear.Location = new System.Drawing.Point(174, 49);
+            this.btnClear.Location = new System.Drawing.Point(232, 60);
             this.btnClear.Margin = new System.Windows.Forms.Padding(0);
             this.btnClear.Name = "btnClear";
-            this.btnClear.Size = new System.Drawing.Size(24, 24);
+            this.btnClear.Size = new System.Drawing.Size(32, 30);
             this.btnClear.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.btnClear.TabIndex = 9;
             this.btnClear.TabStop = false;
@@ -160,10 +164,10 @@
             // btnImport
             // 
             this.btnImport.Image = ((System.Drawing.Image)(resources.GetObject("btnImport.Image")));
-            this.btnImport.Location = new System.Drawing.Point(170, 10);
+            this.btnImport.Location = new System.Drawing.Point(227, 12);
             this.btnImport.Margin = new System.Windows.Forms.Padding(0);
             this.btnImport.Name = "btnImport";
-            this.btnImport.Size = new System.Drawing.Size(32, 32);
+            this.btnImport.Size = new System.Drawing.Size(43, 39);
             this.btnImport.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.btnImport.TabIndex = 8;
             this.btnImport.TabStop = false;
@@ -174,7 +178,8 @@
             // 
             // txtStepSize
             // 
-            this.txtStepSize.Location = new System.Drawing.Point(74, 50);
+            this.txtStepSize.Location = new System.Drawing.Point(99, 62);
+            this.txtStepSize.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtStepSize.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -186,7 +191,7 @@
             0,
             0});
             this.txtStepSize.Name = "txtStepSize";
-            this.txtStepSize.Size = new System.Drawing.Size(65, 20);
+            this.txtStepSize.Size = new System.Drawing.Size(87, 22);
             this.txtStepSize.TabIndex = 7;
             this.toolTip.SetToolTip(this.txtStepSize, "Step count (N steps)");
             this.txtStepSize.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
@@ -195,15 +200,14 @@
             0,
             0,
             0});
-            this.txtStepSize.ValueChanged += new System.EventHandler(this.txtStepSize_ValueChanged);
             // 
             // btnHelp
             // 
             this.btnHelp.Image = ((System.Drawing.Image)(resources.GetObject("btnHelp.Image")));
-            this.btnHelp.Location = new System.Drawing.Point(5, 42);
+            this.btnHelp.Location = new System.Drawing.Point(7, 52);
             this.btnHelp.Margin = new System.Windows.Forms.Padding(0);
             this.btnHelp.Name = "btnHelp";
-            this.btnHelp.Size = new System.Drawing.Size(32, 32);
+            this.btnHelp.Size = new System.Drawing.Size(43, 39);
             this.btnHelp.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.btnHelp.TabIndex = 2;
             this.btnHelp.TabStop = false;
@@ -215,10 +219,10 @@
             // btnRecord
             // 
             this.btnRecord.Image = ((System.Drawing.Image)(resources.GetObject("btnRecord.Image")));
-            this.btnRecord.Location = new System.Drawing.Point(71, 10);
+            this.btnRecord.Location = new System.Drawing.Point(95, 12);
             this.btnRecord.Margin = new System.Windows.Forms.Padding(0);
             this.btnRecord.Name = "btnRecord";
-            this.btnRecord.Size = new System.Drawing.Size(32, 32);
+            this.btnRecord.Size = new System.Drawing.Size(43, 39);
             this.btnRecord.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.btnRecord.TabIndex = 2;
             this.btnRecord.TabStop = false;
@@ -230,10 +234,10 @@
             // btnStop
             // 
             this.btnStop.Image = ((System.Drawing.Image)(resources.GetObject("btnStop.Image")));
-            this.btnStop.Location = new System.Drawing.Point(38, 10);
+            this.btnStop.Location = new System.Drawing.Point(51, 12);
             this.btnStop.Margin = new System.Windows.Forms.Padding(0);
             this.btnStop.Name = "btnStop";
-            this.btnStop.Size = new System.Drawing.Size(32, 32);
+            this.btnStop.Size = new System.Drawing.Size(43, 39);
             this.btnStop.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.btnStop.TabIndex = 2;
             this.btnStop.TabStop = false;
@@ -245,10 +249,10 @@
             // btnRandom
             // 
             this.btnRandom.Image = ((System.Drawing.Image)(resources.GetObject("btnRandom.Image")));
-            this.btnRandom.Location = new System.Drawing.Point(5, 10);
+            this.btnRandom.Location = new System.Drawing.Point(7, 12);
             this.btnRandom.Margin = new System.Windows.Forms.Padding(0);
             this.btnRandom.Name = "btnRandom";
-            this.btnRandom.Size = new System.Drawing.Size(32, 32);
+            this.btnRandom.Size = new System.Drawing.Size(43, 39);
             this.btnRandom.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.btnRandom.TabIndex = 3;
             this.btnRandom.TabStop = false;
@@ -261,10 +265,10 @@
             // btnForward
             // 
             this.btnForward.Image = ((System.Drawing.Image)(resources.GetObject("btnForward.Image")));
-            this.btnForward.Location = new System.Drawing.Point(39, 42);
+            this.btnForward.Location = new System.Drawing.Point(52, 52);
             this.btnForward.Margin = new System.Windows.Forms.Padding(0);
             this.btnForward.Name = "btnForward";
-            this.btnForward.Size = new System.Drawing.Size(32, 32);
+            this.btnForward.Size = new System.Drawing.Size(43, 39);
             this.btnForward.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.btnForward.TabIndex = 4;
             this.btnForward.TabStop = false;
@@ -276,10 +280,10 @@
             // btnPause
             // 
             this.btnPause.Image = ((System.Drawing.Image)(resources.GetObject("btnPause.Image")));
-            this.btnPause.Location = new System.Drawing.Point(137, 10);
+            this.btnPause.Location = new System.Drawing.Point(183, 12);
             this.btnPause.Margin = new System.Windows.Forms.Padding(0);
             this.btnPause.Name = "btnPause";
-            this.btnPause.Size = new System.Drawing.Size(32, 32);
+            this.btnPause.Size = new System.Drawing.Size(43, 39);
             this.btnPause.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.btnPause.TabIndex = 5;
             this.btnPause.TabStop = false;
@@ -291,10 +295,10 @@
             // btnPlay
             // 
             this.btnPlay.Image = ((System.Drawing.Image)(resources.GetObject("btnPlay.Image")));
-            this.btnPlay.Location = new System.Drawing.Point(104, 10);
+            this.btnPlay.Location = new System.Drawing.Point(139, 12);
             this.btnPlay.Margin = new System.Windows.Forms.Padding(0);
             this.btnPlay.Name = "btnPlay";
-            this.btnPlay.Size = new System.Drawing.Size(32, 32);
+            this.btnPlay.Size = new System.Drawing.Size(43, 39);
             this.btnPlay.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.btnPlay.TabIndex = 6;
             this.btnPlay.TabStop = false;
@@ -317,18 +321,19 @@
             this.pnlGrid.Controls.Add(this.btnRandomColor);
             this.pnlGrid.Controls.Add(this.txtGridSize);
             this.pnlGrid.Controls.Add(this.chkWrapAround);
-            this.pnlGrid.Location = new System.Drawing.Point(216, 3);
+            this.pnlGrid.Location = new System.Drawing.Point(287, 4);
+            this.pnlGrid.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.pnlGrid.Name = "pnlGrid";
-            this.pnlGrid.Size = new System.Drawing.Size(208, 83);
+            this.pnlGrid.Size = new System.Drawing.Size(277, 102);
             this.pnlGrid.TabIndex = 3;
             // 
             // btnOneToOne
             // 
             this.btnOneToOne.Image = ((System.Drawing.Image)(resources.GetObject("btnOneToOne.Image")));
-            this.btnOneToOne.Location = new System.Drawing.Point(74, 20);
+            this.btnOneToOne.Location = new System.Drawing.Point(99, 25);
             this.btnOneToOne.Margin = new System.Windows.Forms.Padding(0);
             this.btnOneToOne.Name = "btnOneToOne";
-            this.btnOneToOne.Size = new System.Drawing.Size(16, 16);
+            this.btnOneToOne.Size = new System.Drawing.Size(21, 20);
             this.btnOneToOne.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.btnOneToOne.TabIndex = 9;
             this.btnOneToOne.TabStop = false;
@@ -340,10 +345,11 @@
             this.cmbAlgorithm.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbAlgorithm.DropDownWidth = 200;
             this.cmbAlgorithm.FormattingEnabled = true;
-            this.cmbAlgorithm.Location = new System.Drawing.Point(5, 57);
+            this.cmbAlgorithm.Location = new System.Drawing.Point(7, 70);
+            this.cmbAlgorithm.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.cmbAlgorithm.MaxDropDownItems = 10;
             this.cmbAlgorithm.Name = "cmbAlgorithm";
-            this.cmbAlgorithm.Size = new System.Drawing.Size(168, 21);
+            this.cmbAlgorithm.Size = new System.Drawing.Size(223, 24);
             this.cmbAlgorithm.TabIndex = 8;
             this.cmbAlgorithm.SelectedIndexChanged += new System.EventHandler(this.cmbAlgorithm_SelectedIndexChanged);
             // 
@@ -351,36 +357,40 @@
             // 
             this.picColor.BackColor = System.Drawing.Color.Red;
             this.picColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.picColor.Location = new System.Drawing.Point(148, 19);
+            this.picColor.Location = new System.Drawing.Point(197, 23);
+            this.picColor.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.picColor.Name = "picColor";
-            this.picColor.Size = new System.Drawing.Size(25, 17);
+            this.picColor.Size = new System.Drawing.Size(33, 20);
             this.picColor.TabIndex = 7;
             this.picColor.TabStop = false;
             this.picColor.Click += new System.EventHandler(this.picColor_Click);
             // 
             // label2
             // 
-            this.label2.Location = new System.Drawing.Point(146, 3);
+            this.label2.Location = new System.Drawing.Point(195, 4);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(31, 15);
+            this.label2.Size = new System.Drawing.Size(41, 18);
             this.label2.TabIndex = 6;
             this.label2.Text = "Color";
             this.label2.UseCompatibleTextRendering = true;
             // 
             // label3
             // 
-            this.label3.Location = new System.Drawing.Point(3, 42);
+            this.label3.Location = new System.Drawing.Point(4, 52);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(59, 13);
+            this.label3.Size = new System.Drawing.Size(79, 16);
             this.label3.TabIndex = 6;
             this.label3.Text = "Algorithm";
             this.label3.UseCompatibleTextRendering = true;
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(5, 3);
+            this.label1.Location = new System.Drawing.Point(7, 4);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(26, 15);
+            this.label1.Size = new System.Drawing.Size(35, 18);
             this.label1.TabIndex = 6;
             this.label1.Text = "Size";
             this.label1.UseCompatibleTextRendering = true;
@@ -389,10 +399,10 @@
             // 
             this.btnRandomAlgorithm.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.btnRandomAlgorithm.Image = ((System.Drawing.Image)(resources.GetObject("btnRandomAlgorithm.Image")));
-            this.btnRandomAlgorithm.Location = new System.Drawing.Point(176, 58);
+            this.btnRandomAlgorithm.Location = new System.Drawing.Point(235, 71);
             this.btnRandomAlgorithm.Margin = new System.Windows.Forms.Padding(0);
             this.btnRandomAlgorithm.Name = "btnRandomAlgorithm";
-            this.btnRandomAlgorithm.Size = new System.Drawing.Size(24, 17);
+            this.btnRandomAlgorithm.Size = new System.Drawing.Size(31, 20);
             this.btnRandomAlgorithm.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.btnRandomAlgorithm.TabIndex = 3;
             this.btnRandomAlgorithm.TabStop = false;
@@ -403,10 +413,10 @@
             // 
             this.btnRandomColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.btnRandomColor.Image = ((System.Drawing.Image)(resources.GetObject("btnRandomColor.Image")));
-            this.btnRandomColor.Location = new System.Drawing.Point(176, 19);
+            this.btnRandomColor.Location = new System.Drawing.Point(235, 23);
             this.btnRandomColor.Margin = new System.Windows.Forms.Padding(0);
             this.btnRandomColor.Name = "btnRandomColor";
-            this.btnRandomColor.Size = new System.Drawing.Size(24, 17);
+            this.btnRandomColor.Size = new System.Drawing.Size(31, 20);
             this.btnRandomColor.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.btnRandomColor.TabIndex = 3;
             this.btnRandomColor.TabStop = false;
@@ -416,9 +426,10 @@
             // txtGridSize
             // 
             this.txtGridSize.AcceptsReturn = true;
-            this.txtGridSize.Location = new System.Drawing.Point(5, 18);
+            this.txtGridSize.Location = new System.Drawing.Point(7, 22);
+            this.txtGridSize.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtGridSize.Name = "txtGridSize";
-            this.txtGridSize.Size = new System.Drawing.Size(65, 20);
+            this.txtGridSize.Size = new System.Drawing.Size(85, 22);
             this.txtGridSize.TabIndex = 5;
             this.txtGridSize.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtGridSize_KeyPress);
             this.txtGridSize.Leave += new System.EventHandler(this.txtGridSize_Leave);
@@ -428,9 +439,10 @@
             // 
             this.chkWrapAround.AutoSize = true;
             this.chkWrapAround.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.chkWrapAround.Location = new System.Drawing.Point(97, 19);
+            this.chkWrapAround.Location = new System.Drawing.Point(129, 23);
+            this.chkWrapAround.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chkWrapAround.Name = "chkWrapAround";
-            this.chkWrapAround.Size = new System.Drawing.Size(47, 18);
+            this.chkWrapAround.Size = new System.Drawing.Size(52, 21);
             this.chkWrapAround.TabIndex = 4;
             this.chkWrapAround.Text = "wrap";
             this.toolTip.SetToolTip(this.chkWrapAround, "Wrap around the limits");
@@ -446,18 +458,32 @@
             this.pnlDisplay.Controls.Add(this.chkPosition);
             this.pnlDisplay.Controls.Add(this.chkAlgo);
             this.pnlDisplay.Controls.Add(this.chkFps);
-            this.pnlDisplay.Location = new System.Drawing.Point(430, 3);
+            this.pnlDisplay.Location = new System.Drawing.Point(572, 4);
+            this.pnlDisplay.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.pnlDisplay.Name = "pnlDisplay";
-            this.pnlDisplay.Size = new System.Drawing.Size(215, 83);
+            this.pnlDisplay.Size = new System.Drawing.Size(235, 102);
             this.pnlDisplay.TabIndex = 4;
+            // 
+            // btnFileAssoc
+            // 
+            this.btnFileAssoc.Location = new System.Drawing.Point(4, 68);
+            this.btnFileAssoc.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnFileAssoc.Name = "btnFileAssoc";
+            this.btnFileAssoc.Size = new System.Drawing.Size(153, 28);
+            this.btnFileAssoc.TabIndex = 8;
+            this.btnFileAssoc.Text = "Set file assoc.";
+            this.toolTip.SetToolTip(this.btnFileAssoc, "Set the file associations to open .cells and .rle files");
+            this.btnFileAssoc.UseVisualStyleBackColor = true;
+            this.btnFileAssoc.Click += new System.EventHandler(this.btnSetFileAssoc_Click);
             // 
             // chkPosition
             // 
             this.chkPosition.AutoSize = true;
             this.chkPosition.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.chkPosition.Location = new System.Drawing.Point(9, 31);
+            this.chkPosition.Location = new System.Drawing.Point(12, 38);
+            this.chkPosition.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chkPosition.Name = "chkPosition";
-            this.chkPosition.Size = new System.Drawing.Size(93, 18);
+            this.chkPosition.Size = new System.Drawing.Size(106, 21);
             this.chkPosition.TabIndex = 5;
             this.chkPosition.Text = "Show position";
             this.chkPosition.UseCompatibleTextRendering = true;
@@ -468,9 +494,10 @@
             // 
             this.chkAlgo.AutoSize = true;
             this.chkAlgo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.chkAlgo.Location = new System.Drawing.Point(108, 10);
+            this.chkAlgo.Location = new System.Drawing.Point(118, 12);
+            this.chkAlgo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chkAlgo.Name = "chkAlgo";
-            this.chkAlgo.Size = new System.Drawing.Size(100, 18);
+            this.chkAlgo.Size = new System.Drawing.Size(115, 21);
             this.chkAlgo.TabIndex = 6;
             this.chkAlgo.Text = "Show algorithm";
             this.toolTip.SetToolTip(this.chkAlgo, "Show current algorithm");
@@ -482,9 +509,10 @@
             // 
             this.chkFps.AutoSize = true;
             this.chkFps.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.chkFps.Location = new System.Drawing.Point(9, 10);
+            this.chkFps.Location = new System.Drawing.Point(12, 12);
+            this.chkFps.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chkFps.Name = "chkFps";
-            this.chkFps.Size = new System.Drawing.Size(69, 18);
+            this.chkFps.Size = new System.Drawing.Size(78, 21);
             this.chkFps.TabIndex = 7;
             this.chkFps.Text = "Show fps";
             this.toolTip.SetToolTip(this.chkFps, "Show frames per second");
@@ -520,25 +548,15 @@
             // 
             this.colorDialog1.FullOpen = true;
             // 
-            // btnFileAssoc
-            // 
-            this.btnFileAssoc.Location = new System.Drawing.Point(3, 55);
-            this.btnFileAssoc.Name = "btnFileAssoc";
-            this.btnFileAssoc.Size = new System.Drawing.Size(115, 23);
-            this.btnFileAssoc.TabIndex = 8;
-            this.btnFileAssoc.Text = "Set file assoc.";
-            this.toolTip.SetToolTip(this.btnFileAssoc, "Set the file associations to open .cells and .rle files");
-            this.btnFileAssoc.UseVisualStyleBackColor = true;
-            this.btnFileAssoc.Click += new System.EventHandler(this.btnSetFileAssoc_Click);
-            // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(868, 601);
+            this.ClientSize = new System.Drawing.Size(819, 520);
             this.Controls.Add(this.splitContainer);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "MainForm";
             this.Text = "Game Of Life Simulator";
             this.splitContainer.Panel1.ResumeLayout(false);
