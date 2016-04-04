@@ -1843,11 +1843,6 @@
 		<col def="S255">ProgId_</col>
 		<col def="S64">MIME_</col>
 		<col def="s38">Feature_</col>
-		<row><td>NewExtension1</td><td>Game_of_Life_Simulator.Primary_output</td><td/><td/><td>AlwaysInstall</td></row>
-		<row><td>NewExtension2</td><td>Game_of_Life_Simulator.Primary_output</td><td>GameOfLifeSimulator.Cells</td><td/><td>AlwaysInstall</td></row>
-		<row><td>NewExtension3</td><td>Game_of_Life_Simulator.Primary_output</td><td>GameOfLifeSimulator.Lif</td><td/><td>AlwaysInstall</td></row>
-		<row><td>NewExtension4</td><td>Game_of_Life_Simulator.Primary_output</td><td>GameOfLifeSimulator.Cells</td><td/><td>AlwaysInstall</td></row>
-		<row><td>NewExtension5</td><td>Game_of_Life_Simulator.Primary_output</td><td>GameOfLifeSimulator.Cells</td><td/><td>AlwaysInstall</td></row>
 		<row><td>cells</td><td>Game_of_Life_Simulator.Primary_output</td><td>GameOfLifeSimulator.Cells</td><td/><td>AlwaysInstall</td></row>
 		<row><td>lif</td><td>Game_of_Life_Simulator.Primary_output</td><td>GameOfLifeSimulator.Lif</td><td/><td>AlwaysInstall</td></row>
 		<row><td>rle</td><td>Game_of_Life_Simulator.Primary_output</td><td>GameOfLifeSimulator.Rle</td><td/><td>AlwaysInstall</td></row>
