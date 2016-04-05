@@ -1,5 +1,8 @@
 ﻿// Thepirat 2011
 // thepirat000@hotmail.com
+
+using System.Drawing.Drawing2D;
+
 namespace JVida_Fast_CSharp
 {
     using System;
@@ -27,6 +30,8 @@ namespace JVida_Fast_CSharp
         private Stopwatch stp = new Stopwatch();
         private Font font = new Font("Times New Roman", 9);
         private bool importing = false;
+        private InterpolationMode _interpolationMode = InterpolationMode.Default;
+
         #endregion
 
         #region Properties
@@ -85,6 +90,11 @@ namespace JVida_Fast_CSharp
 
         public string LowerLeftInfo { get; set; }
 
+        public InterpolationMode InterpolationMode
+        {
+            get { return _interpolationMode; }
+            set { _interpolationMode = value; }
+        }
 
         #endregion
 
@@ -174,6 +184,7 @@ namespace JVida_Fast_CSharp
             {
                 this.region = new Rectangle(0, 0, this.maxX - 1, this.maxY - 1);
                 Rectangle rect = this.ClientRectangle;
+                g.InterpolationMode = _interpolationMode;
                 g.DrawImage(this.bmp, rect, this.region, GraphicsUnit.Pixel);
                 if (this.ShowFps)
                 {

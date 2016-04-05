@@ -1,7 +1,7 @@
 ﻿// Thepirat 2011
 // thepirat000@hotmail.com
-
 using System.ComponentModel;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.IO.Compression;
 using System.IO.Pipes;
@@ -64,6 +64,7 @@ namespace JVida_Fast_CSharp
             txtGridSize.GotFocus += txtGridSize_GotFocus;
             txtGridSize.LostFocus += txtGridSize_LostFocus;
             FillAlgorithmCombo();
+            FillInterpolationCombo();
             SetBtnFileAssocText();
             SetFilePatternListener();
             availableExtensions = new HashSet<string>(ParserFactory.GetAvailableExtensions());
@@ -94,16 +95,16 @@ namespace JVida_Fast_CSharp
             });
         }
 
-        private void Restart(bool restoreState)
+        private void Restart(bool restoreState, bool forcePause = false)
         {
             AbortWorker();
             Initialize(restoreState);
-            Start(!restoreState);
+            Start(!restoreState, forcePause);
         }
 
         private void Initialize(bool restoreState)
         {
-            Color prevColor = Graph == null ? Color.Red : Graph.ForeColor;
+            Color prevColor = Graph == null ? Color.FromArgb(255, 12, 160, 180) : Graph.ForeColor;
             string prevUpperRightInfo = Graph == null ? string.Empty : AlgorithmSymbol;
             bool prevShowFps = Graph == null ? true : Graph.ShowFps;
             splitContainer.Panel2.Controls.Remove(Graph);
@@ -127,6 +128,9 @@ namespace JVida_Fast_CSharp
                 ShowFps = prevShowFps,
                 AllowDrop = true
             };
+            Graph.InterpolationMode = cmbInterpolationMode.SelectedItem != null
+                ? (InterpolationMode) cmbInterpolationMode.SelectedItem
+                : InterpolationMode.Default;
             Graph.PointSelected += Graph_PointSelected;
             Graph.DragEnter += Graph_DragEnter;
             Graph.DragDropCell += Graph_DragDropCell;
@@ -182,6 +186,22 @@ namespace JVida_Fast_CSharp
             cmbAlgorithm.SelectedIndex = 0;
         }
 
+        private void FillInterpolationCombo()
+        {
+            var modes = (InterpolationMode[]) Enum.GetValues(typeof (InterpolationMode));
+            cmbInterpolationMode.Items.Clear();
+            for (int i = 0; i < modes.Length; i++)
+            {
+                if (modes[i] != InterpolationMode.Invalid)
+                {
+                    cmbInterpolationMode.Items.Add(modes[i]);
+                }
+            }
+            cmbInterpolationMode.SelectedIndexChanged -= cmbInterpolationMode_SelectedIndexChanged;
+            cmbInterpolationMode.SelectedIndex = 0;
+            cmbInterpolationMode.SelectedIndexChanged += cmbInterpolationMode_SelectedIndexChanged;
+        }
+
         /// <summary>
         /// Handles the PointSelected event of the Graph control.
         /// This is fired when the user selects a point in the graph to insert an imported glyph
@@ -235,12 +255,16 @@ namespace JVida_Fast_CSharp
             }
         }
 
-        private void Start(bool randomize)
+        private void Start(bool randomize, bool forcePause = false)
         {
             AbortWorker();
             if (randomize)
             {
                 Gol.Randomize();
+            }
+            if (forcePause)
+            {
+                Gol.Paused = true;
             }
             workerThread = new Thread(Gol.Play);
             workerThread.Priority = ThreadPriority.AboveNormal;
@@ -357,8 +381,14 @@ namespace JVida_Fast_CSharp
                     Gol.Clear();
                     break;
                 case Keys.P:
-                    Gol.TogglePause();
-                    Graph.LowerLeftInfo = Gol.Paused ? "< PAUSED >" : "";
+                    if (Gol.Paused)
+                    {
+                        Resume();
+                    }
+                    else
+                    {
+                        Pause();
+                    }
                     break;
                 case Keys.I:
                     var res = openFileDialog1.ShowDialog();
@@ -478,6 +508,7 @@ namespace JVida_Fast_CSharp
                 {
                     using (Graphics g = Graphics.FromImage(BmpAvi))
                     {
+                        g.InterpolationMode = Graph.InterpolationMode;
                         g.ScaleTransform(1.0F, -1.0F);
                         g.TranslateTransform(0.0F, -(float)BmpAvi.Height);
                         g.DrawImage(Graph.UniverseBitmap, 0, 0, BmpAvi.Width, BmpAvi.Height);
@@ -701,7 +732,7 @@ namespace JVida_Fast_CSharp
             {
                 ChangeOccupation();
             }
-            Restart(false);
+            Restart(false, Gol.Paused);
         }
 
         private void btnForward_MouseEnter(object sender, EventArgs e)
@@ -861,6 +892,15 @@ namespace JVida_Fast_CSharp
             Graph?.Focus();
         }
 
+        private void cmbInterpolationMode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Graph != null)
+            {
+                var mode = (InterpolationMode) cmbInterpolationMode.SelectedItem;
+                Graph.InterpolationMode = mode;
+            }
+        }
+
         private void btnOneToOne_Click(object sender, EventArgs e)
         {
             txtGridSize.Text = $"{Graph.Width}x{Graph.Height}";
@@ -1005,6 +1045,7 @@ namespace JVida_Fast_CSharp
             btnRecord.Image = IsRecording ? imageList1.Images["rec_red.ico"] : imageList1.Images["rec_blue.ico"];
             btnPause.Image = Gol.Paused ? imageList1.Images["pause_red.ico"] : imageList1.Images["pause_blue.ico"];
         }
+
 
     }
 }

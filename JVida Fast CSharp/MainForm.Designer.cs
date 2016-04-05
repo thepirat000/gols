@@ -65,6 +65,8 @@
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.cmbInterpolationMode = new System.Windows.Forms.ComboBox();
+            this.label4 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
             this.splitContainer.SuspendLayout();
@@ -312,11 +314,13 @@
             // 
             this.pnlGrid.BackColor = System.Drawing.Color.White;
             this.pnlGrid.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlGrid.Controls.Add(this.cmbInterpolationMode);
             this.pnlGrid.Controls.Add(this.btnOneToOne);
             this.pnlGrid.Controls.Add(this.cmbAlgorithm);
             this.pnlGrid.Controls.Add(this.picColor);
             this.pnlGrid.Controls.Add(this.label2);
             this.pnlGrid.Controls.Add(this.label3);
+            this.pnlGrid.Controls.Add(this.label4);
             this.pnlGrid.Controls.Add(this.label1);
             this.pnlGrid.Controls.Add(this.btnRandomAlgorithm);
             this.pnlGrid.Controls.Add(this.btnRandomColor);
@@ -325,13 +329,13 @@
             this.pnlGrid.Location = new System.Drawing.Point(263, 4);
             this.pnlGrid.Margin = new System.Windows.Forms.Padding(4);
             this.pnlGrid.Name = "pnlGrid";
-            this.pnlGrid.Size = new System.Drawing.Size(277, 102);
+            this.pnlGrid.Size = new System.Drawing.Size(317, 102);
             this.pnlGrid.TabIndex = 3;
             // 
             // btnOneToOne
             // 
             this.btnOneToOne.Image = ((System.Drawing.Image)(resources.GetObject("btnOneToOne.Image")));
-            this.btnOneToOne.Location = new System.Drawing.Point(99, 23);
+            this.btnOneToOne.Location = new System.Drawing.Point(62, 2);
             this.btnOneToOne.Margin = new System.Windows.Forms.Padding(0);
             this.btnOneToOne.Name = "btnOneToOne";
             this.btnOneToOne.Size = new System.Drawing.Size(21, 20);
@@ -346,19 +350,19 @@
             this.cmbAlgorithm.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbAlgorithm.DropDownWidth = 200;
             this.cmbAlgorithm.FormattingEnabled = true;
-            this.cmbAlgorithm.Location = new System.Drawing.Point(7, 70);
+            this.cmbAlgorithm.Location = new System.Drawing.Point(7, 72);
             this.cmbAlgorithm.Margin = new System.Windows.Forms.Padding(4);
             this.cmbAlgorithm.MaxDropDownItems = 10;
             this.cmbAlgorithm.Name = "cmbAlgorithm";
-            this.cmbAlgorithm.Size = new System.Drawing.Size(223, 24);
+            this.cmbAlgorithm.Size = new System.Drawing.Size(190, 24);
             this.cmbAlgorithm.TabIndex = 8;
             this.cmbAlgorithm.SelectedIndexChanged += new System.EventHandler(this.cmbAlgorithm_SelectedIndexChanged);
             // 
             // picColor
             // 
-            this.picColor.BackColor = System.Drawing.Color.Red;
+            this.picColor.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.picColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.picColor.Location = new System.Drawing.Point(197, 23);
+            this.picColor.Location = new System.Drawing.Point(239, 24);
             this.picColor.Margin = new System.Windows.Forms.Padding(4);
             this.picColor.Name = "picColor";
             this.picColor.Size = new System.Drawing.Size(33, 20);
@@ -368,13 +372,12 @@
             // 
             // label2
             // 
-            this.label2.Location = new System.Drawing.Point(195, 4);
+            this.label2.Location = new System.Drawing.Point(237, 4);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(41, 18);
             this.label2.TabIndex = 6;
             this.label2.Text = "Color";
-            this.label2.UseCompatibleTextRendering = true;
             // 
             // label3
             // 
@@ -384,7 +387,6 @@
             this.label3.Size = new System.Drawing.Size(79, 16);
             this.label3.TabIndex = 6;
             this.label3.Text = "Algorithm";
-            this.label3.UseCompatibleTextRendering = true;
             // 
             // label1
             // 
@@ -394,13 +396,12 @@
             this.label1.Size = new System.Drawing.Size(35, 18);
             this.label1.TabIndex = 6;
             this.label1.Text = "Size";
-            this.label1.UseCompatibleTextRendering = true;
             // 
             // btnRandomAlgorithm
             // 
             this.btnRandomAlgorithm.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.btnRandomAlgorithm.Image = ((System.Drawing.Image)(resources.GetObject("btnRandomAlgorithm.Image")));
-            this.btnRandomAlgorithm.Location = new System.Drawing.Point(235, 71);
+            this.btnRandomAlgorithm.Location = new System.Drawing.Point(201, 74);
             this.btnRandomAlgorithm.Margin = new System.Windows.Forms.Padding(0);
             this.btnRandomAlgorithm.Name = "btnRandomAlgorithm";
             this.btnRandomAlgorithm.Size = new System.Drawing.Size(31, 20);
@@ -414,7 +415,7 @@
             // 
             this.btnRandomColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.btnRandomColor.Image = ((System.Drawing.Image)(resources.GetObject("btnRandomColor.Image")));
-            this.btnRandomColor.Location = new System.Drawing.Point(235, 23);
+            this.btnRandomColor.Location = new System.Drawing.Point(277, 24);
             this.btnRandomColor.Margin = new System.Windows.Forms.Padding(0);
             this.btnRandomColor.Name = "btnRandomColor";
             this.btnRandomColor.Size = new System.Drawing.Size(31, 20);
@@ -427,10 +428,10 @@
             // txtGridSize
             // 
             this.txtGridSize.AcceptsReturn = true;
-            this.txtGridSize.Location = new System.Drawing.Point(7, 22);
+            this.txtGridSize.Location = new System.Drawing.Point(7, 23);
             this.txtGridSize.Margin = new System.Windows.Forms.Padding(4);
             this.txtGridSize.Name = "txtGridSize";
-            this.txtGridSize.Size = new System.Drawing.Size(85, 22);
+            this.txtGridSize.Size = new System.Drawing.Size(76, 22);
             this.txtGridSize.TabIndex = 5;
             this.txtGridSize.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtGridSize_KeyPress);
             this.txtGridSize.Leave += new System.EventHandler(this.txtGridSize_Leave);
@@ -440,14 +441,13 @@
             // 
             this.chkWrapAround.AutoSize = true;
             this.chkWrapAround.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.chkWrapAround.Location = new System.Drawing.Point(129, 23);
+            this.chkWrapAround.Location = new System.Drawing.Point(256, 72);
             this.chkWrapAround.Margin = new System.Windows.Forms.Padding(4);
             this.chkWrapAround.Name = "chkWrapAround";
-            this.chkWrapAround.Size = new System.Drawing.Size(52, 21);
+            this.chkWrapAround.Size = new System.Drawing.Size(56, 21);
             this.chkWrapAround.TabIndex = 4;
             this.chkWrapAround.Text = "wrap";
             this.toolTip.SetToolTip(this.chkWrapAround, "Wrap around the limits");
-            this.chkWrapAround.UseCompatibleTextRendering = true;
             this.chkWrapAround.UseVisualStyleBackColor = true;
             this.chkWrapAround.CheckedChanged += new System.EventHandler(this.chkWrapAround_CheckedChanged);
             // 
@@ -460,10 +460,10 @@
             this.pnlDisplay.Controls.Add(this.chkPosition);
             this.pnlDisplay.Controls.Add(this.chkAlgo);
             this.pnlDisplay.Controls.Add(this.chkFps);
-            this.pnlDisplay.Location = new System.Drawing.Point(548, 4);
+            this.pnlDisplay.Location = new System.Drawing.Point(588, 4);
             this.pnlDisplay.Margin = new System.Windows.Forms.Padding(4);
             this.pnlDisplay.Name = "pnlDisplay";
-            this.pnlDisplay.Size = new System.Drawing.Size(231, 102);
+            this.pnlDisplay.Size = new System.Drawing.Size(232, 102);
             this.pnlDisplay.TabIndex = 4;
             // 
             // btnDownloadPatterns
@@ -497,10 +497,9 @@
             this.chkPosition.Location = new System.Drawing.Point(147, 11);
             this.chkPosition.Margin = new System.Windows.Forms.Padding(4);
             this.chkPosition.Name = "chkPosition";
-            this.chkPosition.Size = new System.Drawing.Size(69, 21);
+            this.chkPosition.Size = new System.Drawing.Size(75, 21);
             this.chkPosition.TabIndex = 5;
             this.chkPosition.Text = "position";
-            this.chkPosition.UseCompatibleTextRendering = true;
             this.chkPosition.UseVisualStyleBackColor = true;
             this.chkPosition.CheckedChanged += new System.EventHandler(this.chkPosition_CheckedChanged);
             // 
@@ -511,11 +510,10 @@
             this.chkAlgo.Location = new System.Drawing.Point(61, 11);
             this.chkAlgo.Margin = new System.Windows.Forms.Padding(4);
             this.chkAlgo.Name = "chkAlgo";
-            this.chkAlgo.Size = new System.Drawing.Size(78, 21);
+            this.chkAlgo.Size = new System.Drawing.Size(84, 21);
             this.chkAlgo.TabIndex = 6;
             this.chkAlgo.Text = "algorithm";
             this.toolTip.SetToolTip(this.chkAlgo, "Show current algorithm");
-            this.chkAlgo.UseCompatibleTextRendering = true;
             this.chkAlgo.UseVisualStyleBackColor = true;
             this.chkAlgo.CheckedChanged += new System.EventHandler(this.chkAlgo_CheckedChanged);
             // 
@@ -526,11 +524,10 @@
             this.chkFps.Location = new System.Drawing.Point(12, 11);
             this.chkFps.Margin = new System.Windows.Forms.Padding(4);
             this.chkFps.Name = "chkFps";
-            this.chkFps.Size = new System.Drawing.Size(41, 21);
+            this.chkFps.Size = new System.Drawing.Size(45, 21);
             this.chkFps.TabIndex = 7;
             this.chkFps.Text = "fps";
             this.toolTip.SetToolTip(this.chkFps, "Show frames per second");
-            this.chkFps.UseCompatibleTextRendering = true;
             this.chkFps.UseVisualStyleBackColor = true;
             this.chkFps.CheckedChanged += new System.EventHandler(this.chkFps_CheckedChanged);
             // 
@@ -569,6 +566,27 @@
             // colorDialog1
             // 
             this.colorDialog1.FullOpen = true;
+            // 
+            // cmbInterpolationMode
+            // 
+            this.cmbInterpolationMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbInterpolationMode.DropDownWidth = 150;
+            this.cmbInterpolationMode.FormattingEnabled = true;
+            this.cmbInterpolationMode.Location = new System.Drawing.Point(90, 22);
+            this.cmbInterpolationMode.Name = "cmbInterpolationMode";
+            this.cmbInterpolationMode.Size = new System.Drawing.Size(142, 24);
+            this.cmbInterpolationMode.TabIndex = 11;
+            this.toolTip.SetToolTip(this.cmbInterpolationMode, "Specifies the interpolation mode for the graphics");
+            this.cmbInterpolationMode.SelectedIndexChanged += new System.EventHandler(this.cmbInterpolationMode_SelectedIndexChanged);
+            // 
+            // label4
+            // 
+            this.label4.Location = new System.Drawing.Point(90, 4);
+            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(142, 18);
+            this.label4.TabIndex = 6;
+            this.label4.Text = "Interpolation mode";
             // 
             // MainForm
             // 
@@ -645,5 +663,7 @@
         private System.Windows.Forms.PictureBox btnClear;
         private System.Windows.Forms.Button btnFileAssoc;
         private System.Windows.Forms.Button btnDownloadPatterns;
+        private System.Windows.Forms.ComboBox cmbInterpolationMode;
+        private System.Windows.Forms.Label label4;
     }
 }

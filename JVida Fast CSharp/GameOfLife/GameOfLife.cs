@@ -369,12 +369,15 @@ namespace JVida_Fast_CSharp
             List<Point> dead = null;
             while (!@Stop)
             {
-                reallyPaused = false;
-                this.GameStep(ref born, ref dead);
-                this.MyFireUpdater.Invoke(born, dead);
-                if (DoSteps > 0)
+                if (!userPaused || DoSteps > 0)
                 {
-                    DoSteps--;
+                    reallyPaused = false;
+                    this.GameStep(ref born, ref dead);
+                    this.MyFireUpdater.Invoke(born, dead);
+                    if (DoSteps > 0)
+                    {
+                        DoSteps--;
+                    }
                 }
                 System.Threading.Thread.Sleep(1);
                 while (userPaused && DoSteps <= 0)
