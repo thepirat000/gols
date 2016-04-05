@@ -1,4 +1,4 @@
-Game of Life Simulator
+Game of Life Simulator (GOLS)
 ======================
 
 Project Description
@@ -12,6 +12,20 @@ Features
  - Control the simulation (play, pause, step)
  - Record the current simulation to an AVI video file.
  - Drag & Drop to load patterns from _.cells_, _.rle_ or _.lif_ files. (Download [the collection](http://www.conwaylife.com/patterns/all.zip) from LifeWiki).
+
+Installation
+====
+
+###Chocolatey
+If you have [chocolatey](https://chocolatey.org/), install [GOLS](https://chocolatey.org/packages/gols/1.0.0.1) by running the following command from the command line or from PowerShell:
+
+```
+C:\> choco install gols
+```
+
+###Manual
+
+Download [setup.exe](https://github.com/thepirat000/gols/tree/master/Setup/Setup/Express/SingleImage/DiskImages/DISK1). 
 
 Screenshots
 ====
