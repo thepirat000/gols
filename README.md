@@ -23,7 +23,7 @@ If you have [chocolatey](https://chocolatey.org/), install [GOLS](https://chocol
 C:\> choco install gols
 ```
 
-###Manual
+###Manual installation
 
 Download [setup.exe](https://github.com/thepirat000/gols/tree/master/Setup/Setup/Express/SingleImage/DiskImages/DISK1). 
 
