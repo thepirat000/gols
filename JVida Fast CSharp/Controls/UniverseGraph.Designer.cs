@@ -1,11 +1,13 @@
-﻿namespace JVida_Fast_CSharp
+﻿using System.ComponentModel;
+
+namespace JVida_Fast_CSharp
 {
     public partial class UniverseGraph
     {
         /// <summary> 
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary> 
         /// Clean up any resources being used.
@@ -17,13 +19,13 @@
             {
                 this.components.Dispose();
             }
-            if (null != this.bmp)
+            if (null != this._bmp)
             {
-                this.bmp.Dispose();
+                this._bmp.Dispose();
             }
-            if (null != this.font)
+            if (null != this._font)
             {
-                this.font.Dispose();
+                this._font.Dispose();
             }
             base.Dispose(disposing);
         }

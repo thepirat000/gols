@@ -8,17 +8,17 @@ namespace JVida_Fast_CSharp.Parsers
     [ForExtensions(".cells")]
     public class ParserPlainText : ParserBase
     {
-        private static readonly string _tokenCommentStart;
-        private static readonly string _tokenName;
-        private static readonly char _aliveCell;
-        private static readonly char _deadCell;
+        private static readonly string TokenCommentStart;
+        private static readonly string TokenName;
+        private static readonly char AliveCell;
+        private static readonly char DeadCell;
 
         static ParserPlainText()
         {
-            _tokenCommentStart = "!";
-            _tokenName = "!Name: ";
-            _aliveCell = 'O';
-            _deadCell = '.';
+            TokenCommentStart = "!";
+            TokenName = "!Name: ";
+            AliveCell = 'O';
+            DeadCell = '.';
         }
 
         public override Pattern Parse(StreamReader sr)
@@ -31,16 +31,16 @@ namespace JVida_Fast_CSharp.Parsers
             {
                 lineNumber++;
                 line = line.Trim();
-                if (line.StartsWith(_tokenName, StringComparison.InvariantCultureIgnoreCase))
+                if (line.StartsWith(TokenName, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    pattern.Name = line.Substring(_tokenName.Length);
+                    pattern.Name = line.Substring(TokenName.Length);
                     continue;
                 }
-                if (line.StartsWith(_tokenCommentStart, StringComparison.InvariantCultureIgnoreCase))
+                if (line.StartsWith(TokenCommentStart, StringComparison.InvariantCultureIgnoreCase))
                 {
                     continue;
                 }
-                if (line.Any(c => c != _aliveCell && c != _deadCell))
+                if (line.Any(c => c != AliveCell && c != DeadCell))
                 {
                     throw new ParserErrorException(lineNumber, $"Line {lineNumber} contains incorrect characters");
                 }
@@ -57,7 +57,7 @@ namespace JVida_Fast_CSharp.Parsers
             {
                 for (int x = 0; x < list[y].Length; x++)
                 {
-                    if (list[y][x] == _aliveCell)
+                    if (list[y][x] == AliveCell)
                     {
                         pattern.Bitmap[x, y] = 1;
                     }

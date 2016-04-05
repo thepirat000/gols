@@ -9,31 +9,31 @@ namespace JVida_Fast_CSharp.Parsers
     [ForExtensions(".rle")]
     public class ParserRle : ParserBase
     {
-        private static readonly string _tokenCommentStart;
-        private static readonly string _tokenName;
-        private static readonly char _aliveCell;
-        private static readonly char _deadCell;
-        private static readonly char _eol;
-        private static readonly char _eof;
-        private static readonly string _infoToken;
-        private static readonly Regex _wrongDataRegex;
-        private static readonly Regex _infoRegex;
-        private static readonly Regex _ruleRegex;
-        private static readonly Regex _ruleSimpleRegex;
+        private static readonly string TokenCommentStart;
+        private static readonly string TokenName;
+        private static readonly char AliveCell;
+        private static readonly char DeadCell;
+        private static readonly char Eol;
+        private static readonly char Eof;
+        private static readonly string InfoToken;
+        private static readonly Regex WrongDataRegex;
+        private static readonly Regex InfoRegex;
+        private static readonly Regex RuleRegex;
+        private static readonly Regex RuleSimpleRegex;
 
         static ParserRle()
         {
-            _tokenCommentStart = "#";
-            _tokenName = "#N ";
-            _aliveCell = 'o';
-            _deadCell = 'b';
-            _eol = '$';
-            _eof = '!';
-            _infoToken = "x";
-            _wrongDataRegex = new Regex(@"[^0-9bo$!]", RegexOptions.IgnoreCase);
-            _infoRegex = new Regex(@"x\s*=\s*(\d+)\s*,\s*y\s*=\s*(\d+)\s*,\s*rule\s*=\s*(.*)", RegexOptions.IgnoreCase);
-            _ruleRegex = new Regex(@"^B(\d*)/S(\d*)$", RegexOptions.IgnoreCase);
-            _ruleSimpleRegex = new Regex(@"^(\d*)/(\d*)$", RegexOptions.IgnoreCase);
+            TokenCommentStart = "#";
+            TokenName = "#N ";
+            AliveCell = 'o';
+            DeadCell = 'b';
+            Eol = '$';
+            Eof = '!';
+            InfoToken = "x";
+            WrongDataRegex = new Regex(@"[^0-9bo$!]", RegexOptions.IgnoreCase);
+            InfoRegex = new Regex(@"x\s*=\s*(\d+)\s*,\s*y\s*=\s*(\d+)\s*,\s*rule\s*=\s*(.*)", RegexOptions.IgnoreCase);
+            RuleRegex = new Regex(@"^B(\d*)/S(\d*)$", RegexOptions.IgnoreCase);
+            RuleSimpleRegex = new Regex(@"^(\d*)/(\d*)$", RegexOptions.IgnoreCase);
         }
 
         private List<string> GetTokensForString(string line)
@@ -42,23 +42,23 @@ namespace JVida_Fast_CSharp.Parsers
             string temp = "";
             for (int i = 0; i < line.Length; i++)
             {
-                if (line[i] == _eol)
+                if (line[i] == Eol)
                 {
                     if (temp.Length > 0)
                     {
                         list.Add(temp);
                     }
-                    list.Add(_eol.ToString());
+                    list.Add(Eol.ToString());
                     temp = "";
                     continue;
                 }
-                if (line[i] == _eof)
+                if (line[i] == Eof)
                 {
                     if (temp.Length > 0)
                     {
                         list.Add(temp);
                     }
-                    list.Add(_eof.ToString());
+                    list.Add(Eof.ToString());
                     temp = "";
                     break;
                 }
@@ -84,24 +84,24 @@ namespace JVida_Fast_CSharp.Parsers
             {
                 lineNumber++;
                 line = line.Trim();
-                if (line.StartsWith(_tokenName, StringComparison.InvariantCultureIgnoreCase))
+                if (line.StartsWith(TokenName, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    pattern.Name = line.Substring(_tokenName.Length);
+                    pattern.Name = line.Substring(TokenName.Length);
                     continue;
                 }
-                if (line.StartsWith(_tokenCommentStart, StringComparison.InvariantCultureIgnoreCase))
+                if (line.StartsWith(TokenCommentStart, StringComparison.InvariantCultureIgnoreCase))
                 {
                     continue;
                 }
-                if (line.StartsWith(_infoToken, StringComparison.InvariantCultureIgnoreCase))
+                if (line.StartsWith(InfoToken, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    match = _infoRegex.Match(line);
+                    match = InfoRegex.Match(line);
                     x = int.Parse(match.Groups[1].Value);
                     y = int.Parse(match.Groups[2].Value);
                     rule = match.Groups[3].Value;
                     continue;
                 }
-                if (_wrongDataRegex.IsMatch(line))
+                if (WrongDataRegex.IsMatch(line))
                 {
                     throw new ParserErrorException(lineNumber, $"Line {lineNumber} contains invalid characters");
                 }
@@ -111,7 +111,7 @@ namespace JVida_Fast_CSharp.Parsers
             {
                 throw new ParserErrorException(lineNumber, $"No cells info");
             }
-            if (tokens.Last() != _eof.ToString())
+            if (tokens.Last() != Eof.ToString())
             {
                 throw new ParserErrorException(lineNumber, $"Not EOF found");
             }
@@ -150,14 +150,14 @@ namespace JVida_Fast_CSharp.Parsers
             {
                 rule = "23/3";
             }
-            match = _ruleSimpleRegex.Match(rule);
+            match = RuleSimpleRegex.Match(rule);
             if (match.Success)
             {
                 pattern.Algorithm = new Algorithm($"{match.Groups[1].Value}/{match.Groups[2].Value}");
             }
             else
             {
-                match = _ruleRegex.Match(rule);
+                match = RuleRegex.Match(rule);
                 if (match.Success)
                 {
                     pattern.Algorithm = new Algorithm($"{match.Groups[2].Value}/{match.Groups[1].Value}");
@@ -171,7 +171,7 @@ namespace JVida_Fast_CSharp.Parsers
             string temp = "";
             for (int i = 0; i < tokens.Count; i++)
             {
-                if (tokens[i] == _eol.ToString() || tokens[i] == _eof.ToString())
+                if (tokens[i] == Eol.ToString() || tokens[i] == Eof.ToString())
                 {
                     yield return temp;
                     temp = "";
@@ -196,13 +196,13 @@ namespace JVida_Fast_CSharp.Parsers
                 }
                 else
                 {
-                    if ((token[i] != _aliveCell) && (token[i] != _deadCell))
+                    if ((token[i] != AliveCell) && (token[i] != DeadCell))
                     {
                         throw new ParserErrorException(0, $"Invalid token: {token[i]}");
                     }
                     int count = counter.Length == 0 ? 1 : int.Parse(counter);
                     counter = "";
-                    list.Add(new TokenInfo() { Count = count, Alive = (token[i] == _aliveCell)});
+                    list.Add(new TokenInfo { Count = count, Alive = (token[i] == AliveCell)});
                 }
             }
             if (counter.Length > 0)
@@ -211,7 +211,7 @@ namespace JVida_Fast_CSharp.Parsers
                 int count = int.Parse(counter);
                 for (int i = 0; i < count-1; i++)
                 {
-                    list.Add(new TokenInfo() {Count = 0, Alive = false});
+                    list.Add(new TokenInfo {Count = 0, Alive = false});
                 }
 
             }

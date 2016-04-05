@@ -1,54 +1,52 @@
 ﻿// Thepirat 2011
 // thepirat000@hotmail.com
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
 namespace JVida_Fast_CSharp
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Diagnostics;
-    using System.Linq;
-
     /// <summary>
     /// Represents an algorithm of game of life
     /// </summary>
     public struct Algorithm
     {
         #region Fields
-        private static Random rnd = new Random();
+        private static readonly Random Rnd = new Random();
 
         // Values ​​that indicate when a cell keeps alive (number of alive neighbors)
-        private ICollection<byte> StillAliveIf;
+        private readonly ICollection<byte> _stillAliveIf;
 
         // Values ​​that indicate when a cell born (number of alive neighbors)
-        private ICollection<byte> BornIf;
+        private readonly ICollection<byte> _bornIf;
         #endregion
 
         #region Constructor
         // Symbol: "nnn/nnn"
-        public Algorithm(string Symbol)
+        public Algorithm(string symbol)
         {
-            string[] ns = Symbol.Split('/');
+            string[] ns = symbol.Split('/');
             if (ns.Length != 2)
             {
                 throw new ArgumentException("Incorrect Format");
             }
-            this.StillAliveIf = new List<byte>();
+            _stillAliveIf = new List<byte>();
             foreach (char c in ns[0])
             {
-                this.StillAliveIf.Add(Convert.ToByte(char.GetNumericValue(c)));
+                _stillAliveIf.Add(Convert.ToByte(char.GetNumericValue(c)));
             }
-            this.BornIf = new List<byte>();
+            _bornIf = new List<byte>();
             foreach (char c in ns[1])
             {
-                this.BornIf.Add(Convert.ToByte(char.GetNumericValue(c)));
+                _bornIf.Add(Convert.ToByte(char.GetNumericValue(c)));
             }
         }
 
-        public Algorithm(ICollection<byte> StillAliveIf, ICollection<byte> BornIf)
+        public Algorithm(ICollection<byte> stillAliveIf, ICollection<byte> bornIf)
         {
-            this.StillAliveIf = StillAliveIf;
-            this.BornIf = BornIf;
+            _stillAliveIf = stillAliveIf;
+            _bornIf = bornIf;
         }
         #endregion
 
@@ -58,12 +56,12 @@ namespace JVida_Fast_CSharp
             get
             {
                 string s = string.Empty;
-                foreach (byte i in this.StillAliveIf)
+                foreach (byte i in _stillAliveIf)
                 {
                     s += i.ToString();
                 }
                 s += "/";
-                foreach (byte i in this.BornIf)
+                foreach (byte i in _bornIf)
                 {
                     s += i.ToString();
                 }
@@ -73,16 +71,16 @@ namespace JVida_Fast_CSharp
         #endregion
 
         #region Public methods
-        public bool NextState(byte CurrentState, byte AliveNeighbors)
+        public bool NextState(byte currentState, byte aliveNeighbors)
         {
             // Is dead, check if it born
-            if (CurrentState == 0 && this.BornIf.Contains(AliveNeighbors))
+            if (currentState == 0 && _bornIf.Contains(aliveNeighbors))
             {
                 return true;
             }
 
             // Is alive, check if it keeps living or dies
-            if (CurrentState > 0 && this.StillAliveIf.Contains(AliveNeighbors))
+            if (currentState > 0 && _stillAliveIf.Contains(aliveNeighbors))
             {
                 return true;
             }
@@ -94,22 +92,22 @@ namespace JVida_Fast_CSharp
         /// </summary>
         public static string GetRandomAlgorithm()
         {
-            int qty_d = rnd.Next(0, 9);
-            int qty_D = rnd.Next(1, 9);
-            var qry_d = (from i in Enumerable.Range(1, 8)
-                         select new { i = i, order = rnd.NextDouble() })
+            int qtyD = Rnd.Next(0, 9);
+            int qty_D = Rnd.Next(1, 9);
+            var qryD = (from i in Enumerable.Range(1, 8)
+                         select new {i, order = Rnd.NextDouble() })
                     .OrderBy(n => n.order)
-                    .Take(qty_d)
+                    .Take(qtyD)
                     .OrderBy(n => n.i)
                     .Select(n => n.i);
             var qry_D = (from i in Enumerable.Range(1, 8)
-                         select new { i = i, order = rnd.NextDouble() })
+                         select new {i, order = Rnd.NextDouble() })
                     .OrderBy(n => n.order)
                     .Take(qty_D)
                     .OrderBy(n => n.i)
                     .Select(n => n.i);
             string res = string.Empty;
-            foreach (int i in qry_d)
+            foreach (int i in qryD)
             {
                 res += i.ToString();
             }

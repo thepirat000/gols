@@ -8,7 +8,7 @@ namespace JVida_Fast_CSharp.Parsers
 {
     internal class ParserLif106
     {
-        private static Regex CellRegex = new Regex(@"^(-?\d*)\s(-?\d*)$", RegexOptions.IgnoreCase);
+        private static readonly Regex CellRegex = new Regex(@"^(-?\d*)\s(-?\d*)$", RegexOptions.IgnoreCase);
 
         public Pattern Parse(StreamReader sr)
         {

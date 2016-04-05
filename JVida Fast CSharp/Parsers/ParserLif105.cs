@@ -27,8 +27,8 @@ namespace JVida_Fast_CSharp.Parsers
         private const string AlgorithmNormalToken = "#N";
         private const string CommentToken = "#D";
         private const string NameToken = "#D Name: ";
-        private static Regex AlgorithmRegex = new Regex(@"^#R\s*(\d*)/(\d*)\s*$", RegexOptions.IgnoreCase);
-        private static Regex BlockPositionRegex = new Regex(@"^#P\s*(-?\d*)\s*(-?\d*)\s*$", RegexOptions.IgnoreCase);
+        private static readonly Regex AlgorithmRegex = new Regex(@"^#R\s*(\d*)/(\d*)\s*$", RegexOptions.IgnoreCase);
+        private static readonly Regex BlockPositionRegex = new Regex(@"^#P\s*(-?\d*)\s*(-?\d*)\s*$", RegexOptions.IgnoreCase);
 
         public Pattern Parse(StreamReader sr)
         {
@@ -77,7 +77,7 @@ namespace JVida_Fast_CSharp.Parsers
                     var match = BlockPositionRegex.Match(line);
                     if (match.Success)
                     {
-                        runningBlock = new Block()
+                        runningBlock = new Block
                         {
                             StartPoint = new Point(int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value)),
                             Lines = new List<string>()

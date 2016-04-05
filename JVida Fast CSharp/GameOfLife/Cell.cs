@@ -1,13 +1,11 @@
 ﻿// Thepirat 2011
 // thepirat000@hotmail.com
+
+using System.Collections.Generic;
+using System.Drawing;
+
 namespace JVida_Fast_CSharp
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.Linq;
-    using System.Text;
-
     /// <summary>
     /// Represents a cell (an individual) inside the universe
     /// </summary>
@@ -44,11 +42,11 @@ namespace JVida_Fast_CSharp
         public Cell(int x, int y)
             : this()
         {
-            this.Location = new Point(x, y);
-            this.AliveNeighbors = 0;
-            this.Neighbors = new List<Point>(8);
-            this.Age = 0;
-            this.IsAlive = false;
+            Location = new Point(x, y);
+            AliveNeighbors = 0;
+            Neighbors = new List<Point>(8);
+            Age = 0;
+            IsAlive = false;
         } 
         #endregion
     }

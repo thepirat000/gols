@@ -1,24 +1,18 @@
 ﻿// Thepirat 2011
 // thepirat000@hotmail.com
 
+using System;
 using System.IO;
 using System.IO.Pipes;
-using System.Linq;
-using System.Security.Principal;
-using JVida_Fast_CSharp.Helpers;
+using System.Reflection;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace JVida_Fast_CSharp
 {
-    using Parsers;
-    using System;
-    using System.Diagnostics;
-    using System.Reflection;
-    using System.Threading;
-    using System.Windows.Forms;
-
     public static class Program
     {
-        private static Mutex mutex;
+        private static Mutex _mutex;
 
         [STAThread]
         public static void Main(string[] args)
@@ -62,21 +56,18 @@ namespace JVida_Fast_CSharp
         /// </summary>
         public static bool PrevInstance()
         {
-            string AssemblyName = Assembly.GetExecutingAssembly().GetName().Name;
-            string mutexName = "Global\\" + AssemblyName;
+            string assemblyName = Assembly.GetExecutingAssembly().GetName().Name;
+            string mutexName = "Global\\" + assemblyName;
             bool newMutexCreated = false;
             try
             {
-                mutex = new Mutex(false, mutexName, out newMutexCreated);
+                _mutex = new Mutex(false, mutexName, out newMutexCreated);
                 if (newMutexCreated)
                 {
                     return false;
                 }
-                else
-                {
-                    mutex.Close();
-                    return true;
-                }
+                _mutex.Close();
+                return true;
             }
             catch (Exception)
             {

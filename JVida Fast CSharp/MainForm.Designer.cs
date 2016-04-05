@@ -1,11 +1,14 @@
-﻿namespace JVida_Fast_CSharp
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace JVida_Fast_CSharp
 {
     public partial class MainForm
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -628,42 +631,42 @@
 
         #endregion
 
-        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
-        private System.Windows.Forms.OpenFileDialog openFileDialog1;
-        private System.Windows.Forms.SplitContainer splitContainer;
-        private System.Windows.Forms.ImageList imageList1;
-        private System.Windows.Forms.ToolTip toolTip;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel;
-        private System.Windows.Forms.Panel pnlPlayer;
-        private System.Windows.Forms.NumericUpDown txtStepSize;
-        private System.Windows.Forms.PictureBox btnStop;
-        private System.Windows.Forms.PictureBox btnRandom;
-        private System.Windows.Forms.PictureBox btnForward;
-        private System.Windows.Forms.PictureBox btnPause;
-        private System.Windows.Forms.PictureBox btnPlay;
-        private System.Windows.Forms.PictureBox btnHelp;
-        private System.Windows.Forms.Panel pnlGrid;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox txtGridSize;
-        private System.Windows.Forms.CheckBox chkWrapAround;
-        private System.Windows.Forms.PictureBox picColor;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ColorDialog colorDialog1;
-        private System.Windows.Forms.PictureBox btnRandomColor;
-        private System.Windows.Forms.PictureBox btnRecord;
-        private System.Windows.Forms.Panel pnlDisplay;
-        private System.Windows.Forms.CheckBox chkPosition;
-        private System.Windows.Forms.CheckBox chkAlgo;
-        private System.Windows.Forms.CheckBox chkFps;
-        private System.Windows.Forms.ComboBox cmbAlgorithm;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.PictureBox btnRandomAlgorithm;
-        private System.Windows.Forms.PictureBox btnOneToOne;
-        private System.Windows.Forms.PictureBox btnImport;
-        private System.Windows.Forms.PictureBox btnClear;
-        private System.Windows.Forms.Button btnFileAssoc;
-        private System.Windows.Forms.Button btnDownloadPatterns;
-        private System.Windows.Forms.ComboBox cmbInterpolationMode;
-        private System.Windows.Forms.Label label4;
+        private SaveFileDialog saveFileDialog1;
+        private OpenFileDialog openFileDialog1;
+        private SplitContainer splitContainer;
+        private ImageList imageList1;
+        private ToolTip toolTip;
+        private FlowLayoutPanel flowLayoutPanel;
+        private Panel pnlPlayer;
+        private NumericUpDown txtStepSize;
+        private PictureBox btnStop;
+        private PictureBox btnRandom;
+        private PictureBox btnForward;
+        private PictureBox btnPause;
+        private PictureBox btnPlay;
+        private PictureBox btnHelp;
+        private Panel pnlGrid;
+        private Label label1;
+        private TextBox txtGridSize;
+        private CheckBox chkWrapAround;
+        private PictureBox picColor;
+        private Label label2;
+        private ColorDialog colorDialog1;
+        private PictureBox btnRandomColor;
+        private PictureBox btnRecord;
+        private Panel pnlDisplay;
+        private CheckBox chkPosition;
+        private CheckBox chkAlgo;
+        private CheckBox chkFps;
+        private ComboBox cmbAlgorithm;
+        private Label label3;
+        private PictureBox btnRandomAlgorithm;
+        private PictureBox btnOneToOne;
+        private PictureBox btnImport;
+        private PictureBox btnClear;
+        private Button btnFileAssoc;
+        private Button btnDownloadPatterns;
+        private ComboBox cmbInterpolationMode;
+        private Label label4;
     }
 }

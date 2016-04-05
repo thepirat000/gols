@@ -2,7 +2,7 @@ using System;
 
 namespace JVida_Fast_CSharp.Parsers
 {
-    [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Class, Inherited = false)]
     sealed class ForExtensionsAttribute : Attribute
     {
         public ForExtensionsAttribute(params string[] extensions)

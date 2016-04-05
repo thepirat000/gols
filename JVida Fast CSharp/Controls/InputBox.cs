@@ -1,16 +1,11 @@
 ﻿// Thepirat 2011
 // thepirat000@hotmail.com
+
+using System;
+using System.Windows.Forms;
+
 namespace JVida_Fast_CSharp
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Data;
-    using System.Drawing;
-    using System.Linq;
-    using System.Text;
-    using System.Windows.Forms;
-
     public partial class InputBox : Form
     {
         private InputBox()
@@ -29,16 +24,13 @@ namespace JVida_Fast_CSharp
                 value = ib.txtValue.Text;
                 return DialogResult.OK;
             }
-            else
-            {
-                value = null;
-                return DialogResult.Cancel;
-            }
+            value = null;
+            return DialogResult.Cancel;
         }
 
         private void btnOk_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.OK;
+            DialogResult = DialogResult.OK;
         }
     }
 }

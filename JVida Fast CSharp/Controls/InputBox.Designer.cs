@@ -1,11 +1,14 @@
-﻿namespace JVida_Fast_CSharp
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace JVida_Fast_CSharp
 {
     public partial class InputBox
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -96,9 +99,9 @@
 
         #endregion
 
-        private System.Windows.Forms.Label lblInfo;
-        private System.Windows.Forms.TextBox txtValue;
-        private System.Windows.Forms.Button btnOk;
-        private System.Windows.Forms.Button btnCancel;
+        private Label lblInfo;
+        private TextBox txtValue;
+        private Button btnOk;
+        private Button btnCancel;
     }
 }

@@ -1,13 +1,10 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace JVida_Fast_CSharp
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.Linq;
-    using System.Text;
-
     public class PointSelectedEventArgs : EventArgs
     {
         public PointSelectedEventArgs(int x, int y)
@@ -33,10 +30,10 @@ namespace JVida_Fast_CSharp
 
         public ICollection<Point> Dead { get; set; }
 
-        public FireUpdateEventArgs(ICollection<Point> Born, ICollection<Point> Dead)
+        public FireUpdateEventArgs(ICollection<Point> born, ICollection<Point> dead)
         {
-            this.Born = Born;
-            this.Dead = Dead;
+            Born = born;
+            Dead = dead;
         }
     }
 }
