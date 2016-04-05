@@ -1,4 +1,4 @@
-Game of Life Simulator (GOLS)
+Game of Life Simulator
 ======================
 
 Project Description
