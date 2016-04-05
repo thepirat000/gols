@@ -100,6 +100,7 @@
     <Compile Include="Helpers\BitmapLocker.cs" />
     <Compile Include="GameOfLife\Cell.cs" />
     <Compile Include="Helpers\FileAssociation.cs" />
+    <Compile Include="Helpers\ZipStorer.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

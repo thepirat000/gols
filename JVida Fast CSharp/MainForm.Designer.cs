@@ -57,7 +57,7 @@
             this.txtGridSize = new System.Windows.Forms.TextBox();
             this.chkWrapAround = new System.Windows.Forms.CheckBox();
             this.pnlDisplay = new System.Windows.Forms.Panel();
-            this.lnkLifeWiki = new System.Windows.Forms.LinkLabel();
+            this.btnDownloadPatterns = new System.Windows.Forms.Button();
             this.btnFileAssoc = new System.Windows.Forms.Button();
             this.chkPosition = new System.Windows.Forms.CheckBox();
             this.chkAlgo = new System.Windows.Forms.CheckBox();
@@ -112,8 +112,8 @@
             // splitContainer.Panel1
             // 
             this.splitContainer.Panel1.Controls.Add(this.flowLayoutPanel);
-            this.splitContainer.Size = new System.Drawing.Size(874, 583);
-            this.splitContainer.SplitterDistance = 101;
+            this.splitContainer.Size = new System.Drawing.Size(889, 609);
+            this.splitContainer.SplitterDistance = 111;
             this.splitContainer.SplitterWidth = 5;
             this.splitContainer.TabIndex = 0;
             // 
@@ -126,7 +126,7 @@
             this.flowLayoutPanel.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel.Margin = new System.Windows.Forms.Padding(4);
             this.flowLayoutPanel.Name = "flowLayoutPanel";
-            this.flowLayoutPanel.Size = new System.Drawing.Size(874, 101);
+            this.flowLayoutPanel.Size = new System.Drawing.Size(889, 111);
             this.flowLayoutPanel.TabIndex = 1;
             // 
             // pnlPlayer
@@ -146,16 +146,16 @@
             this.pnlPlayer.Location = new System.Drawing.Point(4, 4);
             this.pnlPlayer.Margin = new System.Windows.Forms.Padding(4);
             this.pnlPlayer.Name = "pnlPlayer";
-            this.pnlPlayer.Size = new System.Drawing.Size(275, 100);
+            this.pnlPlayer.Size = new System.Drawing.Size(251, 100);
             this.pnlPlayer.TabIndex = 2;
             // 
             // btnClear
             // 
             this.btnClear.Image = ((System.Drawing.Image)(resources.GetObject("btnClear.Image")));
-            this.btnClear.Location = new System.Drawing.Point(232, 60);
+            this.btnClear.Location = new System.Drawing.Point(202, 55);
             this.btnClear.Margin = new System.Windows.Forms.Padding(0);
             this.btnClear.Name = "btnClear";
-            this.btnClear.Size = new System.Drawing.Size(32, 30);
+            this.btnClear.Size = new System.Drawing.Size(39, 39);
             this.btnClear.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.btnClear.TabIndex = 9;
             this.btnClear.TabStop = false;
@@ -165,21 +165,22 @@
             // btnImport
             // 
             this.btnImport.Image = ((System.Drawing.Image)(resources.GetObject("btnImport.Image")));
-            this.btnImport.Location = new System.Drawing.Point(227, 12);
+            this.btnImport.Location = new System.Drawing.Point(202, 7);
             this.btnImport.Margin = new System.Windows.Forms.Padding(0);
             this.btnImport.Name = "btnImport";
-            this.btnImport.Size = new System.Drawing.Size(43, 39);
+            this.btnImport.Size = new System.Drawing.Size(39, 39);
             this.btnImport.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.btnImport.TabIndex = 8;
             this.btnImport.TabStop = false;
-            this.toolTip.SetToolTip(this.btnImport, "Import a pattern file (.cells, etc)");
+            this.toolTip.SetToolTip(this.btnImport, "Load a pattern from a file (.cells, .lif or .rle). Right click to open the patter" +
+        "ns folder.");
             this.btnImport.MouseClick += new System.Windows.Forms.MouseEventHandler(this.btnImport_MouseClick);
             this.btnImport.MouseEnter += new System.EventHandler(this.btnImport_MouseEnter);
             this.btnImport.MouseLeave += new System.EventHandler(this.btnImport_MouseLeave);
             // 
             // txtStepSize
             // 
-            this.txtStepSize.Location = new System.Drawing.Point(99, 62);
+            this.txtStepSize.Location = new System.Drawing.Point(90, 62);
             this.txtStepSize.Margin = new System.Windows.Forms.Padding(4);
             this.txtStepSize.Maximum = new decimal(new int[] {
             1000,
@@ -192,7 +193,7 @@
             0,
             0});
             this.txtStepSize.Name = "txtStepSize";
-            this.txtStepSize.Size = new System.Drawing.Size(87, 22);
+            this.txtStepSize.Size = new System.Drawing.Size(64, 22);
             this.txtStepSize.TabIndex = 7;
             this.toolTip.SetToolTip(this.txtStepSize, "Step count (N steps)");
             this.txtStepSize.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
@@ -208,7 +209,7 @@
             this.btnHelp.Location = new System.Drawing.Point(7, 52);
             this.btnHelp.Margin = new System.Windows.Forms.Padding(0);
             this.btnHelp.Name = "btnHelp";
-            this.btnHelp.Size = new System.Drawing.Size(43, 39);
+            this.btnHelp.Size = new System.Drawing.Size(39, 39);
             this.btnHelp.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.btnHelp.TabIndex = 2;
             this.btnHelp.TabStop = false;
@@ -220,10 +221,10 @@
             // btnRecord
             // 
             this.btnRecord.Image = ((System.Drawing.Image)(resources.GetObject("btnRecord.Image")));
-            this.btnRecord.Location = new System.Drawing.Point(95, 12);
+            this.btnRecord.Location = new System.Drawing.Point(85, 7);
             this.btnRecord.Margin = new System.Windows.Forms.Padding(0);
             this.btnRecord.Name = "btnRecord";
-            this.btnRecord.Size = new System.Drawing.Size(43, 39);
+            this.btnRecord.Size = new System.Drawing.Size(39, 39);
             this.btnRecord.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.btnRecord.TabIndex = 2;
             this.btnRecord.TabStop = false;
@@ -235,10 +236,10 @@
             // btnStop
             // 
             this.btnStop.Image = ((System.Drawing.Image)(resources.GetObject("btnStop.Image")));
-            this.btnStop.Location = new System.Drawing.Point(51, 12);
+            this.btnStop.Location = new System.Drawing.Point(46, 7);
             this.btnStop.Margin = new System.Windows.Forms.Padding(0);
             this.btnStop.Name = "btnStop";
-            this.btnStop.Size = new System.Drawing.Size(43, 39);
+            this.btnStop.Size = new System.Drawing.Size(39, 39);
             this.btnStop.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.btnStop.TabIndex = 2;
             this.btnStop.TabStop = false;
@@ -250,15 +251,14 @@
             // btnRandom
             // 
             this.btnRandom.Image = ((System.Drawing.Image)(resources.GetObject("btnRandom.Image")));
-            this.btnRandom.Location = new System.Drawing.Point(7, 12);
+            this.btnRandom.Location = new System.Drawing.Point(7, 7);
             this.btnRandom.Margin = new System.Windows.Forms.Padding(0);
             this.btnRandom.Name = "btnRandom";
-            this.btnRandom.Size = new System.Drawing.Size(43, 39);
+            this.btnRandom.Size = new System.Drawing.Size(39, 39);
             this.btnRandom.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.btnRandom.TabIndex = 3;
             this.btnRandom.TabStop = false;
             this.toolTip.SetToolTip(this.btnRandom, "Randomize & Restart (right-click to config)");
-            this.btnRandom.Click += new System.EventHandler(this.btnRandom_Click);
             this.btnRandom.MouseClick += new System.Windows.Forms.MouseEventHandler(this.btnRandom_MouseClick);
             this.btnRandom.MouseEnter += new System.EventHandler(this.btnRandom_MouseEnter);
             this.btnRandom.MouseLeave += new System.EventHandler(this.btnRandom_MouseLeave);
@@ -266,10 +266,10 @@
             // btnForward
             // 
             this.btnForward.Image = ((System.Drawing.Image)(resources.GetObject("btnForward.Image")));
-            this.btnForward.Location = new System.Drawing.Point(52, 52);
+            this.btnForward.Location = new System.Drawing.Point(46, 52);
             this.btnForward.Margin = new System.Windows.Forms.Padding(0);
             this.btnForward.Name = "btnForward";
-            this.btnForward.Size = new System.Drawing.Size(43, 39);
+            this.btnForward.Size = new System.Drawing.Size(39, 39);
             this.btnForward.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.btnForward.TabIndex = 4;
             this.btnForward.TabStop = false;
@@ -281,14 +281,14 @@
             // btnPause
             // 
             this.btnPause.Image = ((System.Drawing.Image)(resources.GetObject("btnPause.Image")));
-            this.btnPause.Location = new System.Drawing.Point(183, 12);
+            this.btnPause.Location = new System.Drawing.Point(163, 7);
             this.btnPause.Margin = new System.Windows.Forms.Padding(0);
             this.btnPause.Name = "btnPause";
-            this.btnPause.Size = new System.Drawing.Size(43, 39);
+            this.btnPause.Size = new System.Drawing.Size(39, 39);
             this.btnPause.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.btnPause.TabIndex = 5;
             this.btnPause.TabStop = false;
-            this.toolTip.SetToolTip(this.btnPause, "Pause / Step");
+            this.toolTip.SetToolTip(this.btnPause, "Pause");
             this.btnPause.Click += new System.EventHandler(this.btnPause_Click);
             this.btnPause.MouseEnter += new System.EventHandler(this.btnPause_MouseEnter);
             this.btnPause.MouseLeave += new System.EventHandler(this.btnPause_MouseLeave);
@@ -296,14 +296,14 @@
             // btnPlay
             // 
             this.btnPlay.Image = ((System.Drawing.Image)(resources.GetObject("btnPlay.Image")));
-            this.btnPlay.Location = new System.Drawing.Point(139, 12);
+            this.btnPlay.Location = new System.Drawing.Point(124, 7);
             this.btnPlay.Margin = new System.Windows.Forms.Padding(0);
             this.btnPlay.Name = "btnPlay";
-            this.btnPlay.Size = new System.Drawing.Size(43, 39);
+            this.btnPlay.Size = new System.Drawing.Size(39, 39);
             this.btnPlay.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.btnPlay.TabIndex = 6;
             this.btnPlay.TabStop = false;
-            this.toolTip.SetToolTip(this.btnPlay, "Resume");
+            this.toolTip.SetToolTip(this.btnPlay, "Start / Resume");
             this.btnPlay.Click += new System.EventHandler(this.btnPlay_Click);
             this.btnPlay.MouseEnter += new System.EventHandler(this.btnPlay_MouseEnter);
             this.btnPlay.MouseLeave += new System.EventHandler(this.btnPlay_MouseLeave);
@@ -322,7 +322,7 @@
             this.pnlGrid.Controls.Add(this.btnRandomColor);
             this.pnlGrid.Controls.Add(this.txtGridSize);
             this.pnlGrid.Controls.Add(this.chkWrapAround);
-            this.pnlGrid.Location = new System.Drawing.Point(287, 4);
+            this.pnlGrid.Location = new System.Drawing.Point(263, 4);
             this.pnlGrid.Margin = new System.Windows.Forms.Padding(4);
             this.pnlGrid.Name = "pnlGrid";
             this.pnlGrid.Size = new System.Drawing.Size(277, 102);
@@ -331,7 +331,7 @@
             // btnOneToOne
             // 
             this.btnOneToOne.Image = ((System.Drawing.Image)(resources.GetObject("btnOneToOne.Image")));
-            this.btnOneToOne.Location = new System.Drawing.Point(99, 25);
+            this.btnOneToOne.Location = new System.Drawing.Point(99, 23);
             this.btnOneToOne.Margin = new System.Windows.Forms.Padding(0);
             this.btnOneToOne.Name = "btnOneToOne";
             this.btnOneToOne.Size = new System.Drawing.Size(21, 20);
@@ -455,35 +455,35 @@
             // 
             this.pnlDisplay.BackColor = System.Drawing.Color.White;
             this.pnlDisplay.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlDisplay.Controls.Add(this.lnkLifeWiki);
+            this.pnlDisplay.Controls.Add(this.btnDownloadPatterns);
             this.pnlDisplay.Controls.Add(this.btnFileAssoc);
             this.pnlDisplay.Controls.Add(this.chkPosition);
             this.pnlDisplay.Controls.Add(this.chkAlgo);
             this.pnlDisplay.Controls.Add(this.chkFps);
-            this.pnlDisplay.Location = new System.Drawing.Point(572, 4);
+            this.pnlDisplay.Location = new System.Drawing.Point(548, 4);
             this.pnlDisplay.Margin = new System.Windows.Forms.Padding(4);
             this.pnlDisplay.Name = "pnlDisplay";
-            this.pnlDisplay.Size = new System.Drawing.Size(235, 102);
+            this.pnlDisplay.Size = new System.Drawing.Size(231, 102);
             this.pnlDisplay.TabIndex = 4;
             // 
-            // lnkLifeWiki
+            // btnDownloadPatterns
             // 
-            this.lnkLifeWiki.AutoSize = true;
-            this.lnkLifeWiki.Location = new System.Drawing.Point(164, 73);
-            this.lnkLifeWiki.Name = "lnkLifeWiki";
-            this.lnkLifeWiki.Size = new System.Drawing.Size(57, 17);
-            this.lnkLifeWiki.TabIndex = 9;
-            this.lnkLifeWiki.TabStop = true;
-            this.lnkLifeWiki.Text = "LifeWiki";
-            this.toolTip.SetToolTip(this.lnkLifeWiki, "Wiki collecting information about Conway\'s Game of Life");
-            this.lnkLifeWiki.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkLifeWiki_LinkClicked);
+            this.btnDownloadPatterns.Location = new System.Drawing.Point(12, 68);
+            this.btnDownloadPatterns.Margin = new System.Windows.Forms.Padding(4);
+            this.btnDownloadPatterns.Name = "btnDownloadPatterns";
+            this.btnDownloadPatterns.Size = new System.Drawing.Size(149, 28);
+            this.btnDownloadPatterns.TabIndex = 10;
+            this.btnDownloadPatterns.Text = "Download Patterns";
+            this.toolTip.SetToolTip(this.btnDownloadPatterns, "Download the pattern collection from LifeWiki");
+            this.btnDownloadPatterns.UseVisualStyleBackColor = true;
+            this.btnDownloadPatterns.Click += new System.EventHandler(this.btnDownloadPatterns_Click);
             // 
             // btnFileAssoc
             // 
-            this.btnFileAssoc.Location = new System.Drawing.Point(4, 68);
+            this.btnFileAssoc.Location = new System.Drawing.Point(12, 40);
             this.btnFileAssoc.Margin = new System.Windows.Forms.Padding(4);
             this.btnFileAssoc.Name = "btnFileAssoc";
-            this.btnFileAssoc.Size = new System.Drawing.Size(153, 28);
+            this.btnFileAssoc.Size = new System.Drawing.Size(149, 28);
             this.btnFileAssoc.TabIndex = 8;
             this.btnFileAssoc.Text = "Set file assoc.";
             this.toolTip.SetToolTip(this.btnFileAssoc, "Set the file associations to open .cells and .rle files");
@@ -494,12 +494,12 @@
             // 
             this.chkPosition.AutoSize = true;
             this.chkPosition.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.chkPosition.Location = new System.Drawing.Point(12, 38);
+            this.chkPosition.Location = new System.Drawing.Point(147, 11);
             this.chkPosition.Margin = new System.Windows.Forms.Padding(4);
             this.chkPosition.Name = "chkPosition";
-            this.chkPosition.Size = new System.Drawing.Size(106, 21);
+            this.chkPosition.Size = new System.Drawing.Size(69, 21);
             this.chkPosition.TabIndex = 5;
-            this.chkPosition.Text = "Show position";
+            this.chkPosition.Text = "position";
             this.chkPosition.UseCompatibleTextRendering = true;
             this.chkPosition.UseVisualStyleBackColor = true;
             this.chkPosition.CheckedChanged += new System.EventHandler(this.chkPosition_CheckedChanged);
@@ -508,12 +508,12 @@
             // 
             this.chkAlgo.AutoSize = true;
             this.chkAlgo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.chkAlgo.Location = new System.Drawing.Point(118, 12);
+            this.chkAlgo.Location = new System.Drawing.Point(61, 11);
             this.chkAlgo.Margin = new System.Windows.Forms.Padding(4);
             this.chkAlgo.Name = "chkAlgo";
-            this.chkAlgo.Size = new System.Drawing.Size(115, 21);
+            this.chkAlgo.Size = new System.Drawing.Size(78, 21);
             this.chkAlgo.TabIndex = 6;
-            this.chkAlgo.Text = "Show algorithm";
+            this.chkAlgo.Text = "algorithm";
             this.toolTip.SetToolTip(this.chkAlgo, "Show current algorithm");
             this.chkAlgo.UseCompatibleTextRendering = true;
             this.chkAlgo.UseVisualStyleBackColor = true;
@@ -523,12 +523,12 @@
             // 
             this.chkFps.AutoSize = true;
             this.chkFps.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.chkFps.Location = new System.Drawing.Point(12, 12);
+            this.chkFps.Location = new System.Drawing.Point(12, 11);
             this.chkFps.Margin = new System.Windows.Forms.Padding(4);
             this.chkFps.Name = "chkFps";
-            this.chkFps.Size = new System.Drawing.Size(78, 21);
+            this.chkFps.Size = new System.Drawing.Size(41, 21);
             this.chkFps.TabIndex = 7;
-            this.chkFps.Text = "Show fps";
+            this.chkFps.Text = "fps";
             this.toolTip.SetToolTip(this.chkFps, "Show frames per second");
             this.chkFps.UseCompatibleTextRendering = true;
             this.chkFps.UseVisualStyleBackColor = true;
@@ -538,25 +538,33 @@
             // 
             this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList1.Images.SetKeyName(0, "button_black_pause.ico");
-            this.imageList1.Images.SetKeyName(1, "button_black_play.ico");
-            this.imageList1.Images.SetKeyName(2, "button_black_rec.ico");
-            this.imageList1.Images.SetKeyName(3, "button_black_stop.ico");
-            this.imageList1.Images.SetKeyName(4, "button_grey_pause.ico");
-            this.imageList1.Images.SetKeyName(5, "button_grey_play.ico");
-            this.imageList1.Images.SetKeyName(6, "button_grey_rec.ico");
-            this.imageList1.Images.SetKeyName(7, "button_grey_stop.ico");
-            this.imageList1.Images.SetKeyName(8, "button_black_random.ico");
-            this.imageList1.Images.SetKeyName(9, "button_grey_random.ico");
-            this.imageList1.Images.SetKeyName(10, "button_black_last.ico");
-            this.imageList1.Images.SetKeyName(11, "button_grey_last.ico");
-            this.imageList1.Images.SetKeyName(12, "button_black_ffw.ico");
-            this.imageList1.Images.SetKeyName(13, "button_grey_ffw.ico");
-            this.imageList1.Images.SetKeyName(14, "alien_black_help.ico");
-            this.imageList1.Images.SetKeyName(15, "alien_gray_help.ico");
-            this.imageList1.Images.SetKeyName(16, "button_black_eject.ico");
-            this.imageList1.Images.SetKeyName(17, "button_grey_eject.ico");
-            this.imageList1.Images.SetKeyName(18, "button_blue_eject.ico");
+            this.imageList1.Images.SetKeyName(0, "alien_black_help.ico");
+            this.imageList1.Images.SetKeyName(1, "alien_gray_help.ico");
+            this.imageList1.Images.SetKeyName(2, "eject_blue.ico");
+            this.imageList1.Images.SetKeyName(3, "eject_green.ico");
+            this.imageList1.Images.SetKeyName(4, "eject_yellow.ico");
+            this.imageList1.Images.SetKeyName(5, "ff_blue.ico");
+            this.imageList1.Images.SetKeyName(6, "ff_greeen.ico");
+            this.imageList1.Images.SetKeyName(7, "ff_yellow.ico");
+            this.imageList1.Images.SetKeyName(8, "pause_blue.ico");
+            this.imageList1.Images.SetKeyName(9, "pause_green.ico");
+            this.imageList1.Images.SetKeyName(10, "pause_yellow.ico");
+            this.imageList1.Images.SetKeyName(11, "play_blue.ico");
+            this.imageList1.Images.SetKeyName(12, "play_green.ico");
+            this.imageList1.Images.SetKeyName(13, "play_yellow.ico");
+            this.imageList1.Images.SetKeyName(14, "shuffle_blue.ico");
+            this.imageList1.Images.SetKeyName(15, "shuffle_yellow.ico");
+            this.imageList1.Images.SetKeyName(16, "stop_blue.ico");
+            this.imageList1.Images.SetKeyName(17, "stop_green.ico");
+            this.imageList1.Images.SetKeyName(18, "stop_yellow.ico");
+            this.imageList1.Images.SetKeyName(19, "question_blue.ico");
+            this.imageList1.Images.SetKeyName(20, "question_green.ico");
+            this.imageList1.Images.SetKeyName(21, "question_yellow.ico");
+            this.imageList1.Images.SetKeyName(22, "rec_red.ico");
+            this.imageList1.Images.SetKeyName(23, "rec_yellow.ico");
+            this.imageList1.Images.SetKeyName(24, "rec_blue.ico");
+            this.imageList1.Images.SetKeyName(25, "pause_red.ico");
+            this.imageList1.Images.SetKeyName(26, "play_red.ico");
             // 
             // colorDialog1
             // 
@@ -566,7 +574,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(874, 583);
+            this.ClientSize = new System.Drawing.Size(889, 609);
             this.Controls.Add(this.splitContainer);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
@@ -636,6 +644,6 @@
         private System.Windows.Forms.PictureBox btnImport;
         private System.Windows.Forms.PictureBox btnClear;
         private System.Windows.Forms.Button btnFileAssoc;
-        private System.Windows.Forms.LinkLabel lnkLifeWiki;
+        private System.Windows.Forms.Button btnDownloadPatterns;
     }
 }

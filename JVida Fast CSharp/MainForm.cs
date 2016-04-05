@@ -1,9 +1,12 @@
 ﻿// Thepirat 2011
 // thepirat000@hotmail.com
 
+using System.ComponentModel;
 using System.IO;
+using System.IO.Compression;
 using System.IO.Pipes;
 using System.Linq;
+using System.Net;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using JVida_Fast_CSharp.Helpers;
@@ -44,6 +47,8 @@ namespace JVida_Fast_CSharp
         private NamedPipeServerStream loadPipe;
         private HashSet<string> availableExtensions;
         private bool GridSizeFocused;
+        private string _patterns_Dir = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Patterns");
+        private string _patternZipFile = "Patterns.zip";
         #endregion
 
         #region Constructor
@@ -103,10 +108,8 @@ namespace JVida_Fast_CSharp
             bool prevShowFps = Graph == null ? true : Graph.ShowFps;
             splitContainer.Panel2.Controls.Remove(Graph);
             Cell[,] ex_matrix = null;
-            bool exPaused = false;
             if (restoreState)
             {
-                exPaused = Gol.Paused;
                 ex_matrix = Gol.Matrix;
             }
             Gol = new GameOfLife(GridSize.Width, GridSize.Height, AlgorithmSymbol, MaximumAge,
@@ -114,10 +117,6 @@ namespace JVida_Fast_CSharp
             if (restoreState)
             {
                 Gol.Plot(new Point(0, 0), ex_matrix);
-            }
-            if (restoreState && exPaused)
-            {
-                Pause();
             }
             Gol.FireUpdate += jv_FireUpdate;
             Graph = new UniverseGraph(GridSize.Width, GridSize.Height)
@@ -264,6 +263,8 @@ namespace JVida_Fast_CSharp
         private string GetKeysHelp()
         {
             StringBuilder sb = new StringBuilder();
+            sb.AppendLine("Keyboard Shortcuts");
+            sb.AppendLine();
             sb.AppendLine("F1: Show/Hide help");
             sb.AppendLine("A: Change Algorithm");
             sb.AppendLine("Q: Random Algorithm");
@@ -280,7 +281,8 @@ namespace JVida_Fast_CSharp
             sb.AppendLine("Esc: Exit Application");
             sb.AppendLine("Enter: Change alive cell color");
             sb.AppendLine();
-            sb.AppendFormat("Algorithm: {0}. Max Age: {1}. Size: {2}.", AlgorithmSymbol, MaximumAge, GridSize);
+            sb.AppendLine("You can drag & drop pattern files here (.cells, .rle or .lif).");
+            sb.AppendLine("Click on Download Patterns to download the LifeWiki's pattern collection.");
             return sb.ToString();
         }
 
@@ -409,7 +411,7 @@ namespace JVida_Fast_CSharp
         {
             Gol.Pause();
             Avi = new AviWriter();
-            saveFileDialog1.FileName = "Algorithm " + AlgorithmSymbol.Replace('/', '^') + " - MaxAge " + MaximumAge + " - Density " + (int)(InitialOccupation * 100);
+            saveFileDialog1.FileName = $"GOLS_Simulation_{DateTime.Now.ToString("yyyyMMddHHmmss")}";
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 BmpAvi = Avi.Open(saveFileDialog1.FileName, 30, GridSize.Width, GridSize.Height);
@@ -418,12 +420,6 @@ namespace JVida_Fast_CSharp
                 Graph.ShowFps = false;
                 Resume();
             }
-        }
-
-        private void Resume()
-        {
-            Gol.Resume();
-            Graph.LowerLeftInfo = "";
         }
 
         private void StopRecording()
@@ -495,6 +491,22 @@ namespace JVida_Fast_CSharp
         {
             Gol.Pause();
             Graph.LowerLeftInfo = "< PAUSED >";
+            while (!Gol.Paused)
+            {
+                Thread.Sleep(1);
+            }
+            SetPlayerButtonState();
+        }
+
+        private void Resume()
+        {
+            Gol.Resume();
+            Graph.LowerLeftInfo = "";
+            while (Gol.Paused)
+            {
+                Thread.Sleep(1);
+            }
+            SetPlayerButtonState();
         }
 
         private void ChangeGridSize()
@@ -515,9 +527,9 @@ namespace JVida_Fast_CSharp
         // Plots a pattern starting at a given point
         private void PlotPattern(Point startPoint, Pattern pattern)
         {
+            var wasPaused = Gol.Paused;
             if (startPoint.X + pattern.Bitmap.GetLength(0) > GridSize.Width || startPoint.Y + pattern.Bitmap.GetLength(1) > GridSize.Height)
             {
-                Pause();
                 var dlg =
                     MessageBox.Show(
                         $"Pattern will overflow {pattern.Bitmap.GetLength(0)}x{pattern.Bitmap.GetLength(1)}. Automatically resize/reposition the pattern?",
@@ -530,11 +542,14 @@ namespace JVida_Fast_CSharp
                         //resize grid to fit the pattern
                         GridSize = new Size(pattern.Bitmap.GetLength(0), pattern.Bitmap.GetLength(1));
                         Restart(true);
+                        if (wasPaused)
+                        {
+                            Pause();
+                        }
                     }
                 }
                 else
                 {
-                    Resume();
                     return;
                 }
             }
@@ -546,7 +561,12 @@ namespace JVida_Fast_CSharp
                 FindSelectAlgorithm(AlgorithmSymbol);
                 Restart(true);
             }
+            Pause();
             Gol.Plot(startPoint, pattern.Bitmap);
+            if (!wasPaused)
+            {
+                Resume();
+            }
         }
 
         // Stops and Clears the current simulation (if any), and loads a centered pattern into the simulation
@@ -581,6 +601,7 @@ namespace JVida_Fast_CSharp
                 FindSelectAlgorithm(AlgorithmSymbol);
                 Restart(true);
             }
+            Pause();
             Gol.Plot(startPoint, pattern.Bitmap);
             if (shiftPressed)
             {
@@ -616,39 +637,38 @@ namespace JVida_Fast_CSharp
                 StopRecording();
                 return;
             }
-            Gol.Pause();
-            Graph.LowerLeftInfo = "< STOPPED >";
+            Pause();
             Gol.Clear();
         }
 
         private void btnStop_MouseEnter(object sender, EventArgs e)
         {
-            btnStop.Image = imageList1.Images["button_black_stop.ico"];
+            btnStop.Image = imageList1.Images["stop_yellow.ico"];
         }
 
         private void btnStop_MouseLeave(object sender, EventArgs e)
         {
-            btnStop.Image = imageList1.Images["button_grey_stop.ico"];
+            btnStop.Image = imageList1.Images["stop_blue.ico"];
         }
 
         private void btnPlay_MouseEnter(object sender, EventArgs e)
         {
-            btnPlay.Image = imageList1.Images["button_black_play.ico"];
+            btnPlay.Image = imageList1.Images["play_yellow.ico"];
         }
 
         private void btnPlay_MouseLeave(object sender, EventArgs e)
         {
-            btnPlay.Image = imageList1.Images["button_grey_play.ico"];
+            btnPlay.Image = !Gol.Paused ? imageList1.Images["play_red.ico"] : imageList1.Images["play_blue.ico"];
         }
 
         private void btnPause_MouseEnter(object sender, EventArgs e)
         {
-            btnPause.Image = imageList1.Images["button_black_pause.ico"];
+            btnPause.Image = imageList1.Images["pause_yellow.ico"];
         }
 
         private void btnPause_MouseLeave(object sender, EventArgs e)
         {
-            btnPause.Image = imageList1.Images["button_grey_pause.ico"];
+            btnPause.Image = Gol.Paused ? imageList1.Images["pause_red.ico"] : imageList1.Images["pause_blue.ico"];
         }
 
         private void btnPause_Click(object sender, EventArgs e)
@@ -663,12 +683,12 @@ namespace JVida_Fast_CSharp
 
         private void btnRandom_MouseEnter(object sender, EventArgs e)
         {
-            btnRandom.Image = imageList1.Images["button_black_random.ico"];
+            btnRandom.Image = imageList1.Images["shuffle_yellow.ico"];
         }
 
         private void btnRandom_MouseLeave(object sender, EventArgs e)
         {
-            btnRandom.Image = imageList1.Images["button_grey_random.ico"];
+            btnRandom.Image = imageList1.Images["shuffle_blue.ico"];
         }
 
         private void btnRandom_Click(object sender, EventArgs e)
@@ -686,12 +706,12 @@ namespace JVida_Fast_CSharp
 
         private void btnForward_MouseEnter(object sender, EventArgs e)
         {
-            btnForward.Image = imageList1.Images["button_black_ffw.ico"];
+            btnForward.Image = imageList1.Images["ff_yellow.ico"];
         }
 
         private void btnForward_MouseLeave(object sender, EventArgs e)
         {
-            btnForward.Image = imageList1.Images["button_grey_ffw.ico"];
+            btnForward.Image = imageList1.Images["ff_blue.ico"];
         }
 
         private void btnForward_Click(object sender, EventArgs e)
@@ -711,10 +731,12 @@ namespace JVida_Fast_CSharp
 
         private void btnHelp_MouseEnter(object sender, EventArgs e)
         {
+            btnHelp.Image = imageList1.Images["question_yellow.ico"];
         }
 
         private void btnHelp_MouseLeave(object sender, EventArgs e)
         {
+            btnHelp.Image = imageList1.Images["question_blue.ico"];
         }
 
         private void txtGridSize_MouseUp(object sender, MouseEventArgs e)
@@ -790,12 +812,12 @@ namespace JVida_Fast_CSharp
 
         private void btnRecord_MouseEnter(object sender, EventArgs e)
         {
-            btnRecord.Image = imageList1.Images["button_black_rec.ico"];
+            btnRecord.Image = imageList1.Images["rec_yellow.ico"];
         }
 
         private void btnRecord_MouseLeave(object sender, EventArgs e)
         {
-            btnRecord.Image = imageList1.Images["button_grey_rec.ico"];
+            btnRecord.Image = imageList1.Images["rec_blue.ico"];
         }
 
         private void btnRecord_Click(object sender, EventArgs e)
@@ -864,13 +886,13 @@ namespace JVida_Fast_CSharp
 
         private void btnImport_MouseEnter(object sender, EventArgs e)
         {
-            btnImport.Image = imageList1.Images["button_black_eject.ico"];
+            btnImport.Image = imageList1.Images["eject_yellow.ico"];
 
         }
 
         private void btnImport_MouseLeave(object sender, EventArgs e)
         {
-            btnImport.Image = imageList1.Images["button_blue_eject.ico"];
+            btnImport.Image = imageList1.Images["eject_blue.ico"];
         }
 
         private void btnImport_MouseClick(object sender, MouseEventArgs e)
@@ -882,6 +904,10 @@ namespace JVida_Fast_CSharp
                 {
                     Graph.EnterSelectionMode(true);
                 }
+            }
+            else if (e.Button == MouseButtons.Right)
+            {
+                Process.Start("explorer.exe", _patterns_Dir);
             }
         }
 
@@ -936,9 +962,49 @@ namespace JVida_Fast_CSharp
         }
         #endregion
 
-        private void lnkLifeWiki_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void btnDownloadPatterns_Click(object sender, EventArgs e)
         {
-            Process.Start("http://www.conwaylife.com/wiki");
+            btnDownloadPatterns.Enabled = false;
+            var webClient = new WebClient();
+            webClient.DownloadFileAsync(new Uri("http://www.conwaylife.com/patterns/all.zip"), _patternZipFile);
+            webClient.DownloadFileCompleted += WebClientOnDownloadFileCompleted;
+            webClient.DownloadProgressChanged += WebClientOnDownloadProgressChanged;
         }
+
+        private void WebClientOnDownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            var p = Math.Round((decimal)e.BytesReceived/e.TotalBytesToReceive*100, 0);
+            btnDownloadPatterns.Text = e.BytesReceived < e.TotalBytesToReceive ? $"Downloading {p}%..." : "Unzipping...";
+        }
+
+        private void WebClientOnDownloadFileCompleted(object sender, AsyncCompletedEventArgs asyncCompletedEventArgs)
+        {
+            UnzipPatterns();
+        }
+
+        private void UnzipPatterns()
+        {
+            var zip = ZipStorer.Open(_patternZipFile, FileAccess.Read);
+            var dir = zip.ReadCentralDir();
+            foreach (var entry in dir)
+            {
+                if (ParserFactory.GetAvailableExtensions().Contains(Path.GetExtension(entry.FilenameInZip)))
+                {
+                    zip.ExtractFile(entry, Path.Combine(_patterns_Dir, entry.FilenameInZip));
+                }
+            }
+            zip.Close();
+            btnDownloadPatterns.Enabled = true;
+            btnDownloadPatterns.Text = "Download Patterns";
+            Process.Start("explorer.exe", _patterns_Dir);
+        }
+
+        private void SetPlayerButtonState()
+        {
+            btnPlay.Image = !Gol.Paused ? imageList1.Images["play_red.ico"] : imageList1.Images["play_blue.ico"];
+            btnRecord.Image = IsRecording ? imageList1.Images["rec_red.ico"] : imageList1.Images["rec_blue.ico"];
+            btnPause.Image = Gol.Paused ? imageList1.Images["pause_red.ico"] : imageList1.Images["pause_blue.ico"];
+        }
+
     }
 }

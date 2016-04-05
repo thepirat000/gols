@@ -21,17 +21,14 @@ namespace JVida_Fast_CSharp
     {
         #region Fields
         public Cell[,] Matrix { get; private set; }
-
         private List<Point> Alive;
-
         private int MaximumAge;
-
         private double InitialOccupation;
         private double InitialMargin;
-
         private bool @Stop = false;
-
-        public bool Paused { get; set; }
+        private bool userPaused;
+        private bool reallyPaused;
+        public bool Paused { get { return reallyPaused; } set { userPaused = value; } }
         // To indicate how many algorithm steps to do when paused (0 means, pause forever)
         public int DoSteps { get; set; }
 
@@ -277,22 +274,22 @@ namespace JVida_Fast_CSharp
         #region Public Methods
         public void TogglePause()
         {
-            Paused = !Paused;
+            userPaused = !Paused;
         }
 
         public void Pause()
         {
-            Paused = true;
+            userPaused = true;
         }
         public void Resume()
         {
-            Paused = false;
+            userPaused = false;
         }
 
         public void Clear()
         {
-            var wasPaused = Paused;
-            Paused = true;
+            var wasPaused = reallyPaused;
+            userPaused = true;
             System.Threading.Thread.Sleep(1);
             for (int x = 0; x < this.Matrix.GetLength(0); x++)
             {
@@ -321,9 +318,6 @@ namespace JVida_Fast_CSharp
         /// </summary>
         public void Plot(Point offset, byte[,] matrix)
         {
-            var wasPaused = Paused;
-            Paused = true;
-            System.Threading.Thread.Sleep(5);
             var dead = new List<Point>();
             var born = new List<Point>();
             for (int i = 0; i < matrix.GetLength(0); i++)
@@ -367,7 +361,6 @@ namespace JVida_Fast_CSharp
                 }
             }
             MyFireUpdater.Invoke(born, dead);
-            Paused = wasPaused;
         }
 
         public void Play()
@@ -376,6 +369,7 @@ namespace JVida_Fast_CSharp
             List<Point> dead = null;
             while (!@Stop)
             {
+                reallyPaused = false;
                 this.GameStep(ref born, ref dead);
                 this.MyFireUpdater.Invoke(born, dead);
                 if (DoSteps > 0)
@@ -383,8 +377,9 @@ namespace JVida_Fast_CSharp
                     DoSteps--;
                 }
                 System.Threading.Thread.Sleep(1);
-                while (Paused && DoSteps <= 0)
+                while (userPaused && DoSteps <= 0)
                 {
+                    reallyPaused = true;
                     System.Threading.Thread.Sleep(1);
                 }
             }
