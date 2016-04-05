@@ -44,8 +44,8 @@ namespace JVida_Fast_CSharp
         private NamedPipeServerStream _loadPipe;
         private readonly HashSet<string> _availableExtensions;
         private bool _gridSizeFocused;
-        private readonly string _patternsDir = Path.Combine(Directory.GetCurrentDirectory(), "Patterns");
-        private readonly string _patternZipFile = "Patterns.zip";
+        private readonly string _patternsDir;
+        private readonly string _patternZipFile;
         #endregion
 
         #region Constructor
@@ -53,6 +53,8 @@ namespace JVida_Fast_CSharp
         {
             // This call is required by the Windows Form Designer.
             InitializeComponent();
+            _patternsDir = Path.Combine(Directory.GetCurrentDirectory(), "Patterns");
+            _patternZipFile = Path.Combine(Directory.GetCurrentDirectory(), "Patterns.zip");
             _initialFilePath = initialFilePath;
             // Add any initialization after the InitializeComponent() call.
             Shown += Form1_Shown;
@@ -1003,6 +1005,7 @@ namespace JVida_Fast_CSharp
         {
             btnDownloadPatterns.Enabled = false;
             var webClient = new WebClient();
+            Directory.CreateDirectory(_patternsDir);
             webClient.DownloadFileAsync(new Uri("http://www.conwaylife.com/patterns/all.zip"), _patternZipFile);
             webClient.DownloadFileCompleted += WebClientOnDownloadFileCompleted;
             webClient.DownloadProgressChanged += WebClientOnDownloadProgressChanged;
@@ -1014,9 +1017,18 @@ namespace JVida_Fast_CSharp
             btnDownloadPatterns.Text = e.BytesReceived < e.TotalBytesToReceive ? $"Downloading {p}%..." : "Unzipping...";
         }
 
-        private void WebClientOnDownloadFileCompleted(object sender, AsyncCompletedEventArgs asyncCompletedEventArgs)
+        private void WebClientOnDownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
-            UnzipPatterns();
+            if (e.Error == null)
+            {
+                btnDownloadPatterns.Text = "Unzipping...";
+                UnzipPatterns();
+            }
+            else
+            {
+                btnDownloadPatterns.Enabled = true;
+                btnDownloadPatterns.Text = "Download Patterns";
+            }
         }
 
         private void UnzipPatterns()
