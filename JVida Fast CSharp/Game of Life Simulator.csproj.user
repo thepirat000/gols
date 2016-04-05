@@ -13,5 +13,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <StartArguments>
     </StartArguments>
+    <StartWorkingDirectory>C:\Users\Federico\AppData\Roaming\GOLS\</StartWorkingDirectory>
   </PropertyGroup>
 </Project>

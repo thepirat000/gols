@@ -44,7 +44,7 @@ namespace JVida_Fast_CSharp
         private NamedPipeServerStream _loadPipe;
         private readonly HashSet<string> _availableExtensions;
         private bool _gridSizeFocused;
-        private readonly string _patternsDir = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Patterns");
+        private readonly string _patternsDir = Path.Combine(Directory.GetCurrentDirectory(), "Patterns");
         private readonly string _patternZipFile = "Patterns.zip";
         #endregion
 
@@ -67,7 +67,7 @@ namespace JVida_Fast_CSharp
             _availableExtensions = new HashSet<string>(ParserFactory.GetAvailableExtensions());
             splitContainer.SplitterDistance = pnlDisplay.Height + 3;
             _gridSize = new Size(splitContainer.Panel2.Width / 2, splitContainer.Panel2.Height / 2);
-            openFileDialog1.InitialDirectory = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), @"Patterns\");
+            openFileDialog1.InitialDirectory = _patternsDir;
             Initialize(false);
         }
         #endregion

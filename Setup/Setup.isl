@@ -1151,6 +1151,7 @@
 		<row><td>LocalAppDataFolder</td><td>TARGETDIR</td><td>.:LocalA~1|LocalAppData</td><td/><td>0</td><td/></row>
 		<row><td>MY_PRODUCT_NAME</td><td>GOLS</td><td>MYPROD~1|My Product Name</td><td/><td>0</td><td/></row>
 		<row><td>MyPicturesFolder</td><td>TARGETDIR</td><td>.:MyPict~1|MyPictures</td><td/><td>0</td><td/></row>
+		<row><td>NEW_DIRECTORY1</td><td>AppDataFolder</td><td>GOLS</td><td/><td>0</td><td/></row>
 		<row><td>NetHoodFolder</td><td>TARGETDIR</td><td>.:NetHood</td><td/><td>0</td><td/></row>
 		<row><td>PersonalFolder</td><td>TARGETDIR</td><td>.:Personal</td><td/><td>0</td><td/></row>
 		<row><td>PrimaryVolumePath</td><td>TARGETDIR</td><td>.:Primar~1|PrimaryVolumePath</td><td/><td>0</td><td/></row>
@@ -3430,7 +3431,6 @@
 		<row><td>IDS_SETUPEXE_EXPIRE_MSG</td><td>1033</td><td>This setup works until %s. The setup will now exit.</td><td>0</td><td/><td>-106677357</td></row>
 		<row><td>IDS_SETUPEXE_LAUNCH_COND_E</td><td>1033</td><td>This setup was built with an evaluation version of InstallShield and can only be launched from setup.exe.</td><td>0</td><td/><td>-106677357</td></row>
 		<row><td>IDS_SHORTCUT_DISPLAY_NAME1</td><td>1033</td><td>Launch |Built</td><td>0</td><td/><td>-106642477</td></row>
-		<row><td>IDS_SHORTCUT_DISPLAY_NAME2</td><td>1033</td><td>GOLS</td><td>0</td><td/><td>572836748</td></row>
 		<row><td>IDS_SQLBROWSE_INTRO</td><td>1033</td><td>From the list of servers below, select the database server you would like to target.</td><td>0</td><td/><td>-106677357</td></row>
 		<row><td>IDS_SQLBROWSE_INTRO_DB</td><td>1033</td><td>From the list of catalog names below, select the database catalog you would like to target.</td><td>0</td><td/><td>-106677357</td></row>
 		<row><td>IDS_SQLBROWSE_INTRO_TEMPLATE</td><td>1033</td><td>[IS_SQLBROWSE_INTRO]</td><td>0</td><td/><td>-106677357</td></row>
@@ -3724,6 +3724,8 @@
 		<row><td>ID_STRING3</td><td>1033</td><td>Federico Colombo</td><td>0</td><td/><td>-106646637</td></row>
 		<row><td>ID_STRING4</td><td>1033</td><td>Launch |Built</td><td>0</td><td/><td>-106638381</td></row>
 		<row><td>ID_STRING5</td><td>1033</td><td>Launch |Built</td><td>0</td><td/><td>170142816</td></row>
+		<row><td>ID_STRING6</td><td>1033</td><td>GOLS</td><td>0</td><td/><td>707043873</td></row>
+		<row><td>ID_STRING7</td><td>1033</td><td>GOLS</td><td>0</td><td/><td>707058113</td></row>
 		<row><td>IIDS_UITEXT_FeatureUninstalled</td><td>1033</td><td>This feature will remain uninstalled.</td><td>0</td><td/><td>-106677357</td></row>
 		<row><td>NEW_STRING1</td><td>1033</td><td>cells</td><td>0</td><td/><td>-106642445</td></row>
 		<row><td>NEW_STRING10</td><td>1033</td><td>.lif</td><td>0</td><td/><td>170171488</td></row>
@@ -3851,7 +3853,7 @@
 		<col def="V0">Data</col>
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="I2">ISIconIndex</col>
-		<row><td>ARPPRODUCTICON.exe</td><td/><td>D:\my downloads\icons\alien.ico</td><td>0</td></row>
+		<row><td>ARPPRODUCTICON.exe</td><td/><td>&lt;VSSolutionFolder&gt;\JVida Fast CSharp\alien.ico</td><td>0</td></row>
 	</table>
 
 	<table name="IniFile">
@@ -3984,7 +3986,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>ISTheme</td><td>InstallShield Blue.theme</td></row>
 		<row><td>ISUSLock</td><td>{D153A439-5D5D-498F-863F-1DDAAE67AA70}</td></row>
 		<row><td>ISUSSignature</td><td>{8F9014B2-E5BC-4722-9D8E-0847EE4566E8}</td></row>
-		<row><td>ISVisitedViews</td><td>viewAssistant,viewFileExtensions,viewIniFiles,viewRegistry,viewShortcuts,viewProject,viewUpgradePaths,viewUpdateService,viewAppFiles,viewObjects,viewEnvironmentVariables,viewVRoots,viewServices,viewISToday</td></row>
+		<row><td>ISVisitedViews</td><td>viewAssistant,viewFileExtensions,viewIniFiles,viewRegistry,viewShortcuts,viewProject,viewUpgradePaths,viewUpdateService,viewAppFiles,viewObjects,viewEnvironmentVariables,viewVRoots,viewServices,viewISToday,viewCustomActions</td></row>
 		<row><td>Limited</td><td>1</td></row>
 		<row><td>LockPermissionMode</td><td>1</td></row>
 		<row><td>MsiExecCmdLineOptions</td><td/></row>
@@ -4439,7 +4441,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<col def="L255">FileName</col>
 		<col def="s72">DirProperty</col>
 		<col def="i2">InstallMode</col>
-		<row><td>_Built</td><td>Game_of_Life_Simulator.Primary_output</td><td/><td>game_of_life_simulator</td><td>2</td></row>
+		<row><td>NewShortcut1</td><td>Game_of_Life_Simulator.Primary_output</td><td/><td>game_of_life_simulator</td><td>2</td></row>
 	</table>
 
 	<table name="RemoveIniFile">
@@ -4525,8 +4527,8 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<col def="S255">ISComments</col>
 		<col def="S255">ISShortcutName</col>
 		<col def="I4">ISAttributes</col>
-		<row><td>_Built</td><td>game_of_life_simulator</td><td>##IDS_SHORTCUT_DISPLAY_NAME2##</td><td>Game_of_Life_Simulator.Primary_output</td><td>AlwaysInstall</td><td/><td/><td/><td/><td/><td>1</td><td/><td/><td/><td/><td/><td/><td/><td/></row>
-		<row><td>_Built1</td><td>DesktopFolder</td><td>##IDS_SHORTCUT_DISPLAY_NAME2##</td><td>Game_of_Life_Simulator.Primary_output</td><td>AlwaysInstall</td><td/><td/><td/><td/><td/><td>1</td><td/><td/><td/><td/><td/><td/><td/><td/></row>
+		<row><td>NewShortcut1</td><td>game_of_life_simulator</td><td>##ID_STRING7##</td><td>Game_of_Life_Simulator.Primary_output</td><td>AlwaysInstall</td><td/><td/><td/><td/><td/><td>1</td><td>NEW_DIRECTORY1</td><td/><td/><td/><td/><td/><td/><td/></row>
+		<row><td>NewShortcut2</td><td>DesktopFolder</td><td>##ID_STRING6##</td><td>Game_of_Life_Simulator.Primary_output</td><td>AlwaysInstall</td><td/><td/><td/><td/><td/><td>1</td><td>NEW_DIRECTORY1</td><td/><td/><td/><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="Signature">
