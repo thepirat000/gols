@@ -1,5 +1,6 @@
-Game of Life Simulator
+Game of Life Simulator  ![GOL icon](http://i.imgur.com/fbhzfGu.png)
 ======================
+
 
 Project Description
 ===================
