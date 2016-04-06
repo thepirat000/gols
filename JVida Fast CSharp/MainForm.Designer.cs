@@ -49,11 +49,13 @@ namespace JVida_Fast_CSharp
             this.btnPause = new System.Windows.Forms.PictureBox();
             this.btnPlay = new System.Windows.Forms.PictureBox();
             this.pnlGrid = new System.Windows.Forms.Panel();
+            this.cmbInterpolationMode = new System.Windows.Forms.ComboBox();
             this.btnOneToOne = new System.Windows.Forms.PictureBox();
             this.cmbAlgorithm = new System.Windows.Forms.ComboBox();
             this.picColor = new System.Windows.Forms.PictureBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.btnRandomAlgorithm = new System.Windows.Forms.PictureBox();
             this.btnRandomColor = new System.Windows.Forms.PictureBox();
@@ -68,8 +70,7 @@ namespace JVida_Fast_CSharp
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            this.cmbInterpolationMode = new System.Windows.Forms.ComboBox();
-            this.label4 = new System.Windows.Forms.Label();
+            this.chkPaintMode = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
             this.splitContainer.SuspendLayout();
@@ -319,6 +320,7 @@ namespace JVida_Fast_CSharp
             this.pnlGrid.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlGrid.Controls.Add(this.cmbInterpolationMode);
             this.pnlGrid.Controls.Add(this.btnOneToOne);
+            this.pnlGrid.Controls.Add(this.chkPaintMode);
             this.pnlGrid.Controls.Add(this.cmbAlgorithm);
             this.pnlGrid.Controls.Add(this.picColor);
             this.pnlGrid.Controls.Add(this.label2);
@@ -334,6 +336,18 @@ namespace JVida_Fast_CSharp
             this.pnlGrid.Name = "pnlGrid";
             this.pnlGrid.Size = new System.Drawing.Size(317, 102);
             this.pnlGrid.TabIndex = 3;
+            // 
+            // cmbInterpolationMode
+            // 
+            this.cmbInterpolationMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbInterpolationMode.DropDownWidth = 150;
+            this.cmbInterpolationMode.FormattingEnabled = true;
+            this.cmbInterpolationMode.Location = new System.Drawing.Point(90, 22);
+            this.cmbInterpolationMode.Name = "cmbInterpolationMode";
+            this.cmbInterpolationMode.Size = new System.Drawing.Size(142, 24);
+            this.cmbInterpolationMode.TabIndex = 11;
+            this.toolTip.SetToolTip(this.cmbInterpolationMode, "Specifies the interpolation mode for the graphics");
+            this.cmbInterpolationMode.SelectedIndexChanged += new System.EventHandler(this.cmbInterpolationMode_SelectedIndexChanged);
             // 
             // btnOneToOne
             // 
@@ -391,6 +405,15 @@ namespace JVida_Fast_CSharp
             this.label3.TabIndex = 6;
             this.label3.Text = "Algorithm";
             // 
+            // label4
+            // 
+            this.label4.Location = new System.Drawing.Point(90, 4);
+            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(142, 18);
+            this.label4.TabIndex = 6;
+            this.label4.Text = "Interpolation mode";
+            // 
             // label1
             // 
             this.label1.Location = new System.Drawing.Point(7, 4);
@@ -444,7 +467,7 @@ namespace JVida_Fast_CSharp
             // 
             this.chkWrapAround.AutoSize = true;
             this.chkWrapAround.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.chkWrapAround.Location = new System.Drawing.Point(256, 72);
+            this.chkWrapAround.Location = new System.Drawing.Point(254, 72);
             this.chkWrapAround.Margin = new System.Windows.Forms.Padding(4);
             this.chkWrapAround.Name = "chkWrapAround";
             this.chkWrapAround.Size = new System.Drawing.Size(56, 21);
@@ -570,26 +593,20 @@ namespace JVida_Fast_CSharp
             // 
             this.colorDialog1.FullOpen = true;
             // 
-            // cmbInterpolationMode
+            // chkPaintMode
             // 
-            this.cmbInterpolationMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbInterpolationMode.DropDownWidth = 150;
-            this.cmbInterpolationMode.FormattingEnabled = true;
-            this.cmbInterpolationMode.Location = new System.Drawing.Point(90, 22);
-            this.cmbInterpolationMode.Name = "cmbInterpolationMode";
-            this.cmbInterpolationMode.Size = new System.Drawing.Size(142, 24);
-            this.cmbInterpolationMode.TabIndex = 11;
-            this.toolTip.SetToolTip(this.cmbInterpolationMode, "Specifies the interpolation mode for the graphics");
-            this.cmbInterpolationMode.SelectedIndexChanged += new System.EventHandler(this.cmbInterpolationMode_SelectedIndexChanged);
-            // 
-            // label4
-            // 
-            this.label4.Location = new System.Drawing.Point(90, 4);
-            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(142, 18);
-            this.label4.TabIndex = 6;
-            this.label4.Text = "Interpolation mode";
+            this.chkPaintMode.AutoSize = true;
+            this.chkPaintMode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.chkPaintMode.Location = new System.Drawing.Point(254, 50);
+            this.chkPaintMode.Margin = new System.Windows.Forms.Padding(4);
+            this.chkPaintMode.Name = "chkPaintMode";
+            this.chkPaintMode.Size = new System.Drawing.Size(57, 21);
+            this.chkPaintMode.TabIndex = 5;
+            this.chkPaintMode.Text = "paint";
+            this.toolTip.SetToolTip(this.chkPaintMode, "Enable drawing cells into the graph (left click alive cell, right click dead cell" +
+        ")");
+            this.chkPaintMode.UseVisualStyleBackColor = true;
+            this.chkPaintMode.CheckedChanged += new System.EventHandler(this.chkPaintMode_CheckedChanged);
             // 
             // MainForm
             // 
@@ -668,5 +685,6 @@ namespace JVida_Fast_CSharp
         private Button btnDownloadPatterns;
         private ComboBox cmbInterpolationMode;
         private Label label4;
+        private CheckBox chkPaintMode;
     }
 }

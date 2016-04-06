@@ -97,6 +97,8 @@ namespace JVida_Fast_CSharp
         private void Restart(bool restoreState, bool forcePause = false)
         {
             AbortWorker();
+            chkPaintMode.Checked = false;
+            _graph.ExitPaintMode();
             Initialize(restoreState);
             Start(!restoreState, forcePause);
         }
@@ -127,10 +129,9 @@ namespace JVida_Fast_CSharp
                 ShowFps = prevShowFps,
                 AllowDrop = true
             };
-            _graph.InterpolationMode = cmbInterpolationMode.SelectedItem != null
-                ? (InterpolationMode) cmbInterpolationMode.SelectedItem
-                : InterpolationMode.Default;
+            _graph.InterpolationMode = cmbInterpolationMode.SelectedItem != null ? (InterpolationMode) cmbInterpolationMode.SelectedItem : InterpolationMode.Default;
             _graph.PointSelected += Graph_PointSelected;
+            _graph.CellPaint += Graph_CellPaint;
             _graph.DragEnter += Graph_DragEnter;
             _graph.DragDropCell += Graph_DragDropCell;
             splitContainer.Panel2.Controls.Add(_graph);
@@ -187,15 +188,11 @@ namespace JVida_Fast_CSharp
 
         private void FillInterpolationCombo()
         {
-            var modes = (InterpolationMode[]) Enum.GetValues(typeof (InterpolationMode));
             cmbInterpolationMode.Items.Clear();
-            for (int i = 0; i < modes.Length; i++)
-            {
-                if (modes[i] != InterpolationMode.Invalid)
-                {
-                    cmbInterpolationMode.Items.Add(modes[i]);
-                }
-            }
+            cmbInterpolationMode.Items.Add(InterpolationMode.Bilinear);
+            cmbInterpolationMode.Items.Add(InterpolationMode.NearestNeighbor);
+            cmbInterpolationMode.Items.Add(InterpolationMode.HighQualityBilinear);
+            cmbInterpolationMode.Items.Add(InterpolationMode.Bicubic);
             cmbInterpolationMode.SelectedIndexChanged -= cmbInterpolationMode_SelectedIndexChanged;
             cmbInterpolationMode.SelectedIndex = 0;
             cmbInterpolationMode.SelectedIndexChanged += cmbInterpolationMode_SelectedIndexChanged;
@@ -305,7 +302,8 @@ namespace JVida_Fast_CSharp
             sb.AppendLine("Enter: Change alive cell color");
             sb.AppendLine();
             sb.AppendLine("You can drag & drop pattern files here (.cells, .rle or .lif).");
-            sb.AppendLine("Click on Download Patterns to download the LifeWiki's pattern collection.");
+            sb.AppendLine("Click on 'Download Patterns' to download the LifeWiki's pattern collection.");
+            sb.AppendLine("Click on 'paint' to set alive/dead cells with the mouse buttons.");
             return sb.ToString();
         }
 
@@ -531,6 +529,8 @@ namespace JVida_Fast_CSharp
         private void Resume()
         {
             _gol.Resume();
+            chkPaintMode.Checked = false;
+            _graph.ExitPaintMode();
             _graph.LowerLeftInfo = "";
             while (_gol.Paused)
             {
@@ -656,6 +656,30 @@ namespace JVida_Fast_CSharp
         public static bool HasAdminPrivileges()
         {
             return new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
+        }
+
+        private void UnzipPatterns()
+        {
+            var zip = ZipStorer.Open(_patternZipFile, FileAccess.Read);
+            var dir = zip.ReadCentralDir();
+            foreach (var entry in dir)
+            {
+                if (ParserFactory.GetAvailableExtensions().Contains(Path.GetExtension(entry.FilenameInZip)))
+                {
+                    zip.ExtractFile(entry, Path.Combine(_patternsDir, entry.FilenameInZip));
+                }
+            }
+            zip.Close();
+            btnDownloadPatterns.Enabled = true;
+            btnDownloadPatterns.Text = "Download Patterns";
+            Process.Start("explorer.exe", _patternsDir);
+        }
+
+        private void SetPlayerButtonState()
+        {
+            btnPlay.Image = !_gol.Paused ? imageList1.Images["play_red.ico"] : imageList1.Images["play_blue.ico"];
+            btnRecord.Image = _isRecording ? imageList1.Images["rec_red.ico"] : imageList1.Images["rec_blue.ico"];
+            btnPause.Image = _gol.Paused ? imageList1.Images["pause_red.ico"] : imageList1.Images["pause_blue.ico"];
         }
         #endregion
 
@@ -794,14 +818,12 @@ namespace JVida_Fast_CSharp
 
         private void picColor_Click(object sender, EventArgs e)
         {
-            _gol.Paused = true;
             var dlg = colorDialog1.ShowDialog();
             if (dlg == DialogResult.OK)
             {
                 picColor.BackColor = colorDialog1.Color;
                 _graph.ForeColor = colorDialog1.Color;
             }
-            Resume();
         }
 
         private void chkFps_CheckedChanged(object sender, EventArgs e)
@@ -818,6 +840,22 @@ namespace JVida_Fast_CSharp
         {
             _wrapAround = chkWrapAround.Checked;
             Restart(true);
+        }
+
+        private void chkPaintMode_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkPaintMode.Checked)
+            {
+                if (!_gol.Paused)
+                {
+                    Pause();
+                }
+                _graph.EnterPaintMode();
+            }
+            else
+            {
+                _graph.ExitPaintMode();
+            }
         }
 
         private void txtGridSize_LostFocus(object sender, EventArgs e)
@@ -897,6 +935,7 @@ namespace JVida_Fast_CSharp
             {
                 var mode = (InterpolationMode) cmbInterpolationMode.SelectedItem;
                 _graph.InterpolationMode = mode;
+                _graph.Invalidate();
             }
         }
 
@@ -999,7 +1038,6 @@ namespace JVida_Fast_CSharp
                 }
             }
         }
-        #endregion
 
         private void btnDownloadPatterns_Click(object sender, EventArgs e)
         {
@@ -1013,7 +1051,7 @@ namespace JVida_Fast_CSharp
 
         private void WebClientOnDownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
-            var p = Math.Round((decimal)e.BytesReceived/e.TotalBytesToReceive*100, 0);
+            var p = Math.Round((decimal)e.BytesReceived / e.TotalBytesToReceive * 100, 0);
             btnDownloadPatterns.Text = e.BytesReceived < e.TotalBytesToReceive ? $"Downloading {p}%..." : "Unzipping...";
         }
 
@@ -1031,29 +1069,15 @@ namespace JVida_Fast_CSharp
             }
         }
 
-        private void UnzipPatterns()
+        private void Graph_CellPaint(object sender, PointSelectedEventArgs e)
         {
-            var zip = ZipStorer.Open(_patternZipFile, FileAccess.Read);
-            var dir = zip.ReadCentralDir();
-            foreach (var entry in dir)
-            {
-                if (ParserFactory.GetAvailableExtensions().Contains(Path.GetExtension(entry.FilenameInZip)))
-                {
-                    zip.ExtractFile(entry, Path.Combine(_patternsDir, entry.FilenameInZip));
-                }
-            }
-            zip.Close();
-            btnDownloadPatterns.Enabled = true;
-            btnDownloadPatterns.Text = "Download Patterns";
-            Process.Start("explorer.exe", _patternsDir);
+            var m = new byte[1, 1];
+            m[0, 0] = e.Button != MouseButtons.Left ? (byte)0 : (byte)1;
+            _gol.Plot(e.Point, m);
         }
 
-        private void SetPlayerButtonState()
-        {
-            btnPlay.Image = !_gol.Paused ? imageList1.Images["play_red.ico"] : imageList1.Images["play_blue.ico"];
-            btnRecord.Image = _isRecording ? imageList1.Images["rec_red.ico"] : imageList1.Images["rec_blue.ico"];
-            btnPause.Image = _gol.Paused ? imageList1.Images["pause_red.ico"] : imageList1.Images["pause_blue.ico"];
-        }
+
+        #endregion
 
 
     }

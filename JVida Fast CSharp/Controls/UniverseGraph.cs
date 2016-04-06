@@ -14,6 +14,7 @@ namespace JVida_Fast_CSharp
     {
         #region Fields
         private bool _selectionModeEnabled;
+        private bool _paintModeEnabled;
         private Color _backColor = Color.Black;
         private Color _foreColor = Color.Red;
         private Color _fontColor = Color.LightBlue;
@@ -27,7 +28,8 @@ namespace JVida_Fast_CSharp
         private readonly Font _font = new Font("Times New Roman", 9);
         private bool _importing;
         private InterpolationMode _interpolationMode = InterpolationMode.Default;
-
+        private Point _lastPointPainted = new Point(-1, -1);
+        private MouseButtons? _lastPaintingButton;
         #endregion
 
         #region Properties
@@ -35,6 +37,16 @@ namespace JVida_Fast_CSharp
         protected virtual void OnPointSelected(PointSelectedEventArgs e)
         {
             var eh = PointSelected;
+            if (eh != null)
+            {
+                eh(this, e);
+            }
+        }
+
+        public event EventHandler<PointSelectedEventArgs> CellPaint;
+        protected virtual void OnCellPaint(PointSelectedEventArgs e)
+        {
+            var eh = CellPaint;
             if (eh != null)
             {
                 eh(this, e);
@@ -113,6 +125,7 @@ namespace JVida_Fast_CSharp
         #region Public Methods
         public void EnterSelectionMode(bool isImporting)
         {
+            Cursor = Cursors.Cross;
             _selectionModeEnabled = true;
             _importing = isImporting;
             Invalidate();
@@ -121,8 +134,28 @@ namespace JVida_Fast_CSharp
         {
             _selectionModeEnabled = false;
             SelectionInfo = string.Empty;
+            Cursor = Cursors.Default;
             Invalidate();
         }
+
+        public void EnterPaintMode()
+        {
+            if (!_selectionModeEnabled)
+            {
+                Cursor = Cursors.Cross;
+                _paintModeEnabled = true;
+                Invalidate();
+            }
+        }
+        public void ExitPaintMode()
+        {
+            _paintModeEnabled = false;
+            Cursor = Cursors.Default;
+            Invalidate();
+        }
+
+
+
         /// <summary>
         /// Draw the bitmap at the given position
         /// </summary>
@@ -229,6 +262,40 @@ namespace JVida_Fast_CSharp
                 SelectionInfo = (_importing ? "Select location\n" : "") + new Point(x, y);
                 Invalidate();
             }
+            else if (_paintModeEnabled)
+            {
+                if (e.Button != MouseButtons.None)
+                {
+                    if (e.X > 0 && e.Y > 0)
+                    {
+                        HandleCellPaint(e);
+                    }
+                }
+            }
+        }
+
+        private void HandleCellPaint(MouseEventArgs e)
+        {
+            var x = e.Location.X*_maxX/Width;
+            var y = e.Location.Y*_maxY/Height;
+            if (x > _maxX || y > _maxY)
+            {
+                return;
+            }
+            if (_lastPointPainted.X != x || _lastPointPainted.Y != y)
+            {
+                OnCellPaint(new PointSelectedEventArgs(x, y, false, e.Button));
+            }
+            else
+            {
+                if (!_lastPaintingButton.HasValue || _lastPaintingButton.Value != e.Button)
+                {
+                    OnCellPaint(new PointSelectedEventArgs(x, y, false, e.Button));
+                }
+            }
+            _lastPaintingButton = e.Button;
+            _lastPointPainted.X = x;
+            _lastPointPainted.Y = y;
         }
 
         private void UniverseGraph_MouseClick(object sender, MouseEventArgs e)
@@ -239,6 +306,10 @@ namespace JVida_Fast_CSharp
                 var y = e.Location.Y * _maxY / Height;
                 OnPointSelected(new PointSelectedEventArgs(x, y, _importing, e.Button));
                 _selectionModeEnabled = false;
+            }
+            else if (_paintModeEnabled)
+            {
+                HandleCellPaint(e);
             }
         }
         #endregion
