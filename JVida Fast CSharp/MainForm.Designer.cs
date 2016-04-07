@@ -51,6 +51,7 @@ namespace JVida_Fast_CSharp
             this.pnlGrid = new System.Windows.Forms.Panel();
             this.cmbInterpolationMode = new System.Windows.Forms.ComboBox();
             this.btnOneToOne = new System.Windows.Forms.PictureBox();
+            this.chkPaintMode = new System.Windows.Forms.CheckBox();
             this.cmbAlgorithm = new System.Windows.Forms.ComboBox();
             this.picColor = new System.Windows.Forms.PictureBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -64,13 +65,11 @@ namespace JVida_Fast_CSharp
             this.pnlDisplay = new System.Windows.Forms.Panel();
             this.btnDownloadPatterns = new System.Windows.Forms.Button();
             this.btnFileAssoc = new System.Windows.Forms.Button();
-            this.chkPosition = new System.Windows.Forms.CheckBox();
             this.chkAlgo = new System.Windows.Forms.CheckBox();
             this.chkFps = new System.Windows.Forms.CheckBox();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            this.chkPaintMode = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
             this.splitContainer.SuspendLayout();
@@ -362,6 +361,21 @@ namespace JVida_Fast_CSharp
             this.toolTip.SetToolTip(this.btnOneToOne, "Set the grid size as 1 cell per pixel");
             this.btnOneToOne.Click += new System.EventHandler(this.btnOneToOne_Click);
             // 
+            // chkPaintMode
+            // 
+            this.chkPaintMode.AutoSize = true;
+            this.chkPaintMode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.chkPaintMode.Location = new System.Drawing.Point(254, 50);
+            this.chkPaintMode.Margin = new System.Windows.Forms.Padding(4);
+            this.chkPaintMode.Name = "chkPaintMode";
+            this.chkPaintMode.Size = new System.Drawing.Size(57, 21);
+            this.chkPaintMode.TabIndex = 5;
+            this.chkPaintMode.Text = "paint";
+            this.toolTip.SetToolTip(this.chkPaintMode, "Enable drawing cells into the graph (left click alive cell, right click dead cell" +
+        ")");
+            this.chkPaintMode.UseVisualStyleBackColor = true;
+            this.chkPaintMode.CheckedChanged += new System.EventHandler(this.chkPaintMode_CheckedChanged);
+            // 
             // cmbAlgorithm
             // 
             this.cmbAlgorithm.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -483,7 +497,6 @@ namespace JVida_Fast_CSharp
             this.pnlDisplay.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlDisplay.Controls.Add(this.btnDownloadPatterns);
             this.pnlDisplay.Controls.Add(this.btnFileAssoc);
-            this.pnlDisplay.Controls.Add(this.chkPosition);
             this.pnlDisplay.Controls.Add(this.chkAlgo);
             this.pnlDisplay.Controls.Add(this.chkFps);
             this.pnlDisplay.Location = new System.Drawing.Point(588, 4);
@@ -515,19 +528,6 @@ namespace JVida_Fast_CSharp
             this.toolTip.SetToolTip(this.btnFileAssoc, "Set the file associations to open .cells and .rle files");
             this.btnFileAssoc.UseVisualStyleBackColor = true;
             this.btnFileAssoc.Click += new System.EventHandler(this.btnSetFileAssoc_Click);
-            // 
-            // chkPosition
-            // 
-            this.chkPosition.AutoSize = true;
-            this.chkPosition.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.chkPosition.Location = new System.Drawing.Point(147, 11);
-            this.chkPosition.Margin = new System.Windows.Forms.Padding(4);
-            this.chkPosition.Name = "chkPosition";
-            this.chkPosition.Size = new System.Drawing.Size(75, 21);
-            this.chkPosition.TabIndex = 5;
-            this.chkPosition.Text = "position";
-            this.chkPosition.UseVisualStyleBackColor = true;
-            this.chkPosition.CheckedChanged += new System.EventHandler(this.chkPosition_CheckedChanged);
             // 
             // chkAlgo
             // 
@@ -593,21 +593,6 @@ namespace JVida_Fast_CSharp
             // 
             this.colorDialog1.FullOpen = true;
             // 
-            // chkPaintMode
-            // 
-            this.chkPaintMode.AutoSize = true;
-            this.chkPaintMode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.chkPaintMode.Location = new System.Drawing.Point(254, 50);
-            this.chkPaintMode.Margin = new System.Windows.Forms.Padding(4);
-            this.chkPaintMode.Name = "chkPaintMode";
-            this.chkPaintMode.Size = new System.Drawing.Size(57, 21);
-            this.chkPaintMode.TabIndex = 5;
-            this.chkPaintMode.Text = "paint";
-            this.toolTip.SetToolTip(this.chkPaintMode, "Enable drawing cells into the graph (left click alive cell, right click dead cell" +
-        ")");
-            this.chkPaintMode.UseVisualStyleBackColor = true;
-            this.chkPaintMode.CheckedChanged += new System.EventHandler(this.chkPaintMode_CheckedChanged);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -672,7 +657,6 @@ namespace JVida_Fast_CSharp
         private PictureBox btnRandomColor;
         private PictureBox btnRecord;
         private Panel pnlDisplay;
-        private CheckBox chkPosition;
         private CheckBox chkAlgo;
         private CheckBox chkFps;
         private ComboBox cmbAlgorithm;

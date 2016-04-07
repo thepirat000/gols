@@ -26,7 +26,6 @@ namespace JVida_Fast_CSharp
         private long _qty;
         private readonly Stopwatch _stp = new Stopwatch();
         private readonly Font _font = new Font("Times New Roman", 9);
-        private bool _importing;
         private InterpolationMode _interpolationMode = InterpolationMode.Default;
         private Point _lastPointPainted = new Point(-1, -1);
         private MouseButtons? _lastPaintingButton;
@@ -123,11 +122,10 @@ namespace JVida_Fast_CSharp
         #endregion
 
         #region Public Methods
-        public void EnterSelectionMode(bool isImporting)
+        public void EnterSelectionMode()
         {
             Cursor = Cursors.Cross;
             _selectionModeEnabled = true;
-            _importing = isImporting;
             Invalidate();
         }
         public void ExitSelectionMode()
@@ -255,11 +253,12 @@ namespace JVida_Fast_CSharp
 
         private void UniverseGraph_MouseMove(object sender, MouseEventArgs e)
         {
-            if (_selectionModeEnabled)
+            var shiftPressed = ModifierKeys.HasFlag(Keys.Shift);
+            if (_selectionModeEnabled || shiftPressed)
             {
                 var x = e.Location.X * _maxX / Width;
                 var y = e.Location.Y * _maxY / Height;
-                SelectionInfo = (_importing ? "Select location\n" : "") + new Point(x, y);
+                SelectionInfo = new Point(x, y).ToString();
                 Invalidate();
             }
             else if (_paintModeEnabled)
@@ -271,6 +270,10 @@ namespace JVida_Fast_CSharp
                         HandleCellPaint(e);
                     }
                 }
+            }
+            else
+            {
+                SelectionInfo = "";
             }
         }
 
@@ -284,13 +287,13 @@ namespace JVida_Fast_CSharp
             }
             if (_lastPointPainted.X != x || _lastPointPainted.Y != y)
             {
-                OnCellPaint(new PointSelectedEventArgs(x, y, false, e.Button));
+                OnCellPaint(new PointSelectedEventArgs(x, y, e.Button));
             }
             else
             {
                 if (!_lastPaintingButton.HasValue || _lastPaintingButton.Value != e.Button)
                 {
-                    OnCellPaint(new PointSelectedEventArgs(x, y, false, e.Button));
+                    OnCellPaint(new PointSelectedEventArgs(x, y, e.Button));
                 }
             }
             _lastPaintingButton = e.Button;
@@ -300,11 +303,12 @@ namespace JVida_Fast_CSharp
 
         private void UniverseGraph_MouseClick(object sender, MouseEventArgs e)
         {
-            if (_selectionModeEnabled)
+            var shiftPressed = ModifierKeys.HasFlag(Keys.Shift);
+            if (_selectionModeEnabled || shiftPressed)
             {
                 var x = e.Location.X * _maxX / Width;
                 var y = e.Location.Y * _maxY / Height;
-                OnPointSelected(new PointSelectedEventArgs(x, y, _importing, e.Button));
+                OnPointSelected(new PointSelectedEventArgs(x, y, e.Button));
                 _selectionModeEnabled = false;
             }
             else if (_paintModeEnabled)
@@ -321,7 +325,7 @@ namespace JVida_Fast_CSharp
                 var point = PointToClient(new Point(e.X, e.Y));
                 var x = point.X * _maxX / Width;
                 var y = point.Y * _maxY / Height;
-                SelectionInfo = (_importing ? "Select location\n" : "") + new Point(x, y);
+                SelectionInfo = new Point(x, y).ToString();
                 Invalidate();
             }
         }

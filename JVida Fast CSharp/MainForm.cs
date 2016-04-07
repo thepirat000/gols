@@ -204,10 +204,6 @@ namespace JVida_Fast_CSharp
         /// </summary>
         private void Graph_PointSelected(object sender, PointSelectedEventArgs e)
         {
-            if (!e.IsImporting)
-            {
-                return;
-            }
             _graph.ExitSelectionMode();
             Pattern pattern = TryParsePattern(openFileDialog1.FileName);
             if (pattern == null)
@@ -391,7 +387,7 @@ namespace JVida_Fast_CSharp
                     var res = openFileDialog1.ShowDialog();
                     if (res == DialogResult.OK)
                     {
-                        _graph.EnterSelectionMode(true);
+                        _graph.EnterSelectionMode();
                     }
                     break;
                 case Keys.Escape:
@@ -560,27 +556,16 @@ namespace JVida_Fast_CSharp
             var wasPaused = _gol.Paused;
             if (startPoint.X + pattern.Bitmap.GetLength(0) > _gridSize.Width || startPoint.Y + pattern.Bitmap.GetLength(1) > _gridSize.Height)
             {
-                var dlg =
-                    MessageBox.Show(
-                        $"Pattern will overflow {pattern.Bitmap.GetLength(0)}x{pattern.Bitmap.GetLength(1)}. Automatically resize/reposition the pattern?",
-                        "Reposition", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (dlg == DialogResult.Yes)
+                startPoint = new Point(0, 0);
+                if (pattern.Bitmap.GetLength(0) > _gridSize.Width || pattern.Bitmap.GetLength(1) > _gridSize.Height)
                 {
-                    startPoint = new Point(0, 0);
-                    if (pattern.Bitmap.GetLength(0) > _gridSize.Width || pattern.Bitmap.GetLength(1) > _gridSize.Height)
+                    //resize grid to fit the pattern
+                    _gridSize = new Size(pattern.Bitmap.GetLength(0), pattern.Bitmap.GetLength(1));
+                    Restart(true);
+                    if (wasPaused)
                     {
-                        //resize grid to fit the pattern
-                        _gridSize = new Size(pattern.Bitmap.GetLength(0), pattern.Bitmap.GetLength(1));
-                        Restart(true);
-                        if (wasPaused)
-                        {
-                            Pause();
-                        }
+                        Pause();
                     }
-                }
-                else
-                {
-                    return;
                 }
             }
             if (pattern.Algorithm.HasValue && pattern.Algorithm.Value.Symbol != _gol.AlgorithmSymbol)
@@ -610,6 +595,7 @@ namespace JVida_Fast_CSharp
             {
                 return;
             }
+            openFileDialog1.FileName = filePath;
             var startPoint = new Point(0, 0);
             if (pattern.Bitmap.GetLength(0) > _gridSize.Width || pattern.Bitmap.GetLength(1) > _gridSize.Height)
             {
@@ -896,18 +882,6 @@ namespace JVida_Fast_CSharp
             }
         }
 
-        private void chkPosition_CheckedChanged(object sender, EventArgs e)
-        {
-            if (chkPosition.Checked)
-            {
-                _graph.EnterSelectionMode(false);
-            }
-            else
-            {
-                _graph.ExitSelectionMode();
-            }
-        }
-
         private void cmbAlgorithm_SelectedIndexChanged(object sender, EventArgs e)
         {
             string valueSelected = ((dynamic)cmbAlgorithm.SelectedItem).Value;
@@ -980,7 +954,7 @@ namespace JVida_Fast_CSharp
                 var res = openFileDialog1.ShowDialog();
                 if (res == DialogResult.OK)
                 {
-                    _graph.EnterSelectionMode(true);
+                    _graph.EnterSelectionMode();
                 }
             }
             else if (e.Button == MouseButtons.Right)
@@ -1017,6 +991,7 @@ namespace JVida_Fast_CSharp
                 var pattern = TryParsePattern(file);
                 if (pattern != null)
                 {
+                    openFileDialog1.FileName = file;
                     PlotPattern(new Point(e.X, e.Y), pattern);
                 }
             }
@@ -1030,7 +1005,7 @@ namespace JVida_Fast_CSharp
                 if (_availableExtensions.Any(ext => fileName.EndsWith(ext)))
                 {
                     e.Effect = DragDropEffects.Copy;
-                    _graph.EnterSelectionMode(false);
+                    _graph.EnterSelectionMode();
                 }
                 else
                 {

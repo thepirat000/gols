@@ -12,15 +12,13 @@ namespace JVida_Fast_CSharp
             Point = new Point(x, y);
         }
 
-        public PointSelectedEventArgs(int x, int y, bool isImporting, MouseButtons button)
+        public PointSelectedEventArgs(int x, int y, MouseButtons button)
         {
             Point = new Point(x, y);
-            IsImporting = isImporting;
             Button = button;
         }
 
         public Point Point { get; set; }
-        public bool IsImporting { get; set; }
         public MouseButtons Button { get; set; }
     }
 
